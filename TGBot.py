@@ -8,12 +8,12 @@ import aiogram.utils.markdown as fmt
 
 
 
-bot = Bot(token= 'toc:en')
+bot = Bot(token= '*******')
 dp = Dispatcher(bot)
 
 
 # отработка команды start
-@dp.message_handler(commands=['start', 'старт'])
+@dp.message_handler(Command(commands='start', prefixes='/'))
 async def send_welcome(message: types.Message):
     await message.reply(f'Привет, {message.from_user.first_name} \U0001F464, я бот секретарь! \u270D\n\
 жми /help или воспользуйся клавиатурой,\

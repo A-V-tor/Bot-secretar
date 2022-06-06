@@ -2,11 +2,11 @@ import requests
 
 
 
-token = 'value_tocen'
+token = '***************'
 
 
 
-def get_weather(a = value1, b=value2):
+def get_weather(a =** , b=**):
     
     params = {f'lat' : {a}, 'lon' : {b}, 'appid' : token, 'units' : 'metric', 'lang' : 'ru'}
     response = requests.get('https://api.openweathermap.org/data/2.5/weather', params=params)
@@ -22,9 +22,11 @@ def get_weather(a = value1, b=value2):
     gust_wind = res['wind']['gust']
     
     if description == 'пасмурно':
-        g = '\u2601'
-    else:
         g = '\u2600'
+    if description == 'небольшой дождь':
+        g = '\u2602'
+    else:
+        g = '\u2601'
 
      # добавил эмодзи для лучшего восприятия   
     p = f'населеный пункт:        \U0001F3D9{locality}\n\

@@ -6,12 +6,12 @@ import time
 # список нужных акий
 lst = ['exelixis-inc', 'beyond-meat-inc', 'micron-tech']
 
-
+    
 
 def function_screp(item):
     slov = {}
     headers = {
-
+    'User-Agent': '***************************'
 }
     ses = requests.Session()
     
