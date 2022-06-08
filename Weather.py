@@ -1,12 +1,12 @@
 import requests
+import tkn
+
+
+token = tkn.wbot
 
 
 
-token = '***************'
-
-
-
-def get_weather(a =** , b=**):
+def get_weather(a =52.6 , b=39.57):
     
     params = {f'lat' : {a}, 'lon' : {b}, 'appid' : token, 'units' : 'metric', 'lang' : 'ru'}
     response = requests.get('https://api.openweathermap.org/data/2.5/weather', params=params)

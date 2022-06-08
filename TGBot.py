@@ -5,15 +5,17 @@ from ScrepBot import function_screp ,screp_iter, lst
 from Weather import get_weather
 import json, string 
 import aiogram.utils.markdown as fmt
+import tkn
 
 
 
-bot = Bot(token= '*******')
+
+bot = Bot(token = tkn.token_bot)
 dp = Dispatcher(bot)
 
 
 # отработка команды start
-@dp.message_handler(Command(commands='start', prefixes='/'))
+@dp.message_handler(commands=['start', 'старт'])
 async def send_welcome(message: types.Message):
     await message.reply(f'Привет, {message.from_user.first_name} \U0001F464, я бот секретарь! \u270D\n\
 жми /help или воспользуйся клавиатурой,\
@@ -21,7 +23,7 @@ async def send_welcome(message: types.Message):
     
     
 # отработка команды help
-@dp.message_handler(commands=['help'])
+@dp.message_handler(commands=['help', 'отмена'])
 async def send_help(message: types.Message):
     await message.reply('\u2193  Доступные команды бота: \u2193\n\n\
 /fonda - посмотреть текущие цены акций\n\n\
@@ -41,8 +43,27 @@ async def send_fonda(message: types.Message):
 # отработка погоды
 @dp.message_handler(commands=['weath'])
 async def send_weath(message: types.Message):
-    await message.reply(get_weather())
-    await message.delete()
+    b1 = KeyboardButton('/Липецк')
+    b2 = KeyboardButton('Передать координаты', request_location=True)
+    b3 = KeyboardButton('/отмена')
+    kb = ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add(b1).add(b2).row(b3)
+    await message.reply('Отправьте свои координаты для определения погоды в вашем районе', reply_markup=kb)
+    @dp.message_handler(content_types=['location'])
+    async def location(message: types.Message):
+        lat = message.location.latitude
+        lon = message.location.longitude
+        await message.reply(f'широта:{lat}, долгота:{lon}')
+        await message.reply(get_weather(lat, lon), reply_markup=ReplyKeyboardRemove())
+
+
+    
+@dp.message_handler(commands=['Липецк'])
+async def send_weath(message: types.Message):
+    await message.reply(get_weather(),reply_markup=ReplyKeyboardRemove())
+
+
+
     
 
 # отработка инфы о компаниях
@@ -54,7 +75,7 @@ async def info_message(message : types.Message):
 
 #......................................................................................................................................
     
-# Блок компаний
+# блок компаний
 
 @dp.message_handler(commands=['BYND'])
 async def info_BYND(message: types.Message):
@@ -86,7 +107,7 @@ async def sl_ban(message : types.Message):
             await message.delete()
             
           
-#обозначение кнопок и их команд
+# основная клавиатура
 b1 = KeyboardButton('/info')
 b2 = KeyboardButton('/weath')
 b3 = KeyboardButton('/fonda')

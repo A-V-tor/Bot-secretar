@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import lxml
 import time
+import tkn
 
 # список нужных акий
 lst = ['exelixis-inc', 'beyond-meat-inc', 'micron-tech']
@@ -10,13 +11,10 @@ lst = ['exelixis-inc', 'beyond-meat-inc', 'micron-tech']
 
 def function_screp(item):
     slov = {}
-    headers = {
-    'User-Agent': '***************************'
-}
     ses = requests.Session()
     
     for i in item:
-        response = ses.get(f'https://ru.investing.com/equities/{i}', headers=headers)
+        response = ses.get(f'https://ru.investing.com/equities/{i}', headers=tkn.h)
         soup = BeautifulSoup(response.text, 'lxml')
     # вылавливаю нужные данные
         name = soup.find('h1').text
