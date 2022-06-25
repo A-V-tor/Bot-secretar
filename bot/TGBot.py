@@ -27,14 +27,25 @@ def main():
     @dp.message_handler(commands=['help', 'отмена'])
     async def send_help(message: types.Message):
         await message.reply('\u2193  Доступные команды бота: \u2193\n\n\
-    /fonda - посмотреть текущие цены акций\n\n\
-    /info - информация по компаниям\n\n\
+    /fonda - информация о фондовом рынке\n\n\
+    /crypto - информация по криптовалютам\n\n\
     /weath - информация о погоде', reply_markup = kb )
         await message.delete()
 
 
-    # отработка команды fonda
+    # отработка команды 'fonda'
     @dp.message_handler(commands=['fonda'])
+    async def get_clav_info_fonda(message: types.Message):
+        await message.reply('Выбери нужный раздел', reply_markup = kbf)
+    b1 = KeyboardButton('/info')
+    b2 = KeyboardButton('/market')
+    b3 = KeyboardButton('/отмена')
+
+    kbf = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True) 
+    kbf.add(b1).insert(b2).add(b3)
+
+    # отработка команды market, отдает текущие цены
+    @dp.message_handler(commands=['market'])
     async def send_fonda(message: types.Message):
         await message.answer('Жди, собираю информацию... \u23F3')
         await message.reply(screp_iter(function_screp(lst)))
@@ -109,7 +120,7 @@ def main():
                 
             
     # основная клавиатура
-    b1 = KeyboardButton('/info')
+    b1 = KeyboardButton('/crypto')
     b2 = KeyboardButton('/weath')
     b3 = KeyboardButton('/fonda')
 
