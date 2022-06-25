@@ -1,8 +1,8 @@
 import requests
-import tkn
+from bot.tkn import wbot
 
 
-token = tkn.wbot
+token = wbot
 
 
 
