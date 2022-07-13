@@ -1,13 +1,14 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 # основная клавиатура
 b1 = KeyboardButton('/crypto')
 b2 = KeyboardButton('/weath')
 b3 = KeyboardButton('/fonda')
+b4 = KeyboardButton('/infotren')
 
 kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kb.add(b1).insert(b2).add(b3)
+kb.add(b1).insert(b2).add(b3).insert(b4)
 # ________________________________________________________________________
 
 # клавиатура информации о компаниях
@@ -36,3 +37,12 @@ b2 = KeyboardButton('Передать координаты', request_location=Tr
 b3 = KeyboardButton('/отмена')
 kbw = ReplyKeyboardMarkup(resize_keyboard=True)
 kbw.add(b1).add(b2).row(b3)
+
+# ________________________________________________________________________
+# клавиатура журнала тренировок
+b1 = KeyboardButton('/all-jr 10')
+b2 = KeyboardButton('/get-jr day,"вторник"')
+b3 = KeyboardButton('/infotren')
+b4 = KeyboardButton('/отмена')
+kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+kbtr.add(b1).insert(b2).add(b3).insert(b4)
