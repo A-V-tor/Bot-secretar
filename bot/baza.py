@@ -1,5 +1,4 @@
 import sqlite3
-from unittest import result
 
 with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
     cur = base.cursor()
@@ -51,7 +50,7 @@ def get_workout_record(value, item):
 
 def get_workout_all_record(item):
     '''функция отдает лимитированое кол-во записей'''
-    data_all = cur.execute('SELECT * FROM data LIMIT {}'.format(item)).fetchall()
+    data_all = cur.execute('SELECT * FROM data ORDER BY rowid DESC LIMIT {} '.format(item)).fetchall()
     if data_all:
         res = ''
         lst = []

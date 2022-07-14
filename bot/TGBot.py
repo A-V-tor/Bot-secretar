@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from cgitb import text
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from bot.ScrepBot import function_screp, screp_iter, lst
@@ -9,7 +8,7 @@ import aiogram.utils.markdown as fmt
 from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
-
+from datetime import date
 
 
 def main():
@@ -75,12 +74,12 @@ def main():
     # добавление тренировки в БД
     @dp.message_handler(commands=['tren','трен','Трен'])
     async def gt_tren(message : types.Message):
-        data = message.text.split(',')[0][6:]
-        day = message.text.split(',')[1].lower()
-        bic = message.text.split(',')[2]
-        waist = message.text.split(',')[3]
-        chest = message.text.split(',')[4]
-        tric = message.text.split(',')[5]
+        data = date.today()
+        day = message.text.split(',')[0][6:].lower()
+        bic = message.text.split(',')[1]
+        waist = message.text.split(',')[2]
+        chest = message.text.split(',')[3]
+        tric = message.text.split(',')[4]
         await bot.send_message(message.chat.id,'Данные успешно добавлены!')
         await message.answer(add_tren(data,day,bic,waist,chest,tric))
     
@@ -123,9 +122,10 @@ ___________________________________________\n\n\
 Пример: /tren 3.01.22,среда,23,15,20,12\n\
 При успешном добавлении,будет отображено соответствующее сообщение!\n\
 ___________________________________________\n\n\
-ПОЛУЧЕНИЕ УНИКАЛЬНОГО ID ЗАПИСИ\
+ПОЛУЧЕНИЕ УНИКАЛЬНОГО ID ЗАПИСИ\n\
 Команда rowid отдает "rowid id" по дате\n\
-Синтаксис: /rowid "22.01.22" КАВЫЧКИ ОБЯЗАТЕЛЬНЫ\n\
+Синтаксис: /rowid "22.01.22"\n\
+КАВЫЧКИ ОБЯЗАТЕЛЬНЫ\n\
 ___________________________________________\n\n\
 РЕДАКТИРОВАНИЕ ЖУРНАЛА\
 Команда update - вносит изменения в таблицу\n\
