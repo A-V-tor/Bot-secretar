@@ -8,6 +8,7 @@ from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
 from datetime import date
+import calendar
 
 
 def main():
@@ -79,11 +80,11 @@ def main():
     @dp.message_handler(commands=['tren','трен','Трен'])
     async def gt_tren(message : types.Message):
         data = date.today()
-        day = message.text.split(',')[0][6:].lower()
-        bic = message.text.split(',')[1]
-        waist = message.text.split(',')[2]
-        chest = message.text.split(',')[3]
-        tric = message.text.split(',')[4]
+        day = calendar.day_name[data.weekday()]
+        bic = message.text.split(',')[0]
+        waist = message.text.split(',')[1]
+        chest = message.text.split(',')[2]
+        tric = message.text.split(',')[3]
         await bot.send_message(message.chat.id,'Данные успешно добавлены!')
         await message.answer(add_tren(data,day,bic,waist,chest,tric))
     
@@ -93,16 +94,19 @@ def main():
     async def gt_tren(message : types.Message):
         tabl = message.text.split(',')[0][8:]
         data = message.text.split(',')[1]
-        await message.answer('Для корректного отображения разверни телефон')
-        await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}')
+        #await message.answer('Для корректного отображения разверни телефон')
+        try:
+            await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}')
+        except:
+            await message.answer('Некорректный ввод данных.\nПРОВЕРЬ КАВЫЧКИ\n                \(ツ)/')
 
 
-    # получение журнала тренировок
+    # получение журнала тренировок определенное кол-во записей
     @dp.message_handler(commands=['all-jr'])
     async def gt_tren(message : types.Message):
         item = message.text.split(',')[0][8:]
-        await message.answer('Для корректного отображения разверни телефон')
-        await message.answer(get_workout_all_record(item),reply_markup=ReplyKeyboardRemove())
+        #await message.answer('Для корректного отображения разверни телефон')
+        await message.answer(get_workout_all_record(item))
 
     # получение информации журнала тренировок
     @dp.message_handler(commands=['infotren'])
@@ -122,8 +126,8 @@ def main():
 Пример: /all-jr 2\n\n\
 ___________________________________________\n\n\
 ДОБАВЛЕНИЕ ЗАПИСИ В ЖУРНАЛ:\n\n\
-    : /tren дата,день,бицепс,пояс,грудь,трицепс\n\
-Пример: /tren 3.01.22,среда,23,15,20,12\n\
+: /tren бицепс,пояс,грудь,трицепс\n\
+Пример: /tren 23,15,20,12\n\
 При успешном добавлении,будет отображено соответствующее сообщение!\n\
 ___________________________________________\n\n\
 ПОЛУЧЕНИЕ УНИКАЛЬНОГО ID ЗАПИСИ\n\

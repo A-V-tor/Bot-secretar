@@ -13,7 +13,21 @@ base.execute('CREATE TABLE IF NOT EXISTS data(\
 base.commit()
 
 def add_tren(data,day,bic,waist,chest,tric):
-    '''добавляются нужные данные в бд'''
+    '''добавляются нужные данные в бд'''  
+    if day == 'Sunday':
+        day = 'Воскресенье'
+    if day =='Monday':
+        day ='Понедельник'
+    if day == 'Tuesday':
+        day = 'Вторник'
+    if day =='Wednesday':
+        day = 'Среда'
+    if day =='Thursday':
+        day = 'Четверг'
+    elif day =='Friday':
+        day = 'Пятница'
+    else:
+        day = 'Суббота'
     cur.execute('INSERT INTO data VALUES(?,?,?,?,?,?)',(data,day,bic,waist,chest,tric))
     base.commit()
 
@@ -35,7 +49,7 @@ def get_workout_record(value, item):
             if day == 'понедельник' or day == 'воскресенье':
                 response = f'{data}  |{day}   |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             elif day == 'вторник' or day == 'четверг' or day == 'пятница' or day == 'суббота':
-                response = f'{data}  |{day}            |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
+                response = f'{data}  |{day}    |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             else:
                 response = f'{data}  |{day}               |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             res_lst.append(response)
@@ -43,6 +57,8 @@ def get_workout_record(value, item):
         for v in res_lst:
             res += v
             res += '\n\n'
+        res += '\n'
+        res += 'Для корректного отображения разверни телефон'
         return res
     else:
         result = 'Данные не найдены'
@@ -55,17 +71,17 @@ def get_workout_all_record(item):
         res = ''
         lst = []
         res_lst = []
-        head = f'     Дата        | День недели  |  бицепс  |  от пояса  |  от груди  |  трицепс  |'
+        head = f'     Дата              | День недели  |  бицепс  |  от пояса  |  от груди  |  трицепс                      |'
         res_lst.append(head)
         for i in data_all:
             lst.append(i)
         while len(lst) > 0:
             data, day, bic, waist, chest, tric = lst[0]
             # в зависимости от дня недели подается соответствующая строка
-            if day == 'понедельник' or day == 'воскресенье':
+            if day == 'Понедельник' or day == 'Воскресенье':
                 response = f'{data}  |{day}   |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            elif day == 'вторник' or day == 'четверг' or day == 'пятница' or day == 'суббота':
-                response = f'{data}  |{day}            |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
+            elif day == 'Вторник' or day == 'Четверг' or day == 'Пятница' or day == 'Суббота':
+                response = f'{data}  |{day}            |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}                     |'
             else:
                 response = f'{data}  |{day}               |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             res_lst.append(response)
@@ -73,6 +89,8 @@ def get_workout_all_record(item):
         for v in res_lst:
             res += v
             res += '\n\n'
+        res += '\n'
+        res += 'Для корректного отображения разверни телефон'
         return res
     else:
         result = 'Данные не найдены'
