@@ -3,7 +3,6 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from bot.ScrepBot import function_screp, screp_iter, lst
 from bot.Weather import get_weather
-import json, string
 import aiogram.utils.markdown as fmt
 from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
@@ -39,6 +38,11 @@ def main():
     @dp.message_handler(commands=['fonda'])
     async def get_keyboard_info_fonda(message: types.Message):
         await message.reply('Выбери нужный раздел', reply_markup = kbf)
+    
+
+    @dp.message_handler(commands=['crypto'])
+    async def send_crypto(message: types.Message):
+        await message.reply('Функционал отсутствует...', reply_markup = kbf)
 
 
     # отработка команды market, отдает текущие цены
