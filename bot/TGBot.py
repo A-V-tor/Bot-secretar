@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.ScrepBot import function_screp, screp_iter, lst
-from bot.Weather import get_weather
+from bot.screpbot import function_screp, screp_iter, lst
+from bot.weather import get_weather
 import aiogram.utils.markdown as fmt
 from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
@@ -102,7 +102,7 @@ def main():
     async def gt_tren(message : types.Message):
         item = message.text.split(',')[0][8:]
         await message.answer('Для корректного отображения разверни телефон')
-        await message.answer(get_workout_all_record(item))
+        await message.answer(get_workout_all_record(item),reply_markup=ReplyKeyboardRemove())
 
     # получение информации журнала тренировок
     @dp.message_handler(commands=['infotren'])

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from bot.TGBot import main
+from bot.tgbot import main
 
 main()
 
