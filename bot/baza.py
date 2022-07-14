@@ -105,12 +105,15 @@ def update_tren(name_column, new_value, rowid):
 
 def get_rowid(value):
     '''выдает rowid id'''
-    data_all = cur.execute('SELECT rowid FROM data WHERE the_date LIKE {}'.format(value)).fetchone()
+    data_all = cur.execute('SELECT rowid FROM data WHERE the_date LIKE {}'.format(value)).fetchall()
     try:
-        row_id = data_all[0]
-        result = f'ID равен {row_id}'
-        return result
+        res_str = f'ID равен: '
+        for i in data_all:
+            for v in i:
+                res_str += str(v)
+                res_str += ' '
+        return res_str
     except:
         result = 'Данные на этот день отсутствуют!\nУточни дату в журнале!'
         return result
-
+#print(get_rowid('2022-07-14'))
