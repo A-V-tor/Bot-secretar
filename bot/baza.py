@@ -31,6 +31,8 @@ def add_tren(data,day,bic,waist,chest,tric):
         day = 'Суббота'
     cur.execute('INSERT INTO data VALUES(?,?,?,?,?,?)',(data,day,bic,waist,chest,tric))
     base.commit()
+    res = 'Данные успешно добавлены!'
+    return res
 
 
 def get_workout_record(value, item):

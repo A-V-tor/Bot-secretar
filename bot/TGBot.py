@@ -3,17 +3,20 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from bot.screpbot import function_screp, screp_iter, lst
 from bot.weather import get_weather
-import aiogram.utils.markdown as fmt # ???
 from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
 from datetime import date
 import calendar
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
 def main():
+    storage = MemoryStorage()
     bot = Bot(token = token_bot)
-    dp = Dispatcher(bot)
+    dp = Dispatcher(bot, storage=storage)
 
     
     # отработка команды start
@@ -77,18 +80,58 @@ def main():
         await message.answer(message_text,reply_markup=kb2)
     
     # добавление тренировки в БД
+
+    class Tren(StatesGroup):
+            bic = State()
+            waist = State()
+            chest = State()
+            tric = State()
+    
     @dp.message_handler(commands=['tren','трен','Трен'])
     async def gt_tren(message : types.Message):
-        data = date.today()
-        day = calendar.day_name[data.weekday()]
-        bic = message.text.split(',')[0]
-        waist = message.text.split(',')[1]
-        chest = message.text.split(',')[2]
-        tric = message.text.split(',')[3]
-        await bot.send_message(message.chat.id,'Данные успешно добавлены!')
-        await message.answer(add_tren(data,day,bic,waist,chest,tric))
+        await Tren().bic.set()
+        await message.reply('Введи кол-во повторов на бицепс:\nЕсли повторов нет введи:  -')
     
-        
+    @dp.message_handler(state=Tren.bic)
+    async def process_biceps(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['bic'] = message.text
+        await Tren.next()
+        await message.reply('Введи кол-во повторов от пояса:\nЕсли повторов нет введи:  -')
+
+    @dp.message_handler(state=Tren.waist)
+    async def process_waist(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['waist'] = message.text
+        await Tren.next()
+        await message.reply('Введи кол-во повторов от груди:\nЕсли повторов нет введи:  -')
+
+    @dp.message_handler(state=Tren.chest)
+    async def process_chest(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['chest'] = message.text
+        await Tren.next()
+        await message.reply('Введи кол-во повторов на трицепс:\nЕсли повторов нет введи:  -')
+    
+    @dp.message_handler(state=Tren.tric)
+    async def process_triceps(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['tric'] = message.text
+            data_ = date.today()
+            day = calendar.day_name[data_.weekday()]
+            bic = data_state['bic']
+            waist = data_state['waist']
+            chest = data_state['chest']
+            tric = data_state['tric']
+        await state.finish()
+        await message.answer(add_tren(data_,day,bic,waist,chest,tric))
+        #await bot.send_message(message.chat.id,'Данные успешно добавлены!')
+            
+            
+
+
+
+
     # получение журнала тренировок
     @dp.message_handler(commands=['needed'])
     async def gt_tren(message : types.Message):
