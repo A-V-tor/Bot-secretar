@@ -105,7 +105,18 @@ def update_tren(name_column, new_value, rowid):
     post = cur.execute('UPDATE data SET {} = {} WHERE rowid={}'.format(name_column, new_value,rowid))
     base.commit()
     message_ = 'Данные обновлены'
-    return message_
+    data_string = cur.execute('SELECT * FROM data WHERE rowid={}'.format(rowid))
+    print(data_string)
+    head = '        Дата        |     День недели|бицепс|от пояса|от груди|трицепс|\n\n'
+    res = ''
+    res += head
+    for i in data_string:
+            for v in i:
+                res += str(v)
+                res += '          '
+    return res
+    #return message_
+    
 
 def get_rowid(value):
     '''выдает rowid id'''

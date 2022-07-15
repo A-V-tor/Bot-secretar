@@ -48,8 +48,9 @@ b3 = KeyboardButton('получить лимит записей')
 b4 = KeyboardButton('назад')
 b5 = KeyboardButton('получить запись')
 b6 = KeyboardButton('получить powid id')
+b7 = KeyboardButton('редактировать журнал')
 kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kbtr.add(b1).insert(b2).add(b3).insert(b5).add(b4).insert(b6)
+kbtr.add(b1).insert(b2).add(b3).insert(b5).insert(b7).add(b4).insert(b6)
 
 # ________________________________________________________________________
 
@@ -67,8 +68,9 @@ b3 = KeyboardButton('biceps')
 b4 = KeyboardButton('waist')
 b5 = KeyboardButton('chest ')
 b6 = KeyboardButton('triceps')
+b7 = KeyboardButton('отмена')
 kbrecord = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kbrecord.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6)
+kbrecord.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6).add(b7)
 
 #клавиатура ввода дня недели
 b1 = KeyboardButton("'Понедельник'")

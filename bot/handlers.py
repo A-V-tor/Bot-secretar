@@ -279,12 +279,47 @@ def main():
 
 
     # редактирование журнала тренировок
+
+    class Update_journal(StatesGroup):
+        name_column = State()
+        new_value = State()
+        rowid = State()
+
     @dp.message_handler(commands=['update'])
-    async def gt_tren(message : types.Message):
-        name_column = message.text.split(',')[0][8:]
-        new_value = message.text.split(',')[1]
-        rowid = message.text.split(',')[2]
-        await message.answer(update_tren(name_column, new_value, rowid))
+    @dp.message_handler(Text(equals=['редактировать журнал']))
+    async def update_journal(message : types.Message):
+        await Update_journal.name_column.set()
+        await message.answer('Введи название стобца: \n\nthe_date - дата\nday - день недели\nbiceps - бицепс\nwaist - пояс\nchest - грудь\ntriceps - трицепс',reply_markup=kbrecord)
+    #async def gt_tren(message : types.Message):
+        #name_column = message.text.split(',')[0][8:]
+        #new_value = message.text.split(',')[1]
+        #rowid = message.text.split(',')[2]
+       # await message.answer(update_tren(name_column, new_value, rowid))
+    
+    @dp.message_handler(state=Update_journal.name_column)
+    async def process_rowid(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['name_column'] = message.text
+        await Update_journal.next()
+        await message.reply('Введи новое значение для записи: ', reply_markup=kbday)
+    
+    @dp.message_handler(state=Update_journal.new_value)
+    async def process_rowid(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['new_value'] = message.text
+        await Update_journal.next()
+        await message.reply('Введи rowid ID записи : ', reply_markup=cancelb)
+    
+    @dp.message_handler(state=Update_journal.rowid)
+    async def process_rowid(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['rowid'] = message.text
+        await state.finish()
+        name_column = data_state['name_column']
+        new_value = data_state['new_value']
+        rowid = data_state['rowid']
+        await message.answer(update_tren(name_column, new_value, rowid),reply_markup=ReplyKeyboardRemove())
+
 
     #........................................информация о работе с журналом........................
 
