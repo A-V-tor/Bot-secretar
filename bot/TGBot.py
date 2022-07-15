@@ -4,7 +4,7 @@ from aiogram.types import ReplyKeyboardRemove
 from bot.screpbot import function_screp, screp_iter, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot
-from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
+from bot.keyboardd import kb, kb2, kbf, kbw, kbtr,cancelb
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
 from datetime import date
 import calendar
@@ -35,7 +35,7 @@ def main():
 
     # отработка команды help
     @dp.message_handler(commands=['help', 'отмена'])
-    @dp.message_handler(Text(equals=['помощь','Помощь','Help','help']))
+    @dp.message_handler(Text(equals=['помощь','Помощь','Help','help','back','Back','назад','Назад']))
     async def send_help(message: types.Message):
         await message.reply('\u2193  Доступные команды бота: \u2193\n\n\
     /fonda - информация о фондовом рынке\n\n\
@@ -56,6 +56,7 @@ def main():
     
     # отработка комаманды 'crypto'
     @dp.message_handler(commands=['crypto'])
+    @dp.message_handler(Text(equals=['Крипта','крипта','Crypto','crypto']))
     async def send_crypto(message: types.Message):
         await message.reply('Функционал отсутствует...', reply_markup = kbf)
 
@@ -115,7 +116,7 @@ def main():
 
     # получение текущей погоды в Липецке
     @dp.message_handler(commands=['Липецк'])
-    @dp.message_handler(Text(equals=['Липецк погода']))
+    @dp.message_handler(Text(equals=['Липецк погода','Липецк']))
     async def send_weath(message: types.Message):
         await message.reply(get_weather(),reply_markup=ReplyKeyboardRemove())
 # _____________________________________________________________________________________________________________
@@ -136,7 +137,7 @@ def main():
     @dp.message_handler(Text(equals=['добавить тренировку','Добавить тренировку']))
     async def gt_tren(message : types.Message):
         await Tren().bic.set()
-        await message.reply('Введи кол-во повторов на бицепс:\nЕсли повторов нет введи:  -')
+        await message.reply('Введи кол-во повторов на бицепс:\nЕсли повторов нет введи:  -\nОтмена - чтобы прекратить заполнение и выйти.', reply_markup=cancelb)
     
     # Добавляем возможность отмены, если пользователь передумал заполнять
     @dp.message_handler(state='*', commands='отмена')
@@ -146,28 +147,28 @@ def main():
         if current_state is None:
             return
         await state.finish()
-        await message.answer('Добавление записи отменено!')
+        await message.answer('Добавление записи отменено!', reply_markup = kb)
     
     @dp.message_handler(state=Tren.bic)
     async def process_biceps(message: types.Message, state: FSMContext):
         async with state.proxy() as data_state:
             data_state['bic'] = message.text
         await Tren.next()
-        await message.reply('Введи кол-во повторов от пояса:\nЕсли повторов нет введи:  -')
+        await message.reply('Введи кол-во повторов от пояса:\nЕсли повторов нет введи:  -', reply_markup=cancelb)
 
     @dp.message_handler(state=Tren.waist)
     async def process_waist(message: types.Message, state: FSMContext):
         async with state.proxy() as data_state:
             data_state['waist'] = message.text
         await Tren.next()
-        await message.reply('Введи кол-во повторов от груди:\nЕсли повторов нет введи:  -')
+        await message.reply('Введи кол-во повторов от груди:\nЕсли повторов нет введи:  -', reply_markup=cancelb)
 
     @dp.message_handler(state=Tren.chest)
     async def process_chest(message: types.Message, state: FSMContext):
         async with state.proxy() as data_state:
             data_state['chest'] = message.text
         await Tren.next()
-        await message.reply('Введи кол-во повторов на трицепс:\nЕсли повторов нет введи:  -')
+        await message.reply('Введи кол-во повторов на трицепс:\nЕсли повторов нет введи:  -', reply_markup=cancelb)
     
     @dp.message_handler(state=Tren.tric)
     async def process_triceps(message: types.Message, state: FSMContext):
@@ -234,6 +235,7 @@ def main():
 
     # получение информации  о работе с журналом тренировок
     @dp.message_handler(commands=['infotren'])
+    @dp.message_handler(Text(equals=['инфо о журнале']))
     async def gt_tren(message : types.Message):
         await message.answer('\
 ПОСМОТРЕТЬ ЗАПИСЬ В ЖУРНАЛЕ ТРЕНИРОВОК:\n\n\
@@ -266,6 +268,7 @@ ___________________________________________\n\n\
 КАВЫЧКИ ОБЯЗАТЕЛЬНЫ',reply_markup = kbtr)
 
 # _____________________________________________________________________________________________________________  
+
 
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
 
