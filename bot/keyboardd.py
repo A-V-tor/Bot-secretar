@@ -40,8 +40,8 @@ kbw.add(b1).add(b2).row(b3)
 
 # ________________________________________________________________________
 # клавиатура журнала тренировок
-b1 = KeyboardButton('/all-jr 10')
-b2 = KeyboardButton('/get-jr day,"вторник"')
+b1 = KeyboardButton('/journal 7')
+b2 = KeyboardButton('/needed day,"Пятница"')
 b3 = KeyboardButton('/infotren')
 b4 = KeyboardButton('/отмена')
 kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)

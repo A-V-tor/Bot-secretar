@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from bot.screpbot import function_screp, screp_iter, lst
 from bot.weather import get_weather
-import aiogram.utils.markdown as fmt
+import aiogram.utils.markdown as fmt # ???
 from bot.tkn import token_bot
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
@@ -90,11 +90,10 @@ def main():
     
         
     # получение журнала тренировок
-    @dp.message_handler(commands=['get-jr'])
+    @dp.message_handler(commands=['needed'])
     async def gt_tren(message : types.Message):
         tabl = message.text.split(',')[0][8:]
         data = message.text.split(',')[1]
-        #await message.answer('Для корректного отображения разверни телефон')
         try:
             await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}')
         except:
@@ -102,10 +101,9 @@ def main():
 
 
     # получение журнала тренировок определенное кол-во записей
-    @dp.message_handler(commands=['all-jr'])
+    @dp.message_handler(commands=['journal']) 
     async def gt_tren(message : types.Message):
-        item = message.text.split(',')[0][8:]
-        #await message.answer('Для корректного отображения разверни телефон')
+        item = message.text.split(',')[0][9:]
         await message.answer(get_workout_all_record(item))
 
     # получение информации журнала тренировок
@@ -113,8 +111,8 @@ def main():
     async def gt_tren(message : types.Message):
         await message.answer('\
 ПОСМОТРЕТЬ ЗАПИСЬ В ЖУРНАЛЕ ТРЕНИРОВОК:\n\n\
-:/get-jr имя таблицы,кол-во повторов\n\
-Пример:/get-jr biceps,23\n\
+:/needed имя столбца,кол-во повторов\n\
+Пример:/needed biceps,23\n\
 Пример выдает журнал тренировок  на бицепс с 23 повторениями.\n\
 Имена таблиц:\n\
         the_data    дата\n        day         день\n        biceps   бицепс\n        waist      пояс\n        chest     грудь\n        triceps  трицепс\n\
@@ -122,23 +120,23 @@ def main():
 \n\n\
 ПОСМОТРЕТЬ ЖУРНАЛ ТРЕНИРОВОК\n\
 Лимиритрованый запрос журнала:\n\
-Команда: /all-jr *, где * - кол-во записей;отдает заданое кол-во записей\n\
-Пример: /all-jr 2\n\n\
+Команда: /journal *, где * - кол-во записей;отдает заданое кол-во записей\n\
+Пример: /jourrnal 2\n\n\
 ___________________________________________\n\n\
 ДОБАВЛЕНИЕ ЗАПИСИ В ЖУРНАЛ:\n\n\
 : /tren бицепс,пояс,грудь,трицепс\n\
 Пример: /tren 23,15,20,12\n\
 При успешном добавлении,будет отображено соответствующее сообщение!\n\
 ___________________________________________\n\n\
-ПОЛУЧЕНИЕ УНИКАЛЬНОГО ID ЗАПИСИ\n\
+ПОЛУЧЕНИЕ УНИКАЛЬНОГО ID ЗАПИСИ\n\n\
 Команда rowid отдает "rowid id" по дате\n\
 Синтаксис: /rowid "2022-07-15"\n\
 КАВЫЧКИ ОБЯЗАТЕЛЬНЫ\n\
 ___________________________________________\n\n\
-РЕДАКТИРОВАНИЕ ЖУРНАЛА\
+РЕДАКТИРОВАНИЕ ЖУРНАЛА\n\n\
 Команда update - вносит изменения в таблицу\n\
+: /update столбец новое-значение rowid_ID\n\
 Синтаксис: /update day, "Среда", 3\n\
-где day-столбец, а Среда - его значение которое будет внесено,последнее значение - уникальное ID\n\
 КАВЫЧКИ ОБЯЗАТЕЛЬНЫ',reply_markup = kbtr)
 
     # редактирование журнала тренировок

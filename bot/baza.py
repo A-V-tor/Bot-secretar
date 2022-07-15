@@ -1,5 +1,6 @@
 import sqlite3
 
+# with sqlite3.connect(r'bot/bot_bz.db') as base: - путь при сборке пакета
 with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
     cur = base.cursor()
 
@@ -39,7 +40,7 @@ def get_workout_record(value, item):
         res = ''
         lst = []
         res_lst = []
-        head = f'     Дата        | День недели  |  бицепс  |  от пояса  |  от груди  |  трицепс  |'
+        head = f'     Дата        |     День недели    |  бицепс  |  от пояса  |  от груди  |  трицепс  |'
         res_lst.append(head)
         for i in data:
             lst.append(i)
@@ -47,9 +48,9 @@ def get_workout_record(value, item):
             data, day, bic, waist, chest, tric = lst[0]
             # в зависимости от дня недели подается соответствующая строка
             if day == 'понедельник' or day == 'воскресенье':
-                response = f'{data}  |{day}   |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
+                response = f'{data}  |{day}   |   {str(bic)}     |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             elif day == 'вторник' or day == 'четверг' or day == 'пятница' or day == 'суббота':
-                response = f'{data}  |{day}    |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
+                response = f'{data}  |{day}    |     {str(bic)}     |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             else:
                 response = f'{data}  |{day}               |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
             res_lst.append(response)
