@@ -229,21 +229,49 @@ def main():
 
 
     # получение журнала тренировок лимитированое кол-во записей(показывается последние)
+
+    class Journal(StatesGroup):
+        item = State()
+    
     @dp.message_handler(commands=['journal'])
-    async def gt_tren(message : types.Message):
-        item = message.text.split(',')[0][9:]
+    @dp.message_handler(Text(equals=['задать лимит записей','получить лимит записей','получить лимит', 'нужен лимит записей','лимит журнала']))
+    async def gt_jornal_limit(message : types.Message):
+        await Journal.item.set()
+        await message.answer('Введи задай нужное кол-во записей для вывода:')
+    
+    @dp.message_handler(state=Journal.item)
+    async def process_journal(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['item'] = message.text
+        await state.finish()
+        item = data_state['item']
         await message.answer(get_workout_all_record(item))
     
+
     # получение журнала с последними 7 записями
     @dp.message_handler(commands=['журнал'])
     @dp.message_handler(Text(equals=['журнал','Журнал']))
-    async def gt_tren(message : types.Message):
+    async def gt_journal(message : types.Message):
         await message.answer(get_workout_all_record(7))
     
     # получение уникального айди
+
+    class Rowid(StatesGroup):
+        value = State()
+    
+
     @dp.message_handler(commands=['rowid'])
-    async def gt_tren(message : types.Message):
-        value = message.text.split(',')[0][7:]
+    @dp.message_handler(Text(equals=['получить ровид ID','получить айди', 'получить powid id']))
+    async def gt_rowid(message : types.Message):
+        await Rowid.value.set()
+        await message.answer('Задай дату записи в формате: "2022-07-14"\n\nКАВЫЧКИ ОБЯЗАТЕЛЬНЫ! ')
+    
+    @dp.message_handler(state=Rowid.value)
+    async def process_rowid(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['value'] = message.text
+        await state.finish()
+        value = data_state['value']
         await bot.send_message(message.chat.id, get_rowid(value))
 
 

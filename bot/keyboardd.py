@@ -44,11 +44,12 @@ kbw.add(b1).add(b2).row(b3)
 # клавиатура журнала тренировок
 b1 = KeyboardButton('журнал')
 b2 = KeyboardButton('добавить тренировку')
-b3 = KeyboardButton('инфо о журнале')
+b3 = KeyboardButton('получить лимит записей')
 b4 = KeyboardButton('назад')
 b5 = KeyboardButton('получить запись')
+b6 = KeyboardButton('получить powid id')
 kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kbtr.add(b1).insert(b2).add(b3).insert(b5).add(b4)
+kbtr.add(b1).insert(b2).add(b3).insert(b5).add(b4).insert(b6)
 
 # ________________________________________________________________________
 
