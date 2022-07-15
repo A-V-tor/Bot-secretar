@@ -1,3 +1,4 @@
+
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
@@ -39,15 +40,43 @@ kbw = ReplyKeyboardMarkup(resize_keyboard=True)
 kbw.add(b1).add(b2).row(b3)
 
 # ________________________________________________________________________
+
 # клавиатура журнала тренировок
 b1 = KeyboardButton('журнал')
 b2 = KeyboardButton('добавить тренировку')
 b3 = KeyboardButton('инфо о журнале')
 b4 = KeyboardButton('назад')
+b5 = KeyboardButton('получить запись')
 kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kbtr.add(b1).insert(b2).add(b3).insert(b4)
+kbtr.add(b1).insert(b2).add(b3).insert(b5).add(b4)
+
 # ________________________________________________________________________
+
+# ситуативные клавиатуры
+
 # кнопка отмены
 b1 = KeyboardButton('отмена')
 cancelb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 cancelb.add(b1)
+
+# клавиатура для отработки выбора столца
+b1 = KeyboardButton('the_date')
+b2 = KeyboardButton('day')
+b3 = KeyboardButton('biceps')
+b4 = KeyboardButton('waist')
+b5 = KeyboardButton('chest ')
+b6 = KeyboardButton('triceps')
+kbrecord = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+kbrecord.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6)
+
+#клавиатура ввода дня недели
+b1 = KeyboardButton("'Понедельник'")
+b2 = KeyboardButton("'Вторник'")
+b3 = KeyboardButton("'Среда'")
+b4 = KeyboardButton("'Четверг'")
+b5 = KeyboardButton("'Пятница'")
+b6 = KeyboardButton("'Суббота'")
+b7 = KeyboardButton("'Воскресенье'")
+b8 = KeyboardButton('отмена')
+kbday = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+kbday.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6).add(b7).insert(b8)

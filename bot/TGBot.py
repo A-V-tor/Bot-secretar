@@ -4,7 +4,7 @@ from aiogram.types import ReplyKeyboardRemove
 from bot.screpbot import function_screp, screp_iter, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot
-from bot.keyboardd import kb, kb2, kbf, kbw, kbtr,cancelb
+from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
 from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid
 from datetime import date
 import calendar
@@ -126,7 +126,7 @@ def main():
 
     # .....................................добавление тренировки в БД...........................................
     class Tren(StatesGroup):
-            '''класс для хранения переменых машины состояний'''
+            '''класс для хранения переменых машины состояний при добавлении записи'''
             bic = State()
             waist = State()
             chest = State()
@@ -191,14 +191,41 @@ def main():
     # .................................вывод записей журнала......................................
 
     # получение журнала тренировок по заданым данным
+
+    class Record(StatesGroup):
+        '''класс для хранения переменых машины состояний при получении записи'''
+        tabl = State()
+        data = State()
+
     @dp.message_handler(commands=['needed'])
+    @dp.message_handler(Text(equals=['Получить запись журнала','получить запись','получить запись журнала', 'нужна запись','запись журнала','Запись журнала']))
     async def gt_tren(message : types.Message):
-        tabl = message.text.split(',')[0][8:]
-        data = message.text.split(',')[1]
+        await Record.tabl.set()
+        await message.reply('Введи название стобца: \n\nthe_date - дата\nday - день недели\nbiceps - бицепс\nwaist - пояс\nchest - грудь\ntriceps - трицепс',reply_markup=kbrecord)
+
+    @dp.message_handler(state=Record.tabl)
+    async def process_biceps(message: types.Message, state: FSMContext):
+        if message.text  in ['the_date','day','biceps','waist','chest','triceps']:
+            async with state.proxy() as data_state:
+                data_state['tabl'] = message.text
+            await Record.next()
+            await message.reply('Укажи нужное значение: \n\nЕсли столбцем выбран day то день недели вводить в кавычках: "Вторник"\n\nФормат даты: 2022-07-14', reply_markup=kbday)
+        else:
+            await message.reply('Неверное значение столбца')
+
+
+    @dp.message_handler(state=Record.data)
+    async def process_triceps(message: types.Message, state: FSMContext):
+        async with state.proxy() as data_state:
+            data_state['data'] = message.text
+            data = data_state['data']
+            tabl = data_state['tabl']
+        await state.finish()
         try:
-            await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}')
+            await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}', reply_markup=kbtr)
         except:
-            await message.answer('Некорректный ввод данных.\nПРОВЕРЬ КАВЫЧКИ\n                \(ツ)/')
+            await message.answer('Некорректный ввод данных.\n\nПРОВЕРЬ КАВЫЧКИ\n                \(ツ)/')
+
 
 
     # получение журнала тренировок лимитированое кол-во записей(показывается последние)

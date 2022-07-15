@@ -4,6 +4,7 @@ import sqlite3
 with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
     cur = base.cursor()
 
+# таблица журнала тренировок
 base.execute('CREATE TABLE IF NOT EXISTS data(\
     the_date,\
     day TEXT,\
