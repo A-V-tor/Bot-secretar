@@ -12,6 +12,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
+from bot.loggs_bot import get_loggs
 
 
 def main():
@@ -359,7 +360,7 @@ ___________________________________________\n\n\
 
 # _____________________________________________________________________________________________________________  
 
-
+    get_loggs()
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
 
 
