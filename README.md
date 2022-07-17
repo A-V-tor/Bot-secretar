@@ -1,5 +1,8 @@
 <h1>Проект личного бота-секретаря.</h1>
 <br>
+<div id="header" align="center">
+<img src='https://media.giphy.com/media/wlR4kWTnwEyY8RwHKM/giphy.gif' width="100"/>
+</div>
 <br>
 <h2>Содержимое модуля tkn.py:</h2>
 
