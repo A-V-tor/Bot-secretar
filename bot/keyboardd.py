@@ -58,11 +58,14 @@ kbtr.add(b1).insert(b2).add(b3).insert(b5).insert(b7).add(b4).insert(b6)
 
 # кнопка отмены
 b1 = KeyboardButton('отмена')
+back_but = KeyboardButton('назад')
 cancelb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-cancelb.add(b1)
+cancelb.add(b1).insert(back_but)
+
+
 
 # клавиатура для отработки выбора столца
-b1 = KeyboardButton('the_date')
+b1 = KeyboardButton('назад')
 b2 = KeyboardButton('day')
 b3 = KeyboardButton('biceps')
 b4 = KeyboardButton('waist')
@@ -70,7 +73,7 @@ b5 = KeyboardButton('chest ')
 b6 = KeyboardButton('triceps')
 b7 = KeyboardButton('отмена')
 kbrecord = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-kbrecord.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6).add(b7)
+kbrecord.add(b2).insert(b3).add(b4).insert(b5).insert(b6).add(b7).insert(b1)
 
 #клавиатура ввода дня недели
 b1 = KeyboardButton("'Понедельник'")
