@@ -4,6 +4,7 @@
 <img src='https://media.giphy.com/media/wlR4kWTnwEyY8RwHKM/giphy.gif' width="100"/>
 </div>
 <br>
+<h2></h2>
 <h2>Содержимое модуля tkn.py:</h2>
 
 <p>h = {' тут лежат заголовки для сайта'}</p>
