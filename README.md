@@ -7,8 +7,8 @@
 <h2>Содержимое модуля tkn.py:</h2>
 
 <p>h = {' тут лежат заголовки для сайта'}</p>
-<p>wbot = 'токен от BotFather'</p>
-<p>token_bot = 'токен с сайта https://openweathermap.org'</p>
+<p>wbot = 'токен с сайта https://openweathermap.org'</p>
+<p>token_bot = 'токен от BotFather'</p>
 <p>USER_ID = id юзера для доступа к боту</p>
 <br>
 
