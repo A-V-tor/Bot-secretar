@@ -1,4 +1,4 @@
-<h1>Проект личного бота-секретаря.</h1>
+<h1>Проект личного бота-секретаря.    <img src='https://img.shields.io/badge/bot secretary-A--V--tor-blue?logo=telegram&logoColor=white&style=flat'/></h1>
 <br>
 <div id="header" align="center">
 <img src='https://media.giphy.com/media/wlR4kWTnwEyY8RwHKM/giphy.gif' width="100"/>
@@ -21,3 +21,5 @@
 | 3 | 2022-07-16 | Четверг | 29 | 15 | 27 | 31 |
 | 4 | 2022-07-17 | Пятница | 25 | 25 | 22 | 26 |
 | 5 | 2022-07-18 | Суббота | 33 | 35 | 27 | 21 |
+
+
