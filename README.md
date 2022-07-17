@@ -3,10 +3,10 @@
 
 Содержимое модуля tkn.pu:
 
-h = {' тут лежат заголовки для сайта'}
-wbot = 'токен от BotFather'
-token_bot = 'токен с сайта https://openweathermap.org'
-USER_ID = id юзера для доступа к боту
+h = {' тут лежат заголовки для сайта'}\n
+wbot = 'токен от BotFather'\n
+token_bot = 'токен с сайта https://openweathermap.org'\n
+USER_ID = id юзера для доступа к боту\n
 
 
 Таблица базы данных для журнала тренировок имеет следущий вид :
