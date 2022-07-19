@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.screpers import function_screp, screp_iter, lst
+from bot.screpers import get_price_market, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
@@ -35,7 +35,7 @@ def main():
     жми /help или воспользуйся клавиатурой,\
     чтобы подать мне команду!', reply_markup = kb)
         else:
-            await message.reply('У Вас нет доступа!!!')
+            await message.reply('У Вас нет доступа!!!\U0001F5CB')
 
     
     # отработка команды help
@@ -81,7 +81,7 @@ def main():
     async def send_fonda(message: types.Message):
         if message.from_user.id == USER_ID:
             await message.answer('Жди, собираю информацию... \u23F3')
-            await message.reply(screp_iter(function_screp(lst)))
+            await message.reply(get_price_market(lst))
             await message.delete()
         else:
             await message.reply('У Вас нет доступа!!!')
@@ -94,7 +94,7 @@ def main():
     @dp.message_handler(Text(equals=['Инфа','инфа','Инфо','инфо']))
     async def info_message(message : types.Message):
         if message.from_user.id == USER_ID:
-            message_text =f'Блок информации об представленых компаниях'
+            message_text =f'Блок информации об представленых компаниях\U0001F4AB'
             await message.answer(message_text,reply_markup=kb2)
         else:
             await message.reply('У Вас нет доступа!!!')
@@ -265,7 +265,7 @@ def main():
         try:
             await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}', reply_markup=kbtr)
         except:
-            await message.answer('Некорректный ввод данных.\n\nПРОВЕРЬ КАВЫЧКИ\n                \(ツ)/')
+            await message.answer('Некорректный ввод данных.\n\nПРОВЕРЬ КАВЫЧКИ\n                ¯\_(ツ)_/¯')
 
 
 

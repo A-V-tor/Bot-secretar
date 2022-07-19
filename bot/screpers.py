@@ -4,52 +4,32 @@ import lxml
 import time
 from bot.tkn import h
 
-# список нужных акий
-lst = ['exelixis-inc', 'beyond-meat-inc', 'micron-tech']
-
-
-def function_screp(item):
-    slov = {}
-    ses = requests.Session()
-
+lst = ['MU?p=MU&.tsrc=fin-srch', 'BYND?p=BYND&.tsrc=fin-srch', 'EXEL?p=EXEL&.tsrc=fin-srch']
+def get_price_market(item):
+    sl = {}
     for i in item:
-        response = ses.get(f'https://ru.investing.com/equities/{i}', headers=h)
-        soup = BeautifulSoup(response.text, 'lxml')
-    # вылавливаю нужные данные
-        name = soup.find('h1').text
-        price = soup.find('span', class_='text-2xl').text
-        ticer = soup.find('h2', class_= 'text-lg font-semibold').text
-        ticer = ticer[6:]
+        url = f'https://finance.yahoo.com/quote/{i}'
+        ses = requests.Session()
 
-        try:
-            change = soup.find('span', class_='instrument-price_change-value__jkuml ml-2.5 text-negative-main').text
-            change_ = soup.find('span', class_='instrument-price_change-percent__19cas ml-2.5 text-negative-main').text
-            sl = f'Компания {name}\nЦена {price}\U0001F4B2\nИзменение цены к закрытию {change}\u0024 {change_}\n\n'
-            slov[ticer] = sl
-            time.sleep(3)
-    # сайт то и дело меняет значение class, делаю исключение
-        except:
-            change = soup.find('span', class_='instrument-price_change-value__jkuml ml-2.5 text-positive-main').text
-            change_ = soup.find('span', class_='instrument-price_change-percent__19cas ml-2.5 text-positive-main').text
-            sl = f'Компания {name}\nЦена {price}\U0001F4B2\nИзменение цены к закрытию {change}\u0024 {change_}\n\n'
-            slov[ticer] = sl
-            time.sleep(3)
-    print('скрапер сработал')
-    # при успешном сценарии формируется словарь с данными
-    return slov
+        respons = ses.get(url, headers=h)
+        soup = BeautifulSoup(respons.text, 'html.parser')
 
-
-def screp_iter(a):
-    '''
-функция вынимает значения из словаря
-и ложит в переменые (пока вручную
-    '''
-    comp1 = a['EXEL']
-    comp2 = a['BYND']
-    comp3 = a['MU']
-    ot = f'{comp1}\n{comp2}\n{comp3}\n'
-    return ot
+        name = soup.find('h1', class_='D(ib) Fz(18px)').text
+        price = soup.find('fin-streamer', class_='Fw(b) Fz(36px) Mb(-4px) D(ib)').text
+        changes = soup.find_all('fin-streamer', class_='Fw(500) Pstart(8px) Fz(24px)')
+        lst_changes = [i.text for i in changes if i.find('span')]
+        changes = lst_changes[0]
+        changes_ = lst_changes[1]
+        sl.update({name: [price, changes, changes_]})
+        time.sleep(1.5)
+    result = ''
+    for i in sl:
+        res = f'{i} цена: {sl[i][0]} \u0024, изменения: {sl[i][1]} \u0024 {sl[i][2]}'
+        result += res
+        result += '\n\n'
+    print('Скрепер сработал!')
+    return result
 
 
 if __name__ == '__main__':
-    print(screp_iter(function_screp(lst)))
+    get_price_market(lst)
