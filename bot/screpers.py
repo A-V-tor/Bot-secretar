@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-import lxml
 import time
 from bot.tkn import h
+import calendar
+from datetime import date, datetime
+
 
 lst = ['MU?p=MU&.tsrc=fin-srch', 'BYND?p=BYND&.tsrc=fin-srch', 'EXEL?p=EXEL&.tsrc=fin-srch']
 def get_price_market(item):
@@ -31,5 +33,34 @@ def get_price_market(item):
     return result
 
 
-if __name__ == '__main__':
-    get_price_market(lst)
+def get_calendar():
+    url = 'https://www.reddit.com/r/wallstreetbets/search?q=flair_name%3A%22Earnings%20Thread%22&restrict_sr=1&sort=new'
+
+    ses = requests.Session()
+    respons = ses.get(url, headers=h)
+    soup = BeautifulSoup(respons.text, 'html.parser')
+    data = soup.find('div', class_='_2MkcR85HDnYngvlVW2gMMa').find('a').get('href')
+
+    down = requests.get(data, stream = True)
+    f = open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'wb') # путь при сборке пакета нужно будет переделать!
+    for i in down.iter_content(1024*1024):
+        f.write(i)
+        f.close()
+
+
+
+def calendar_check():
+    '''каждый понедельник календарь будет обновляться с помощью этой функции'''
+    data_ = date.today()
+    dt1=datetime.strptime('2021-01-29T10:00:04.836603Z', "%Y-%m-%dT%H:%M:%S.%fZ") # нижняя граница обновления календаря
+    dt2=datetime.strptime('2021-01-29T10:01:04.836603Z', "%Y-%m-%dT%H:%M:%S.%fZ") # верхняя граница 
+    now = datetime.now().time() # текущее время
+    calendar.day_name[data_.weekday()]
+    if calendar.day_name[data_.weekday()] == "Monday" and dt1<now<dt2:
+        get_calendar()
+    else:
+        pass
+
+
+
+

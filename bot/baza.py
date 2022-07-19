@@ -28,8 +28,10 @@ def add_tren(data,day,bic,waist,chest,tric):
         day = 'Четверг'
     elif day =='Friday':
         day = 'Пятница'
-    else:
+    elif day == 'Saturday':
         day = 'Суббота'
+    else:
+        day =='-'
     cur.execute('INSERT INTO data VALUES(?,?,?,?,?,?)',(data,day,bic,waist,chest,tric))
     base.commit()
     res = 'Данные успешно добавлены!'

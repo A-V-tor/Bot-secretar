@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.screpers import get_price_market, lst
+from bot.screpers import get_price_market, get_calendar,calendar_check, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
@@ -86,6 +86,19 @@ def main():
         else:
             await message.reply('У Вас нет доступа!!!')
     
+
+    # календарь отчетностей
+    @dp.message_handler(content_types=['photo'])
+    @dp.message_handler(Text(equals=['календарь','Календарь','calendar','Calendar']))
+    async def send_calendar(message : types.Message):
+        if message.from_user.id == USER_ID:
+            #id_photo = message.photo[-1].file_id
+            #print(id_photo)
+            #await message.answer_photo(id_photo)
+            await bot.send_photo(chat_id=message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = f"Попсовые отчетности на текущей недели!")
+
+        else:
+            await message.reply('У Вас нет доступа!!!')
 
     # ....................................информация о компаниях и токенах.........................................
 
@@ -390,7 +403,7 @@ ___________________________________________\n\n\
             await message.reply('У Вас нет доступа!!!')
 
 # _____________________________________________________________________________________________________________  
-
+    calendar_check()
     get_loggs()
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
 
