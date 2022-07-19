@@ -88,15 +88,11 @@ def main():
     
 
     # календарь отчетностей
-    @dp.message_handler(content_types=['photo'])
     @dp.message_handler(Text(equals=['календарь','Календарь','calendar','Calendar']))
     async def send_calendar(message : types.Message):
         if message.from_user.id == USER_ID:
-            #id_photo = message.photo[-1].file_id
-            #print(id_photo)
-            #await message.answer_photo(id_photo)
             await bot.send_photo(chat_id=message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = f"Попсовые отчетности на текущей недели!")
-
+            
         else:
             await message.reply('У Вас нет доступа!!!')
 
