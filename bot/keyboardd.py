@@ -26,9 +26,10 @@ kb2.add(but1, but2).insert(but3)
 b1 = KeyboardButton('инфо')
 b2 = KeyboardButton('рынок')
 b3 = KeyboardButton('назад')
+b4 = KeyboardButton('календарь')
 
 kbf = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True) 
-kbf.add(b1).insert(b2).add(b3)
+kbf.add(b1).insert(b2).add(b3).insert(b4)
 
 # _______________________________________________________________________
 
