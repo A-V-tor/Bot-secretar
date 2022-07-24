@@ -15,7 +15,7 @@ base.execute('CREATE TABLE IF NOT EXISTS data(\
 base.commit()
 
 def add_tren(data,day,bic,waist,chest,tric):
-    '''добавляются нужные данные в бд'''  
+    '''Добавляются нужные данные в бд'''  
     if day == 'Sunday':
         day = 'Воскресенье'
     if day =='Monday':
@@ -39,7 +39,7 @@ def add_tren(data,day,bic,waist,chest,tric):
 
 
 def get_workout_record(value, item):
-    '''функция достает нужные значения и формирует таблицу на возврат'''
+    '''Функция достает нужные значения и формирует таблицу на возврат'''
     data = cur.execute('SELECT * FROM data WHERE {} LIKE {}'.format(value,item)).fetchall()
     if data:
         res = ''
@@ -71,7 +71,7 @@ def get_workout_record(value, item):
         return result
 
 def get_workout_all_record(item):
-    '''функция отдает лимитированое кол-во записей'''
+    '''Функция отдает лимитированое кол-во записей'''
     data_all = cur.execute('SELECT * FROM data ORDER BY rowid DESC LIMIT {} '.format(item)).fetchall()
     if data_all:
         res = ''
@@ -103,7 +103,7 @@ def get_workout_all_record(item):
         return result
 
 def update_tren(name_column, new_value, rowid):
-    '''редактирование данных БД'''
+    '''Редактирование данных БД'''
     post = cur.execute('UPDATE data SET {} = {} WHERE rowid={}'.format(name_column, new_value,rowid))
     base.commit()
     message_ = 'Данные обновлены'
@@ -121,7 +121,7 @@ def update_tren(name_column, new_value, rowid):
     
 
 def get_rowid(value):
-    '''выдает rowid id'''
+    '''Выдает rowid id'''
     data_all = cur.execute('SELECT rowid FROM data WHERE the_date LIKE {}'.format(value)).fetchall()
     try:
         res_str = f'ID равен: '
@@ -133,4 +133,12 @@ def get_rowid(value):
     except:
         result = 'Данные на этот день отсутствуют!\nУточни дату в журнале!'
         return result
-#print(get_rowid('2022-07-14'))
+
+def get_sum_all_record_day(item):
+    '''Суммирует значение столбцев заданого дня'''
+    data = cur.execute('SELECT the_date,day,sum(biceps) as bic,sum(waist) as waist,sum(chest) as chest,sum(triceps) as triceps FROM data WHERE the_date ="{item}"'.format(item=item))
+    for i in data:
+        print('yes')
+        return i
+
+#print(get_sum_all_record_day('2022-07-18'))

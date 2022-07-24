@@ -1,2 +1,21 @@
-22:13:41 - executor - WARNING - _skip_updates: 358 - Updates were skipped successfully.
-13:22:34 - executor - WARNING - _skip_updates: 358 - Updates were skipped successfully.
+21:06:58 - executor - WARNING - _skip_updates: 358 - Updates were skipped successfully.
+21:15:05 - executor - WARNING - _skip_updates: 358 - Updates were skipped successfully.
+21:15:26 - base_events - ERROR - default_exception_handler: 1744 - Task exception was never retrieved
+future: <Task finished name='Task-14' coro=<Dispatcher._process_polling_updates() done, defined at /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=OperationalError('near "2022": syntax error')>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/Users/user/Documents/TG_bot/bot/handlers.py", line 358, in process_rowid
+    await bot.send_message(message.chat.id, get_sum_all_record_day(item))
+  File "/Users/user/Documents/TG_bot/bot/baza.py", line 139, in get_sum_all_record_day
+    data = cur.execute('SELECT the_date,day,sum(biceps) as bic,sum(waist) as waist,sum(chest) as chest,sum(triceps) as triceps FROM data WHERE the_date ="{item}"'.format(item=item))
+sqlite3.OperationalError: near "2022": syntax error
+21:16:56 - executor - WARNING - _skip_updates: 358 - Updates were skipped successfully.
