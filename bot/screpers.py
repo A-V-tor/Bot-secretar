@@ -56,8 +56,9 @@ def calendar_check():
     dt2=datetime.strptime('2021-01-29T10:01:04.836603Z', "%Y-%m-%dT%H:%M:%S.%fZ") # верхняя граница 
     now = datetime.now().time() # текущее время
     calendar.day_name[data_.weekday()]
-    if calendar.day_name[data_.weekday()] == "Monday" and dt1<now<dt2:
+    if calendar.day_name[data_.weekday()] == "Monday":# and now not in [dt1,dt2]:  требуеться корректировка функции https://ru.stackoverflow.com/questions/1378424/Сравнение-дат-времени-в-python
         get_calendar()
+        print('calendar')
     else:
         pass
 

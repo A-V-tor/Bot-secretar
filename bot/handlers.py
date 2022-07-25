@@ -5,7 +5,7 @@ from bot.screpers import get_price_market, get_calendar,calendar_check, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
-from bot.baza import add_tren, get_workout_record, get_workout_all_record, update_tren, get_rowid, get_sum_all_record_day
+from bot.baza import add_tren, get_workout_record, get_workout_limit_record, update_tren, get_rowid, get_sum_all_record_day
 from datetime import date
 import calendar
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -91,7 +91,7 @@ def main():
     @dp.message_handler(Text(equals=['календарь','Календарь','calendar','Calendar']))
     async def send_calendar(message : types.Message):
         if message.from_user.id == USER_ID:
-            await bot.send_photo(chat_id=message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = f"Попсовые отчетности на текущей недели!")
+            await bot.send_photo(chat_id=message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = "<b>Попсовые отчетности на текущей недели!</b>",parse_mode='HTML')
             
         else:
             await message.reply('У Вас нет доступа!!!')
@@ -272,7 +272,7 @@ def main():
             tabl = data_state['tabl']
         await state.finish()
         try:
-            await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}', reply_markup=kbtr)
+            await bot.send_message(message.chat.id,f'{get_workout_record(tabl, data)}', reply_markup=kbtr,parse_mode='HTML')
         except:
             await message.answer('Некорректный ввод данных.\n\nПРОВЕРЬ КАВЫЧКИ\n                ¯\_(ツ)_/¯')
 
@@ -298,15 +298,15 @@ def main():
             data_state['item'] = message.text
         await state.finish()
         item = data_state['item']
-        await message.answer(get_workout_all_record(item))
+        await message.answer(get_workout_limit_record(item),parse_mode='HTML')
     
 
-    # получение журнала с последними 7 записями
+    # получение журнала с записями
     @dp.message_handler(commands=['журнал'])
     @dp.message_handler(Text(equals=['журнал','Журнал']))
     async def gt_journal(message : types.Message):
         if message.from_user.id == USER_ID:
-            await message.answer(get_workout_all_record(7))
+            await message.answer(get_sum_all_record_day(),parse_mode='HTML')
         else:
             await message.reply('У Вас нет доступа!!!')
     
@@ -333,29 +333,6 @@ def main():
         value = data_state['value']
         await bot.send_message(message.chat.id, get_rowid(value))
     
-
-    # подсчет всех подходов одного дня в одну запись
-    class Trei_day(StatesGroup):
-        item=State()
-    
-    @dp.message_handler(commands=['дневная тренировка'])
-    @dp.message_handler(Text(equals=['дневная тренировка','Дневная тренировка']))
-    async def gt_journal(message : types.Message):
-        if message.from_user.id == USER_ID:
-            await Trei_day.item.set()
-            await message.answer('Задай дату записи в формате: 2022-07-19 ')
-            #await message.answer('as',get_sum_all_record_day(item))
-        else:
-            await message.reply('У Вас нет доступа!!!')
-    
-
-    @dp.message_handler(state=Trei_day.item)
-    async def process_rowid(message: types.Message, state: FSMContext):
-        async with state.proxy() as data_state:
-            data_state['item'] = message.text
-        await state.finish()
-        item = data_state['item']
-        await bot.send_message(message.chat.id, get_sum_all_record_day(item))
 
 
     #........................................редактирование журнала................................
@@ -410,7 +387,7 @@ def main():
     async def gt_tren(message : types.Message):
         if message.from_user.id == USER_ID:
             await message.answer('\
-КОМАНДА журнал :\nПоказывает последние 7 записей.\n\
+КОМАНДА журнал :\nПоказывает  записи тренировок.\n\
 ___________________________________________\n\n\
 КОМАНДА добавить тренировку:\nдобавляет новую запись.\n\
 ___________________________________________\n\n\
@@ -423,7 +400,8 @@ ___________________________________________\n\n\
             await message.reply('У Вас нет доступа!!!')
 
 # _____________________________________________________________________________________________________________  
-    calendar_check()
+    
+    #calendar_check()
     get_loggs()
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
 

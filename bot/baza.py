@@ -1,4 +1,6 @@
 import sqlite3
+from prettytable import PrettyTable
+
 
 # with sqlite3.connect(r'bot/bot_bz.db') as base: - путь при сборке пакета
 with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
@@ -42,65 +44,26 @@ def get_workout_record(value, item):
     '''Функция достает нужные значения и формирует таблицу на возврат'''
     data = cur.execute('SELECT * FROM data WHERE {} LIKE {}'.format(value,item)).fetchall()
     if data:
-        res = ''
-        lst = []
-        res_lst = []
-        head = f'     Дата        |     День недели    |  бицепс  |  от пояса  |  от груди  |  трицепс  |'
-        res_lst.append(head)
+        mytable = PrettyTable()
+        mytable.field_names = ["дата", "день", "бицепс", "пояс", "грудь", "трицепс"]
         for i in data:
-            lst.append(i)
-        while len(lst) > 0:
-            data, day, bic, waist, chest, tric = lst[0]
-            # в зависимости от дня недели подается соответствующая строка
-            if day == 'понедельник' or day == 'воскресенье':
-                response = f'{data}  |{day}   |   {str(bic)}     |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            elif day == 'вторник' or day == 'четверг' or day == 'пятница' or day == 'суббота':
-                response = f'{data}  |{day}    |     {str(bic)}     |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            else:
-                response = f'{data}  |{day}               |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            res_lst.append(response)
-            lst = lst[1:]
-        for v in res_lst:
-            res += v
-            res += '\n\n'
-        res += '\n'
-        res += 'Для корректного отображения разверни телефон'
-        return res
+            mytable.add_row(i)
+        return f'<pre>{mytable}</pre>'
     else:
         result = 'Данные не найдены'
         return result
 
-def get_workout_all_record(item):
+
+
+def get_workout_limit_record(item):
     '''Функция отдает лимитированое кол-во записей'''
+    mytable = PrettyTable()
+    mytable.field_names = ["дата", "день", "бицепс", "пояс", "грудь", "трицепс"]
     data_all = cur.execute('SELECT * FROM data ORDER BY rowid DESC LIMIT {} '.format(item)).fetchall()
-    if data_all:
-        res = ''
-        lst = []
-        res_lst = []
-        head = f'     Дата              | День недели  |  бицепс  |  от пояса  |  от груди  |  трицепс                      |'
-        res_lst.append(head)
-        for i in data_all:
-            lst.append(i)
-        while len(lst) > 0:
-            data, day, bic, waist, chest, tric = lst[0]
-            # в зависимости от дня недели подается соответствующая строка
-            if day == 'Понедельник' or day == 'Воскресенье':
-                response = f'{data}  |{day}   |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            elif day == 'Вторник' or day == 'Четверг' or day == 'Пятница' or day == 'Суббота':
-                response = f'{data}  |{day}            |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}                     |'
-            else:
-                response = f'{data}  |{day}               |      {str(bic)}      |       {str(waist)}        |        {str(chest)}       |       {str(tric)}       |'
-            res_lst.append(response)
-            lst = lst[1:]
-        for v in res_lst:
-            res += v
-            res += '\n\n'
-        res += '\n'
-        res += 'Для корректного отображения разверни телефон'
-        return res
-    else:
-        result = 'Данные не найдены'
-        return result
+    for i in data_all:
+        mytable.add_row(i)
+    return f'<pre>{mytable}</pre>'
+
 
 def update_tren(name_column, new_value, rowid):
     '''Редактирование данных БД'''
@@ -117,7 +80,6 @@ def update_tren(name_column, new_value, rowid):
                 res += str(v)
                 res += '          '
     return res
-    #return message_
     
 
 def get_rowid(value):
@@ -134,11 +96,15 @@ def get_rowid(value):
         result = 'Данные на этот день отсутствуют!\nУточни дату в журнале!'
         return result
 
-def get_sum_all_record_day(item):
-    '''Суммирует значение столбцев заданого дня'''
-    data = cur.execute('SELECT the_date,day,sum(biceps) as bic,sum(waist) as waist,sum(chest) as chest,sum(triceps) as triceps FROM data WHERE the_date ="{item}"'.format(item=item))
-    for i in data:
-        print('yes')
-        return i
 
-#print(get_sum_all_record_day('2022-07-18'))
+def get_sum_all_record_day():
+    '''Суммирует значение всех записей в рамках одного дня'''
+    mytable = PrettyTable()
+    mytable.field_names = ["дата", "день", "бицепс", "пояс", "грудь", "трицепс"]
+    data_the_date = cur.execute('SELECT the_date FROM data GROUP BY the_date')
+    item = [v[0] for v in[i for i in data_the_date]] # список дат
+    for i in item:
+        data = cur.execute('SELECT the_date,day,sum(biceps),sum(waist),sum(chest),sum(triceps) FROM data WHERE the_date ="{item}"'.format(item=i))
+        for value in data:
+            mytable.add_row(value)
+    return f'<pre>{mytable}</pre>'
