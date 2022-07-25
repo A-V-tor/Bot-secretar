@@ -1,14 +1,16 @@
+import time
+import calendar
 import requests
 from bs4 import BeautifulSoup
-import time
-from bot.tkn import h
-import calendar
+from prettytable import PrettyTable
 from datetime import date, datetime
+from bot.tkn import h
 
 
 lst = ['MU?p=MU&.tsrc=fin-srch', 'BYND?p=BYND&.tsrc=fin-srch', 'EXEL?p=EXEL&.tsrc=fin-srch']
 def get_price_market(item):
-    sl = {}
+    mytable = PrettyTable()
+    mytable.field_names = ["компания", "цена", "изменение $", "изменение %"]
     for i in item:
         url = f'https://finance.yahoo.com/quote/{i}'
         ses = requests.Session()
@@ -22,16 +24,12 @@ def get_price_market(item):
         lst_changes = [i.text for i in changes if i.find('span')]
         changes = lst_changes[0]
         changes_ = lst_changes[1]
-        sl.update({name: [price, changes, changes_]})
+        lst=[]
+        lst.extend([name,price,changes,changes_])
+        mytable.add_row(lst)
         time.sleep(1.5)
-    result = ''
-    for i in sl:
-        res = f'{i} цена: {sl[i][0]} \u0024, изменения: {sl[i][1]} \u0024 {sl[i][2]}'
-        result += res
-        result += '\n\n'
     print('Скрепер сработал!')
-    return result
-
+    return f'<pre>{mytable}</pre>'
 
 def get_calendar():
     url = 'https://www.reddit.com/r/wallstreetbets/search?q=flair_name%3A%22Earnings%20Thread%22&restrict_sr=1&sort=new'

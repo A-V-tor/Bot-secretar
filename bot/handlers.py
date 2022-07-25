@@ -81,7 +81,7 @@ def main():
     async def send_fonda(message: types.Message):
         if message.from_user.id == USER_ID:
             await message.answer('Жди, собираю информацию... \u23F3')
-            await message.reply(get_price_market(lst))
+            await message.reply(get_price_market(lst), parse_mode='HTML')
             await message.delete()
         else:
             await message.reply('У Вас нет доступа!!!')
