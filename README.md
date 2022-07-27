@@ -23,4 +23,7 @@
 | 4 | 2022-07-17 | Пятница | 25 | 25 | 22 | 26 |
 | 5 | 2022-07-18 | Суббота | 33 | 35 | 27 | 21 |
 
+</br>
+![Image alt](https://github.com/A-V-tor/Bot-secretar/raw/master/weatch)
+
 
