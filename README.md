@@ -31,6 +31,6 @@
 <img src="https://github.com/A-V-tor/Bot-secretar/blob/main/market.png">
 </br>
 Клавиатура журнала.
-<img src="https://github.com/A-V-tor/Bot-secretar/blob/main/keyboard.png">
+<img src="https://github.com/A-V-tor/Bot-secretar/blob/main/keyj.png">
 
 
