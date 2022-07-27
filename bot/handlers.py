@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+from email import message
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
 from bot.screpers import get_price_market, get_calendar,calendar_check, lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
-from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
+from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday, urlkb
 from bot.baza import add_tren, get_workout_record, get_workout_limit_record, update_tren, get_rowid, get_sum_all_record_day
 from datetime import date
 import calendar
@@ -36,7 +37,7 @@ def main():
     чтобы подать мне команду!', reply_markup = kb)
         else:
             await message.reply('У Вас нет доступа!!!\U0001F5CB')
-
+    
     
     # отработка команды help
     @dp.message_handler(commands=['help'])
@@ -56,57 +57,46 @@ def main():
 
                                         # БЛОК ФИНАНСОВ
 
-    # отработка команды 'fonda'
-    @dp.message_handler(commands=['fonda'])
-    @dp.message_handler(Text(equals=['Фонда','фонда','fonda','Fonda']))
-    async def get_keyboard_info_fonda(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Выбери нужный раздел', reply_markup = kbf)
-        else:
-            await message.reply('У Вас нет доступа!!!')
-    
+    # отработка команды 'fonda' 
+    @dp.callback_query_handler(text='fonda')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer('Выбери нужный раздел', reply_markup = kbf)
+        
     # отработка комаманды 'crypto'
-    @dp.message_handler(commands=['crypto'])
-    @dp.message_handler(Text(equals=['Крипта','крипта','Crypto','crypto']))
-    async def send_crypto(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Функционал отсутствует...', reply_markup = kbf)
-        else:
-            await message.reply('У Вас нет доступа!!!')
+    @dp.callback_query_handler(text='crypto')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.answer('Функционал отсутствует...', reply_markup = kbf)
 
 
     # отработка команды market, отдает текущие цены
-    @dp.message_handler(commands=['market'])
-    @dp.message_handler(Text(equals=['market','Market','Рынок','рынок']))
-    async def send_fonda(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.answer('Жди, собираю информацию... \u23F3')
-            await message.reply(get_price_market(lst), parse_mode='HTML')
-            await message.delete()
-        else:
-            await message.reply('У Вас нет доступа!!!')
+    @dp.callback_query_handler(text='market')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer('Жди, собираю информацию... \u23F3')
+        await callback.message.answer(get_price_market(lst), parse_mode='HTML')
     
 
     # календарь отчетностей
-    @dp.message_handler(Text(equals=['календарь','Календарь','calendar','Calendar']))
-    async def send_calendar(message : types.Message):
-        if message.from_user.id == USER_ID:
-            await bot.send_photo(chat_id=message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = "<b>Попсовые отчетности на текущей недели!</b>",parse_mode='HTML')
-            
-        else:
-            await message.reply('У Вас нет доступа!!!')
+    @dp.callback_query_handler(text='calendar')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.bot.send_photo(chat_id=callback.message.chat.id, photo=open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'rb'),caption = "<b>Попсовые отчетности на текущей недели!</b>",parse_mode='HTML')  
+
+    @dp.callback_query_handler(text='back')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer('help',reply_markup = kb)
+        
 
     # ....................................информация о компаниях и токенах.........................................
 
-    # отработка инфы о компаниях
-    @dp.message_handler(commands=['info'])
-    @dp.message_handler(Text(equals=['Инфа','инфа','Инфо','инфо']))
-    async def info_message(message : types.Message):
-        if message.from_user.id == USER_ID:
-            message_text =f'Блок информации об представленых компаниях\U0001F4AB'
-            await message.answer(message_text,reply_markup=kb2)
-        else:
-            await message.reply('У Вас нет доступа!!!')
+    # отработка инфы о компаниях    
+    @dp.callback_query_handler(text='info')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer()
+        await callback.message.answer('Блок информации об представленых компаниях\U0001F4AB', reply_markup=kb2)
     
 
     #  инфо-заглушки
@@ -141,19 +131,16 @@ def main():
                                         # БЛОК ПОГОДЫ
 
     # получение текущей погоды по координатам
-    @dp.message_handler(commands=['weath'])
-    @dp.message_handler(Text(equals=['погода','Погода','Weath','weatch']))
-    async def send_weath(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Отправьте свои координаты для определения погоды в вашем районе', reply_markup=kbw)
-            @dp.message_handler(content_types=['location'])
-            async def location(message: types.Message):
-                lat = message.location.latitude
-                lon = message.location.longitude
-                await message.reply(f'широта:{lat}, долгота:{lon}')
-                await message.reply(get_weather(lat, lon), reply_markup=ReplyKeyboardRemove())
-        else:
-            await message.reply('У Вас нет доступа!!!')
+    @dp.callback_query_handler(text='weatch')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.answer('Отправьте свои координаты для определения погоды в вашем районе',reply_markup = kbw)
+        @dp.message_handler(content_types=['location'])
+        async def location(message: types.Message):
+            lat = message.location.latitude
+            lon = message.location.longitude
+            await message.reply(f'широта:{lat}, долгота:{lon}')
+            await message.reply(get_weather(lat, lon), reply_markup=ReplyKeyboardRemove())
+    
 
     # получение текущей погоды в Липецке
     @dp.message_handler(commands=['Липецк'])
@@ -230,7 +217,12 @@ def main():
         await state.finish()
         await message.answer(add_tren(data_,day,bic,waist,chest,tric))
     
-
+            
+    @dp.callback_query_handler(text='tren',state=None)
+    async def in_test(callback: types.CallbackQuery):
+        await Tren.bic.set()
+        await callback.message.answer('Введи кол-во повторов на бицепс:\nЕсли повторов нет введи:  -\nОтмена - чтобы прекратить заполнение и выйти.', reply_markup=cancelb)
+        
       
     
     # ............................................................................................    
@@ -277,9 +269,13 @@ def main():
             await message.answer('Некорректный ввод данных.\n\nПРОВЕРЬ КАВЫЧКИ\n                ¯\_(ツ)_/¯')
 
 
+    @dp.callback_query_handler(text='needed',state=None)
+    async def in_test(callback: types.CallbackQuery):
+        await Record.tabl.set()
+        await callback.message.answer('Введи название стобца: \n\nthe_date - дата\nday - день недели\nbiceps - бицепс\nwaist - пояс\nchest - грудь\ntriceps - трицепс',reply_markup=kbrecord)
+
 
     # получение журнала тренировок лимитированое кол-во записей(показывается последние)
-
     class Journal(StatesGroup):
         item = State()
     
@@ -300,15 +296,27 @@ def main():
         item = data_state['item']
         await message.answer(get_workout_limit_record(item),parse_mode='HTML')
     
+    @dp.callback_query_handler(text='journal',state=None)
+    async def in_test(callback: types.CallbackQuery):
+        await Journal.item.set()
+        await callback.message.answer('Введи задай нужное кол-во записей для вывода:')
+    
+    
 
     # получение журнала с записями
     @dp.message_handler(commands=['журнал'])
     @dp.message_handler(Text(equals=['журнал','Журнал']))
     async def gt_journal(message : types.Message):
         if message.from_user.id == USER_ID:
-            await message.answer(get_sum_all_record_day(),parse_mode='HTML')
+            await bot.send_message(message.chat.id, get_sum_all_record_day(),parse_mode='HTML',reply_markup='')
         else:
             await message.reply('У Вас нет доступа!!!')
+    
+    @dp.callback_query_handler(text='журнал')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer('журнал тренировок')
+        await callback.message.bot.send_message(callback.message.chat.id, get_sum_all_record_day(),parse_mode='HTML',reply_markup='')
     
     # получение уникального айди
 
@@ -332,6 +340,11 @@ def main():
         await state.finish()
         value = data_state['value']
         await bot.send_message(message.chat.id, get_rowid(value))
+    
+    @dp.callback_query_handler(text='rowid',state=None)
+    async def in_test(callback: types.CallbackQuery):
+        await Rowid.value.set()
+        await callback.message.answer('Задай дату записи в формате: "2022-07-14"\n\nКАВЫЧКИ ОБЯЗАТЕЛЬНЫ! ')
     
 
 
@@ -377,16 +390,20 @@ def main():
         new_value = data_state['new_value']
         rowid = data_state['rowid']
         await message.reply(update_tren(name_column, new_value, rowid))
+    
+    @dp.callback_query_handler(text='update',state=None)
+    async def in_test(callback: types.CallbackQuery):
+        await Update_journal.name_column.set()
+        await callback.message.answer('Введи название стобца: \n\nday - день недели\nbiceps - бицепс\nwaist - пояс\nchest - грудь\ntriceps - трицепс',reply_markup=kbrecord)
 
 
     #........................................информация о работе с журналом........................
 
     # получение информации  о работе с журналом тренировок
-    @dp.message_handler(commands=['infotren'])
-    @dp.message_handler(Text(equals=['инфо о журнале']))
-    async def gt_tren(message : types.Message):
-        if message.from_user.id == USER_ID:
-            await message.answer('\
+    @dp.callback_query_handler(text='infotren')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.delete()
+        await callback.message.answer('\
 КОМАНДА журнал :\nПоказывает  записи тренировок.\n\
 ___________________________________________\n\n\
 КОМАНДА добавить тренировку:\nдобавляет новую запись.\n\
@@ -396,11 +413,8 @@ ___________________________________________\n\n\
 КОМАНДА получить запись:\nВыдает нужную запись.\n\
 ___________________________________________\n\n\
 КОМАНДА редактировать журнал: Редактирование нужной записи.',reply_markup = kbtr)
-        else:
-            await message.reply('У Вас нет доступа!!!')
 
-# _____________________________________________________________________________________________________________  
-    
+# _____________________________________________________________________________________________________________      
     #calendar_check()
     get_loggs()
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
