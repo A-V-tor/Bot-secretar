@@ -24,6 +24,7 @@
 | 5 | 2022-07-18 | Суббота | 33 | 35 | 27 | 21 |
 
 </br>
-![Image alt](https://github.com/A-V-tor/Bot-secretar/raw/master/weatch.png)
+Ответ по запросу погоды.
+<img src="https://github.com/A-V-tor/Bot-secretar/blob/main/weatch.png">
 
 
