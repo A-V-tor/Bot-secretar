@@ -12,12 +12,12 @@ kb.add(b1).insert(b2).add(b3).insert(b4)
 # ________________________________________________________________________
 
 # клавиатура информации о компаниях
-but1 = KeyboardButton('/BYND')
-but2 = KeyboardButton('/EXEL')
-but3 = KeyboardButton('/MU')
-
-kb2 = ReplyKeyboardMarkup(resize_keyboard=True)
-kb2.add(but1, but2).insert(but3)
+but1 = InlineKeyboardButton(text='MU', url='https://marketinfo.pro/kompanii-usa/micron_technology_inc_mu')
+but2 = InlineKeyboardButton(text='BYND', url='https://marketinfo.pro/kompanii-usa/beyond_meat_inc_bynd')
+but3 = InlineKeyboardButton(text='EXEL', url='https://marketinfo.pro/kompanii-usa/exelixis_inc_exel')
+but4 = InlineKeyboardButton(text='назад', callback_data='back')
+kb2 = InlineKeyboardMarkup()
+kb2.add(but1, but2).insert(but3).add(but4)
 
 # ________________________________________________________________________
 
@@ -40,24 +40,15 @@ kbw.add(b1).add(b2).row(b3)
 # ________________________________________________________________________
 
 # клавиатура журнала тренировок
-#b1 = KeyboardButton('журнал')
-#b2 = KeyboardButton('добавить тренировку')
-#b3 = KeyboardButton('получить лимит записей')
-#b4 = KeyboardButton('назад')
-#b5 = KeyboardButton('получить запись')
-##b6 = KeyboardButton('получить powid id')
-#b7 = KeyboardButton('редактировать журнал')
-#kbtr = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-#kbtr.add(b1).insert(b2).add(b3).insert(b5).insert(b7).add(b4).insert(b6)
-
 kbtr = InlineKeyboardMarkup()
 b1 = InlineKeyboardButton(text='журнал', callback_data='журнал')
-b2 = InlineKeyboardButton(text='получить лимит записей', callback_data='journal')
+b2 = InlineKeyboardButton(text='лимит записей', callback_data='journal')
 b3 = InlineKeyboardButton(text='получить запись', callback_data='needed')
 b4 = InlineKeyboardButton(text='получить powid id', callback_data='rowid')
 b5 = InlineKeyboardButton(text='редактировать журнал',callback_data='update')
 b6 = InlineKeyboardButton(text='добавить тренировку', callback_data='tren')
-kbtr.add(b1).insert(b2).insert(b3).add(b4).insert(b5).add(b6)
+b7 = InlineKeyboardButton(text='назад', callback_data='back')
+kbtr.add(b1).add(b2).insert(b3).add(b4).insert(b5).add(b6).add(b7)
 # ________________________________________________________________________
 
 # ситуативные клавиатуры
@@ -67,7 +58,6 @@ b1 = KeyboardButton('отмена')
 back_but = KeyboardButton('назад')
 cancelb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 cancelb.add(b1).insert(back_but)
-
 
 
 # клавиатура для отработки выбора столбца
@@ -93,7 +83,3 @@ b8 = KeyboardButton('отмена')
 kbday = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kbday.add(b1).insert(b2).insert(b3).add(b4).insert(b5).insert(b6).add(b7).insert(b8)
 
-urlkb = InlineKeyboardMarkup()
-urlbut = InlineKeyboardButton(text='button',url = 'https://mastergroosha.github.io/telegram-tutorial-2/buttons/')
-inbut = InlineKeyboardButton(text = 'рынок', callback_data='рынок')
-urlkb.add(urlbut).insert(inbut)

@@ -61,5 +61,33 @@ def calendar_check():
         pass
 
 
+def get_price_crypto():
+    url = 'https://bitinfocharts.com/ru/crypto-kurs/'
+    respons = requests.get(url,headers=h)
+    soup = BeautifulSoup(respons.text, 'lxml')
+    data = soup.find_all('div', class_='i_div')
 
+    lst_name = [i.next_element for i in data] # список названий монет
+    lst_name = lst_name[:11]
+    data = soup.find_all('a', class_='conv_cur')
+
+    lst_price =[i.text.replace(',',' ') for i in data] # список цен
+    lst_price = lst_price[:11]
+
+    changes = soup.find_all('span', class_='text-success')
+    data_changes = [i.find('b') for i in changes]
+    lst_changes = [i.text for i in data_changes]
+    lst_changes = lst_changes[:11] # список измениний цен
+
+    mytable = PrettyTable()
+    mytable.field_names = ["монета", "цена", 'изменение']
+    lst = []
+    lst.append(lst_name[0])
+    lst.append(lst_price[0])
+    lst_price = [i.replace(' ','') for i in lst_price]
+    lst_name = [i.replace("'",'') for i in lst_name]
+    data = zip(lst_name, lst_price, lst_changes)
+    for i in data:
+        mytable.add_row(i)
+    return f'<pre>{mytable}</pre>'
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
+from ast import Delete
 from email import message
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.screpers import get_price_market, get_calendar,calendar_check, lst
+from bot.screpers import get_price_market, get_calendar,calendar_check, get_price_crypto,lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
-from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday, urlkb
+from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
 from bot.baza import add_tren, get_workout_record, get_workout_limit_record, update_tren, get_rowid, get_sum_all_record_day
 from datetime import date
 import calendar
@@ -45,13 +46,19 @@ def main():
     async def send_help(message: types.Message):
         if message.from_user.id == USER_ID:
             await message.reply('\u2193  Доступные команды бота: \u2193\n\n\
-    /fonda - информация о фондовом рынке\n\n\
-    /crypto - информация по криптовалютам\n\n\
-    /weath - информация о погоде\n\n\
-    /infotren -  информация о ведении журнала тренировок', reply_markup = kb)
+    фонда - информация о фондовом рынке\n\n\
+    крипта - информация по криптовалютам\n\n\
+    погода - информация о погоде\n\n\
+    ведение журнала тренировок -  информация о ведении журнала тренировок', reply_markup = kb)
             await message.delete()
         else:
             await message.reply('У Вас нет доступа!!!')
+        
+    @dp.message_handler(commands=['delit'])
+    @dp.message_handler(Text(equals=['delkey','делит'],ignore_case=True))
+    async def sa(message: types.Message):
+        await message.answer('Ok',reply_markup=ReplyKeyboardRemove())
+        
 # _____________________________________________________________________________________________________________
 
 
@@ -63,11 +70,6 @@ def main():
         await callback.message.delete()
         await callback.message.answer('Выбери нужный раздел', reply_markup = kbf)
         
-    # отработка комаманды 'crypto'
-    @dp.callback_query_handler(text='crypto')
-    async def in_test(callback: types.CallbackQuery):
-        await callback.message.answer('Функционал отсутствует...', reply_markup = kbf)
-
 
     # отработка команды market, отдает текущие цены
     @dp.callback_query_handler(text='market')
@@ -94,37 +96,16 @@ def main():
     # отработка инфы о компаниях    
     @dp.callback_query_handler(text='info')
     async def in_test(callback: types.CallbackQuery):
-        await callback.message.delete()
-        await callback.message.answer()
         await callback.message.answer('Блок информации об представленых компаниях\U0001F4AB', reply_markup=kb2)
     
+    # отработка комаманды 'crypto'
+    @dp.callback_query_handler(text='crypto')
+    async def in_test(callback: types.CallbackQuery):
+        await callback.message.answer('Жди, собираю информацию... \u23F3')
+        await callback.message.answer(get_price_crypto(), parse_mode='HTML')
+    
 
-    #  инфо-заглушки
-    @dp.message_handler(commands=['BYND'])
-    async def info_BYND(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Beyond meat\nКомпания специализирующаяся на производстве растительного мяса.\n\
-    В качестве сырья используется горох.\nВ 2019 компания вышла  на IPO с 25$ за акцию.\n\
-    На территории США продукция Beyon meat используется в продуктах McDonald\'s и Burger King', reply_markup=ReplyKeyboardRemove())
-        else:
-            await message.reply('У Вас нет доступа!!!')
 
-    @dp.message_handler(commands=['EXEL'])
-    async def info_EXEL(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Exelixis, Inc\nБиотех, специализирующийся на разработке лекарственых\n\
-    препаратов от различных форм рака.\nОсновная молекула компании - кабозантиниб.\n\
-    Сотрудничает со многими фармацептическими "монстрами".', reply_markup=ReplyKeyboardRemove())
-        else:
-            await message.reply('У Вас нет доступа!!!')
-
-    @dp.message_handler(commands=['MU'])
-    async def info_MU(message: types.Message):
-        if message.from_user.id == USER_ID:
-            await message.reply('Micron Technology, Inc\nИзготавливает полуппроводники(входит в ТОП 5 компаний)\
-    , основная часть которых - различные виды памяти.', reply_markup=ReplyKeyboardRemove())
-        else:
-            await message.reply('У Вас нет доступа!!!')
 # _____________________________________________________________________________________________________________
 
 
@@ -367,6 +348,7 @@ def main():
         else:
             await message.reply('У Вас нет доступа!!!')
 
+
     @dp.message_handler(state=Update_journal.name_column)
     async def process_rowid(message: types.Message, state: FSMContext):
         async with state.proxy() as data_state:
@@ -396,6 +378,8 @@ def main():
         await Update_journal.name_column.set()
         await callback.message.answer('Введи название стобца: \n\nday - день недели\nbiceps - бицепс\nwaist - пояс\nchest - грудь\ntriceps - трицепс',reply_markup=kbrecord)
 
+        
+
 
     #........................................информация о работе с журналом........................
 
@@ -408,14 +392,13 @@ def main():
 ___________________________________________\n\n\
 КОМАНДА добавить тренировку:\nдобавляет новую запись.\n\
 ___________________________________________\n\n\
-КОМАНДА получить лимит записей:\nПоказывает заданное кол-во записей от начала ведения журнала.\n\
+КОМАНДА лимит записей:\nПоказывает заданное кол-во записей от начала ведения журнала.\n\
 ___________________________________________\n\n\
 КОМАНДА получить запись:\nВыдает нужную запись.\n\
 ___________________________________________\n\n\
 КОМАНДА редактировать журнал: Редактирование нужной записи.',reply_markup = kbtr)
-
 # _____________________________________________________________________________________________________________      
-    #calendar_check()
+    calendar_check()
     get_loggs()
     executor.start_polling(dp, skip_updates=True, on_startup=print('Бот запущен'))
 
