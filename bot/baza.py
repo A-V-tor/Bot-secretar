@@ -2,9 +2,10 @@ import sqlite3
 from prettytable import PrettyTable
 
 
-# with sqlite3.connect(r'bot/bot_bz.db') as base: - путь при сборке пакета
-with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
+with sqlite3.connect(r'bot/bot_bz.db') as base: #- путь при сборке пакета
     cur = base.cursor()
+#with sqlite3.connect(r'Documents/TG_bot/bot/bot_bz.db') as base:
+    #cur = base.cursor()
 
 # таблица журнала тренировок
 base.execute('CREATE TABLE IF NOT EXISTS data(\

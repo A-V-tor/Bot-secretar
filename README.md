@@ -32,5 +32,12 @@
 </br>
 Клавиатура журнала.
 <img src="https://github.com/A-V-tor/Bot-secretar/blob/main/keyj.png">
+</br>
+<h2>Локальный запуск бота:</h2>
+    - установка зависимостей: make install
+    - сборка пакета : make buld
+    - установка пакета: make ackage-install
+Если все прошло успешно, то командой: bot-secretar
+            бот начнет работу на локальной машине.
 
 
