@@ -41,4 +41,6 @@
 
 установка пакета: ```make package-install```
 
+Запуск бота: ```bot-secretar```
+
 
