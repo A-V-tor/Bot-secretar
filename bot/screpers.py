@@ -50,13 +50,13 @@ def get_calendar():
 def calendar_check():
     '''каждый понедельник календарь будет обновляться с помощью этой функции'''
     data_ = date.today()
-    dt1=datetime.strptime('2021-01-29T10:00:04.836603Z', "%Y-%m-%dT%H:%M:%S.%fZ") # нижняя граница обновления календаря
-    dt2=datetime.strptime('2021-01-29T10:01:04.836603Z', "%Y-%m-%dT%H:%M:%S.%fZ") # верхняя граница 
+    dt1=datetime.strptime('10::00::05', '%H::%M::%S').time() # нижняя граница обновления календаря
+    dt2=datetime.strptime('10::03::00', '%H::%M::%S').time() # верхняя граница 
     now = datetime.now().time() # текущее время
     calendar.day_name[data_.weekday()]
-    if calendar.day_name[data_.weekday()] == "Monday":# and now not in [dt1,dt2]:  требуеться корректировка функции https://ru.stackoverflow.com/questions/1378424/Сравнение-дат-времени-в-python
+    if calendar.day_name[data_.weekday()] == "Monday" and dt1<now<dt2:
         get_calendar()
-        print('calendar')
+        time.sleep(60)
     else:
         pass
 
