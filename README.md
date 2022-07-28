@@ -34,10 +34,10 @@
 <img src="https://github.com/A-V-tor/Bot-secretar/blob/main/keyj.png">
 </br>
 <h2>Локальный запуск бота:</h2>
-    - установка зависимостей: make install
-    - сборка пакета : make buld
-    - установка пакета: make ackage-install
-Если все прошло успешно, то командой: bot-secretar
-            бот начнет работу на локальной машине.
+    <p>- установка зависимостей: make install</p>
+    <p>- сборка пакета : make buld</p>
+   <p> - установка пакета: make ackage-install</p>
+<p>Если все прошло успешно, то командой: bot-secretar</p>
+            <p>бот начнет работу на локальной машине.</p>
 
 
