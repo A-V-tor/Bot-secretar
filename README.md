@@ -39,7 +39,7 @@
 
 установка зависимостей:```make install```
 
-сборка пакета:```make buld```
+сборка пакета:```make build```
 
 установка пакета: ```make package-install```
 
