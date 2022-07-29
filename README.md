@@ -25,7 +25,7 @@
 
 </br>
 Ответ по запросу погоды.
-<img src="https://github.com/A-V-tor/Bot-secretar/blob/main/weatch.png">
+<img src="https://github.com/A-V-tor/Bot-secretar/blob/main/weat.png">
 </br>
 Таблица по запросу цен акций.
 <img src="https://github.com/A-V-tor/Bot-secretar/blob/main/market.png">
