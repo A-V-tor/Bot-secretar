@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-from ast import Delete
-from email import message
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.screpers import get_price_market, get_calendar,calendar_check, get_price_crypto,lst
+from bot.screpers import get_price_market, calendar_check, get_price_crypto,lst
 from bot.weather import get_weather
 from bot.tkn import token_bot, USER_ID
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
