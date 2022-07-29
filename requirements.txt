@@ -1,0 +1,5 @@
+lxml 
+requests
+aiogram
+beautifulsoup4
+prettytable
