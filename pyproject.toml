@@ -3,7 +3,7 @@ packages = [
     {include = 'bot'},
 ]
 name = "bot-secretar"
-version = "0.7.0"
+version = "1.0.0"
 description = "telegram bot"
 authors = ["Артем Торшин <avtorca4@gmail.com>"]
 
