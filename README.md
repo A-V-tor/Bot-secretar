@@ -45,4 +45,21 @@
 
 Запуск бота: ```bot-secretar```
 
+# Deploy на Heroku:
+
+1)```heroku login```
+
+2)```git clone git@github.com:A-V-tor/Bot-secretar.git```
+
+3)Нужно создать и наполнить файл tkn.py
+
+4)```git add .```
+
+5)```git commin -m'release'```
+
+6)```git push heroku main``` 
+
+7)```heroku ps:scale worker=1```
+
+Для просмотра логов в случае неполадок: ```heroku logs ```
 
