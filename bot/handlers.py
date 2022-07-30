@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardRemove
-from bot.screpers import get_price_market, calendar_check, get_price_crypto,lst, get_weather
-#from bot.weather import get_weather
+from bot.screpers import get_price_market, calendar_check, get_price_crypto,lst
+from bot.weather_ import get_weather
 from bot.tkn import token_bot, USER_ID
 from bot.keyboardd import kb, kb2, kbf, kbw, kbtr, cancelb, kbrecord, kbday
 from bot.baza import add_tren, get_workout_record, get_workout_limit_record, update_tren, get_rowid, get_sum_all_record_day
