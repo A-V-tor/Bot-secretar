@@ -40,7 +40,7 @@ def get_calendar():
     data = soup.find('div', class_='_2MkcR85HDnYngvlVW2gMMa').find('a').get('href')
 
     down = requests.get(data, stream = True)
-    f = open('/Users/user/Documents/TG_bot/bot/image/calendar.jpg', 'wb') # путь при сборке пакета нужно будет переделать!
+    f = open('/bot/image/calendar.jpg', 'wb') 
     for i in down.iter_content(1024*1024):
         f.write(i)
         f.close()
