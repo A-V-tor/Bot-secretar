@@ -55,7 +55,7 @@
 
 4)```git add .```
 
-5)```git commin -m'release'```
+5)```git commit -m'release'```
 
 6)```git push heroku main``` 
 
