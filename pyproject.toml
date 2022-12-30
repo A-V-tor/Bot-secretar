@@ -3,26 +3,28 @@ packages = [
     {include = 'bot'},
 ]
 name = "bot-secretar"
-version = "1.0.0"
+version = "2.0.0"
 description = "telegram bot"
 authors = ["Артем Торшин <avtorca4@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-flake8 = "^4.0.1"
-lxml = "^4.9.0"
-requests = "^2.28.0"
-aiogram = "^2.20"
-beautifulsoup4 = "^4.11.1"
-prettytable = "^3.3.0"
+python = "^3.11"
+flask = "^2.2.2"
+pytelegrambotapi = "^4.8.0"
+flask-sqlalchemy = "^3.0.2"
+python-dotenv = "^0.21.0"
+flask-admin = "^1.6.0"
+pillow = "^9.3.0"
+flask-babelex = "^0.9.4"
+flask-login = "^0.6.2"
+dash = "^2.7.1"
 
-[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-bot-secretar = 'bot.script.start_bot:main'
 
 

@@ -11,7 +11,7 @@ publish: #публикация проекта без добавления в и�
 	poetry publish --dry-run
 
 package-install: #установка пакета
-	python3 -m pip install --user dist/bot_secretar-0.7.0-py3-none-any.whl
+	python3 -m pip install --user dist/bot_secretar-1.0.0-py3-none-any.whl
 
 lint: #запуск линтера
 	poetry run flake8 bot
