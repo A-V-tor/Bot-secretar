@@ -1,13 +1,11 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 
-def create_app():
-    """Создание основного приложения."""
-    app = Flask(__name__, instance_relative_config=False)
-    app.config.from_object("config.TestConfig")
+app = Flask(__name__)
+app.config.from_object("config.TestConfig")
+db = SQLAlchemy(app)
 
-    with app.app_context():
+from . import handlers
 
-        from . import handlers
-
-        return app
+db.create_all()

@@ -1,8 +1,9 @@
 *.db
-*/.DS_Store/
+*/.DS_Store
 */__pycache__/
 dist/
 .env
 .idea/
 .DS_Store
 __pycache__
+*.log

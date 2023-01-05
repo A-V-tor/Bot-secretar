@@ -1,7 +1,4 @@
-from bot import create_app
-
-
-app = create_app()
+from bot import app
 
 
 if __name__ == "__main__":
