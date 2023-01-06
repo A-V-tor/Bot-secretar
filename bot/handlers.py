@@ -34,8 +34,10 @@ from .keyboards import (
     current_state_keyboard,
     categories_edit_finance_keyboard,
     current_state_edit_keyboard,
+    news_keyboard,
 )
 from finance.models import CurrentBalance
+from news.news import get_news
 
 
 load_dotenv(find_dotenv())
@@ -174,6 +176,20 @@ def close_state(callback):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         НОВОСТИ
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "news")
+def news(callback):
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    item = bot.send_message(callback.message.chat.id, get_news(), reply_markup=news_keyboard,parse_mode="HTML")
+    DEL_MESSEGE_ID.append(item.message_id)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         ОБРАБОТКА  ВЕДЕНИЯ ЗАПИСЕЙ РАСХОДОВ
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -186,9 +202,14 @@ def get_my_current_balance(callback):
     entries = (
         CurrentBalance.query.filter_by().order_by(CurrentBalance.date.desc()).first()
     )
-    data = entries.get_balance()
+    if entries is None or entries.date.strftime(
+        "%Y-%m-%d"
+    ) < datetime.datetime.now().strftime("%Y-%m-%d"):
+        msg = "НЕТ данных на сегодня!"
+    else:
+        msg = entries.get_balance()
     item = bot.send_message(
-        callback.message.chat.id, data, reply_markup=main_keyboard, parse_mode="HTML"
+        callback.message.chat.id, msg, reply_markup=main_keyboard, parse_mode="HTML"
     )
     DEL_MESSEGE_ID.append(item.message_id)
 
@@ -318,7 +339,7 @@ def spend_money(message):
         db.session.commit()
         entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
         setattr(entries, SELECT_CATEGORY, MONEY_VALUE)
-        msg = f"Добалена новая запись\nКатегория{SELECT_CATEGORY} расход{MONEY_VALUE}"
+        msg = f"Добалена новая запись\nКатегория: {SELECT_CATEGORY}\n Расход: {MONEY_VALUE}"
     # если запись за текущий день найдена, то в нее вносятся изменения
     else:
         value = getattr(entries, SELECT_CATEGORY) + MONEY_VALUE
@@ -454,4 +475,4 @@ def shutdown_session(exception=None):
 bot.remove_webhook()
 time.sleep(0.1)
 
-bot.set_webhook(url="https://9503-79-133-105-41.eu.ngrok.io")
+bot.set_webhook(url="https://7ab2-79-133-105-41.eu.ngrok.io")

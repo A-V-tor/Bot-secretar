@@ -115,3 +115,9 @@ other = types.InlineKeyboardButton(text="прочее ⚒", callback_data="other
 categories_edit_finance_keyboard.add(
     transport, food, entertainment, clothes, present, health, hobby, other
 ).add(close_state_add_entries)
+
+
+""" Клавиатура новостей. """
+news_keyboard = types.InlineKeyboardMarkup()
+
+news_keyboard.add(close_entries)
