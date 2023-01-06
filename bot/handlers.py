@@ -2,7 +2,7 @@ import os
 import time
 import logging
 import datetime
-from flask import request, abort
+from flask import request, abort, session
 import telebot
 from dotenv import find_dotenv, load_dotenv
 from finance.markets import (
@@ -17,7 +17,7 @@ from finance.markets import (
 from finance.crypto import get_crypto
 from finance.other import get_product
 
-from . import app, db
+from . import app, db, babel
 from .other import (
     get_current_state,
     set_state,
@@ -452,6 +452,13 @@ def get_market_technologies(callback):
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+@babel.localeselector
+def get_locale():
+    if request.args.get("lang"):
+        session["lang"] = request.args.get("lang")
+    return session.get("lang", "ru")
 
 
 @app.route("/", methods=["GET", "POST"])
