@@ -1,15 +1,21 @@
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from finance.models import CurrentBalance
-from bot import app, db
+from bot.handlers import current_user
+from bot import server, db
 
 
 class MyAdminIndexView(AdminIndexView):
-    pass
+    def is_accessible(self):
+        try:
+            if current_user.psw:
+                return True
+        except:
+            pass
 
 
 admin = Admin(
-    app,
+    server,
     name="",
     template_mode="bootstrap3",
     index_view=MyAdminIndexView(
@@ -34,6 +40,13 @@ class CurrentBalanceView(ModelView):
     can_view_details = True
     create_modal = True
     edit_modal = True
+
+    def is_accessible(self):
+        try:
+            if current_user.psw:
+                return True
+        except:
+            pass
 
 
 admin.add_view(

@@ -2,9 +2,17 @@ import os
 import time
 import logging
 import datetime
-from flask import request, abort, session
+from flask import request, abort, session, flash, redirect, url_for, render_template
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 import telebot
 from dotenv import find_dotenv, load_dotenv
+from admin.models import AdminUser
 from finance.markets import (
     get_price_market_for_america,
     get_price_market_for_russia,
@@ -17,7 +25,7 @@ from finance.markets import (
 from finance.crypto import get_crypto
 from finance.other import get_product
 
-from . import app, db, babel
+from . import server, db, babel
 from .other import (
     get_current_state,
     set_state,
@@ -41,13 +49,21 @@ from news.news import get_news
 
 
 load_dotenv(find_dotenv())
-
+login_manager = LoginManager(server)
+login_manager.init_app(server)
+login_manager.login_view = "index_autorization"
 bot = telebot.TeleBot(os.getenv("token"))
 
 log_file = os.path.join(os.path.abspath(os.path.dirname(__name__)), "file.log")
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.FileHandler(log_file))
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return AdminUser.query.get(int(user_id))
+    
 
 
 # константы обработки добавления записи расходов
@@ -461,7 +477,7 @@ def get_locale():
     return session.get("lang", "ru")
 
 
-@app.route("/", methods=["GET", "POST"])
+@server.route("/", methods=["GET", "POST"])
 def receive_update():
     if request.headers.get("content-type") == "application/json":
         json_string = request.get_data().decode("utf-8")
@@ -472,7 +488,30 @@ def receive_update():
         abort(403)
 
 
-@app.teardown_appcontext
+@server.route("/login", methods=['POST', 'GET'])
+def index_autorization():
+    """Авторизация администратора"""
+    if request.method == "POST":
+        admin = AdminUser.query.filter_by(
+            name=request.form['name'],psw=request.form['psw']
+        ).first()
+        if admin:
+            login_user(admin, remember=True)
+            return redirect(url_for("admin.index"))
+        else:
+            flash("Неверный логин или пароль!")
+    return render_template("autorization.html", title="Авторизация")
+
+
+@server.route("/exit", methods=["POST", "GET"])
+@login_required
+def user_exit():
+    logout_user()
+    print(current_user)
+    return redirect(url_for("index_autorization"))
+
+
+@server.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()
 
@@ -482,4 +521,4 @@ def shutdown_session(exception=None):
 bot.remove_webhook()
 time.sleep(0.1)
 
-bot.set_webhook(url="https://7ab2-79-133-105-41.eu.ngrok.io")
+bot.set_webhook(url="https://f503-79-133-105-41.eu.ngrok.io")

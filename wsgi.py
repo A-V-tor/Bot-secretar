@@ -1,5 +1,5 @@
-from bot import app
+from bot import server
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    server.run(debug=True)
