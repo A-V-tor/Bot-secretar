@@ -1,6 +1,7 @@
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from finance.models import CurrentBalance
+from bot.models import MyWeight
 from bot.handlers import current_user
 from bot import server, db
 
@@ -27,15 +28,15 @@ admin = Admin(
 class CurrentBalanceView(ModelView):
     column_display_pk = True
     column_labels = dict(
-        date='дата',
-        transport='транспорт',
-        food='еда',
-        entertainment='развлечения',
-        clothes='одежда',
-        present='подарки',
-        health='здоровье',
-        hobby='хобби',
-        other='прочее',
+        date="дата",
+        transport="транспорт",
+        food="еда",
+        entertainment="развлечения",
+        clothes="одежда",
+        present="подарки",
+        health="здоровье",
+        hobby="хобби",
+        other="прочее",
     )
     can_view_details = True
     create_modal = True
@@ -49,6 +50,14 @@ class CurrentBalanceView(ModelView):
             pass
 
 
+class MyWeightView(ModelView):
+    column_display_pk = True
+    column_labels = dict(
+        date="дата",
+        value='вес'
+    )
+
+
 admin.add_view(
     CurrentBalanceView(
         CurrentBalance,
@@ -56,5 +65,15 @@ admin.add_view(
         name="Расходы",
         menu_icon_type="glyph",
         menu_icon_value="glyphicon-shopping-cart",
+    )
+)
+
+admin.add_view(
+    MyWeightView(
+        MyWeight,
+        db.session,
+        name='Вес',
+        menu_icon_type="glyph",
+        menu_icon_value="glyphicon-hand-down",
     )
 )

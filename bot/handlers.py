@@ -31,8 +31,11 @@ from .other import (
     set_state,
     get_current_state_edit,
     set_state_edit,
+    get_current_statel_weight,
+    set_state_weight,
     States,
     StatesEdit,
+    StateslWeight,
 )
 from .keyboards import (
     main_keyboard,
@@ -44,6 +47,7 @@ from .keyboards import (
     current_state_edit_keyboard,
     news_keyboard,
 )
+from .models import MyWeight
 from finance.models import CurrentBalance
 from news.news import get_news
 
@@ -63,13 +67,13 @@ logger.addHandler(logging.FileHandler(log_file))
 @login_manager.user_loader
 def load_user(user_id):
     return AdminUser.query.get(int(user_id))
-    
 
 
 # константы обработки добавления записи расходов
 SELECT_CATEGORY = None
 MONEY_VALUE = None
 TEXT_CATEGORY = None
+
 
 # хранение id сообщений для чистки чата
 DEL_MESSEGE_ID = []
@@ -96,6 +100,18 @@ def start_chat(message=None, callback=None):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         ОБРАБОТКА  КЛАВИАТУР
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "weight")
+def make_entries_weight_keyboard(callback):
+    """Получение клавиатуры записи веса в журнал"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    item = bot.send_message(
+        callback.message.chat.id, "Сколько сегодня ?"
+    )
+    set_state(StateslWeight.START.value)
+    DEL_MESSEGE_ID.append(item.message_id)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "market")
@@ -200,8 +216,55 @@ def close_state(callback):
 def news(callback):
     [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
     DEL_MESSEGE_ID.clear()
-    item = bot.send_message(callback.message.chat.id, get_news(), reply_markup=news_keyboard,parse_mode="HTML")
+    item = bot.send_message(
+        callback.message.chat.id,
+        get_news(),
+        reply_markup=news_keyboard,
+        parse_mode="HTML",
+    )
     DEL_MESSEGE_ID.append(item.message_id)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         ЗАПИСЬ     ВЕСА
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+@bot.message_handler(
+    func=lambda message: get_current_statel_weight() == StateslWeight.START.value
+)
+def change_weight(message):
+    entries = (
+        MyWeight.query.filter_by().order_by(MyWeight.date.desc()).first()
+    )
+    if entries is None or entries.date.strftime(
+        "%Y-%m-%d"
+    ) < datetime.datetime.now().strftime("%Y-%m-%d"):
+        try:
+            weight = message.text
+            data_weight = MyWeight(value=weight)
+            db.session.add(data_weight)
+            db.session.commit()
+            if float(weight) > 85:
+                data_msg = 'Стоит подумать о диете...'
+            else:
+                data_msg = ' ...'
+            item = bot.send_message(
+                message.chat.id, f"Записано, текущий вес - {weight} кг\n\n{data_msg}"
+            )
+        except Exception:
+            item = bot.send_message(
+                message.chat.id, f"{'не корректный ввод!'}"
+            )
+    else:
+        item = bot.send_message(
+                message.chat.id, f"Запись на сегодня уже есть!!!"
+            )
+    set_state(StateslWeight.END.value)
+    DEL_MESSEGE_ID.append(item.message_id)
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -488,12 +551,12 @@ def receive_update():
         abort(403)
 
 
-@server.route("/login", methods=['POST', 'GET'])
+@server.route("/login", methods=["POST", "GET"])
 def index_autorization():
     """Авторизация администратора"""
     if request.method == "POST":
         admin = AdminUser.query.filter_by(
-            name=request.form['name'],psw=request.form['psw']
+            name=request.form["name"], psw=request.form["psw"]
         ).first()
         if admin:
             login_user(admin, remember=True)
@@ -521,4 +584,4 @@ def shutdown_session(exception=None):
 bot.remove_webhook()
 time.sleep(0.1)
 
-bot.set_webhook(url="https://f503-79-133-105-41.eu.ngrok.io")
+bot.set_webhook(url="https://664e-79-133-105-41.eu.ngrok.io")

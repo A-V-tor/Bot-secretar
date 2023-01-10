@@ -14,6 +14,13 @@ app = Dash(
     external_stylesheets=external_stylesheets,
 )
 
+app2 = Dash(
+    __name__,
+    server=server,
+    url_base_pathname="/admin/analytics/weight/",
+    external_stylesheets=external_stylesheets,
+)
+
 server.config.from_object("config.TestConfig")
 db = SQLAlchemy(server)
 babel = Babel(server)
@@ -21,4 +28,5 @@ babel = Babel(server)
 from . import handlers
 from admin.admin import *
 from admin.analytics import *
+
 db.create_all()

@@ -49,3 +49,29 @@ def set_state_edit(value):
         return True
     except:
         return False
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         МАШИНА СОСТОЯНИЙ ДЛЯ ВЕДЕНИЯ  ЗАПИСЕЙ ВЕСА
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+sl_weight = {}
+
+class StateslWeight(Enum):
+    START = 0
+    END = 1
+
+
+def get_current_statel_weight():
+    try:
+        return sl["state"]
+    except:
+        return 0
+
+
+def set_state_weight(value):
+    try:
+        sl["state"] = value
+        return True
+    except:
+        return False
