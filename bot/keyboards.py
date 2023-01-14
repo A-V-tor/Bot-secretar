@@ -117,7 +117,27 @@ categories_edit_finance_keyboard.add(
 ).add(close_state_add_entries)
 
 
-""" Клавиатура новостей. """
+""" Клавиатура новостей """
 news_keyboard = types.InlineKeyboardMarkup()
 
 news_keyboard.add(close_entries)
+
+
+""" Клавиатура меню заметки """
+
+notes_keyboard = types.InlineKeyboardMarkup()
+
+add_note = types.InlineKeyboardButton(text="добавить ✏", callback_data="add-note")
+show_notes = types.InlineKeyboardButton(text="просмотреть ✉", callback_data="show-note")
+
+notes_keyboard.add(add_note, show_notes).add(close_entries)
+
+""" Клавиатура обхода заметок """
+
+piligrim__keyboard = types.InlineKeyboardMarkup()
+
+back_note = types.InlineKeyboardButton(text="◀", callback_data="back-note")
+next_note = types.InlineKeyboardButton(text="▶", callback_data="next-note")
+del_note = types.InlineKeyboardButton(text="удалить", callback_data="del-note")
+
+piligrim__keyboard.add(back_note, next_note).add(del_note).add(close_entries)

@@ -2,6 +2,7 @@ import os
 import time
 import logging
 import datetime
+from collections import deque
 from flask import request, abort, session, flash, redirect, url_for, render_template
 from flask_login import (
     LoginManager,
@@ -31,11 +32,14 @@ from .other import (
     set_state,
     get_current_state_edit,
     set_state_edit,
-    get_current_statel_weight,
+    get_current_state_weight,
     set_state_weight,
+    get_current_statel_notes,
+    set_state_notes,
     States,
     StatesEdit,
-    StateslWeight,
+    StatesWeight,
+    StatesNotes,
 )
 from .keyboards import (
     main_keyboard,
@@ -46,8 +50,10 @@ from .keyboards import (
     categories_edit_finance_keyboard,
     current_state_edit_keyboard,
     news_keyboard,
+    notes_keyboard,
+    piligrim__keyboard,
 )
-from .models import MyWeight
+from .models import MyWeight, MyNotes
 from finance.models import CurrentBalance
 from news.news import get_news
 
@@ -78,6 +84,9 @@ TEXT_CATEGORY = None
 # хранение id сообщений для чистки чата
 DEL_MESSEGE_ID = []
 
+#  хранение состояния заметок при их обходе
+STATE_NOTE = {}
+
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "start")
 @bot.message_handler(commands=["start"])
@@ -87,6 +96,7 @@ def start_chat(message=None, callback=None):
         [bot.delete_message(message.from_user.id, id) for id in DEL_MESSEGE_ID]
         DEL_MESSEGE_ID.clear()
         item = bot.send_message(message.from_user.id, msg, reply_markup=main_keyboard)
+        STATE_NOTE = {}
         DEL_MESSEGE_ID.append(item.message_id)
     else:
         [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
@@ -94,6 +104,7 @@ def start_chat(message=None, callback=None):
         item = bot.send_message(
             callback.message.chat.id, msg, reply_markup=main_keyboard
         )
+        STATE_NOTE = {}
         DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -102,15 +113,24 @@ def start_chat(message=None, callback=None):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
+@bot.callback_query_handler(func=lambda callback: callback.data == "notes")
+def get_notes_keyboard(callback):
+    """Получение клавиатуры с кнопками по заметкам."""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    item = bot.send_message(
+        callback.message.chat.id, "ЗАМЕТКИ", reply_markup=notes_keyboard
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
 @bot.callback_query_handler(func=lambda callback: callback.data == "weight")
 def make_entries_weight_keyboard(callback):
     """Получение клавиатуры записи веса в журнал"""
     [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
     DEL_MESSEGE_ID.clear()
-    item = bot.send_message(
-        callback.message.chat.id, "Сколько сегодня ?"
-    )
-    set_state(StateslWeight.START.value)
+    item = bot.send_message(callback.message.chat.id, "Сколько сегодня ?")
+    set_state(StatesWeight.START.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -228,17 +248,151 @@ def news(callback):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         ЗАМЕТКИ
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "add-note")
+def add_note_start(callback):
+    """Старт машины состояний по добавлению заметки в базу данных"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    msg = "Ввести текст заметки: "
+    item = bot.send_message(
+        callback.message.chat.id,
+        msg,
+        reply_markup=news_keyboard,
+        parse_mode="HTML",
+    )
+    set_state_notes(StatesNotes.START.value)
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.message_handler(
+    func=lambda message: get_current_statel_notes() == StatesNotes.START.value
+)
+def add_note_end(message):
+    """Добавлению заметки в базу данных или обработка исключений в случае неудачи"""
+    try:
+        text_note = message.text
+        new_note = MyNotes(note=text_note)
+        db.session.add(new_note)
+        db.session.commit()
+        msg = "Запись сделана ⚡"
+    except Exception:
+        msg = "⚠ что-то пошло не так! ⚠"
+    item = bot.send_message(message.chat.id, msg)
+    DEL_MESSEGE_ID.append(item.message_id)
+    set_state(StatesNotes.END.value)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "show-note")
+def show_note(callback):
+    """Показ заметки"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    data_notes = MyNotes.query.filter_by().all()
+    if data_notes:
+        notes = deque([(i.date.strftime("%Y-%m-%d"), i.note) for i in data_notes])
+        STATE_NOTE["notes"] = notes
+        msg = f"Заметка от <b>{notes[0][0]}</b>\n <i>{notes[0][1]}</i>"
+        item = bot.send_message(
+            callback.message.chat.id,
+            msg,
+            reply_markup=piligrim__keyboard,
+            parse_mode="HTML",
+        )
+    else:
+        msg = "нет заметок"
+        item = bot.send_message(callback.message.chat.id, msg, parse_mode="HTML")
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "next-note")
+def show_next_note(callback):
+    """Проход по заметкам вперед"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    try:
+        notes = STATE_NOTE["notes"]
+        notes.rotate(1)
+        current_note = notes[0]
+        msg = f"Заметка от {current_note[0]}\n {current_note[1]}"
+        item = bot.send_message(
+            callback.message.chat.id,
+            msg,
+            reply_markup=piligrim__keyboard,
+            parse_mode="HTML",
+        )
+    except Exception:
+        msg = "нет доступых записей"
+        item = bot.send_message(callback.message.chat.id, msg, parse_mode="HTML")
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "back-note")
+def show_back_note(callback):
+    """Проход по заметкам назад"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    try:
+        notes = STATE_NOTE["notes"]
+        notes.rotate(-1)
+        current_note = notes[0]
+        msg = f"Заметка от {current_note[0]}\n {current_note[1]}"
+        item = bot.send_message(
+            callback.message.chat.id,
+            msg,
+            reply_markup=piligrim__keyboard,
+            parse_mode="HTML",
+        )
+    except Exception:
+        msg = "нет доступых записей"
+        item = bot.send_message(callback.message.chat.id, msg, parse_mode="HTML")
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "del-note")
+def show_del_note(callback):
+    """Удаление заметки"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    notes = STATE_NOTE["notes"]
+    current_note = notes[0]
+    del_note = MyNotes.query.filter_by(note=notes[0][1]).first()
+    if del_note:
+        db.session.delete(del_note)
+        db.session.commit()
+        msg = f"Заметка от {current_note[0]}\n {current_note[1]}\n\n Удалена"
+        data_notes = MyNotes.query.filter_by().all()
+        if len(data_notes) > 0:
+            notes = deque([(i.date.strftime("%Y-%m-%d"), i.note) for i in data_notes])
+            STATE_NOTE["notes"] = notes
+        else:
+            STATE_NOTE["notes"] = None
+    else:
+        msg = "пусто"
+    item = bot.send_message(
+        callback.message.chat.id,
+        msg,
+        reply_markup=piligrim__keyboard,
+        parse_mode="HTML",
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         ЗАПИСЬ     ВЕСА
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
 @bot.message_handler(
-    func=lambda message: get_current_statel_weight() == StateslWeight.START.value
+    func=lambda message: get_current_state_weight() == StatesWeight.START.value
 )
 def change_weight(message):
-    entries = (
-        MyWeight.query.filter_by().order_by(MyWeight.date.desc()).first()
-    )
+    entries = MyWeight.query.filter_by().order_by(MyWeight.date.desc()).first()
     if entries is None or entries.date.strftime(
         "%Y-%m-%d"
     ) < datetime.datetime.now().strftime("%Y-%m-%d"):
@@ -248,21 +402,17 @@ def change_weight(message):
             db.session.add(data_weight)
             db.session.commit()
             if float(weight) > 85:
-                data_msg = 'Стоит подумать о диете...'
+                data_msg = "Стоит подумать о диете..."
             else:
-                data_msg = ' ...'
+                data_msg = " ..."
             item = bot.send_message(
                 message.chat.id, f"Записано, текущий вес - {weight} кг\n\n{data_msg}"
             )
         except Exception:
-            item = bot.send_message(
-                message.chat.id, f"{'не корректный ввод!'}"
-            )
+            item = bot.send_message(message.chat.id, f"{'не корректный ввод!'}")
     else:
-        item = bot.send_message(
-                message.chat.id, f"Запись на сегодня уже есть!!!"
-            )
-    set_state(StateslWeight.END.value)
+        item = bot.send_message(message.chat.id, f"Запись на сегодня уже есть!!!")
+    set_state(StatesWeight.END.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -407,25 +557,29 @@ def spend_money(message):
     msg = message.text
     global SELECT_CATEGORY
     global TEXT_CATEGORY
-    MONEY_VALUE = int(msg)
-    entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
-    # если записи на текущий день нет, то она создается, а затем вносятся изменения
-    if entries is None or entries.date.strftime(
-        "%Y-%m-%d"
-    ) < datetime.datetime.now().strftime("%Y-%m-%d"):
-        new_entries = CurrentBalance()
-        db.session.add(new_entries)
-        db.session.commit()
+    try:
+        MONEY_VALUE = int(msg)
         entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
-        setattr(entries, SELECT_CATEGORY, MONEY_VALUE)
-        msg = f"Добалена новая запись\nКатегория: {SELECT_CATEGORY}\n Расход: {MONEY_VALUE}"
-    # если запись за текущий день найдена, то в нее вносятся изменения
-    else:
-        value = getattr(entries, SELECT_CATEGORY) + MONEY_VALUE
-        setattr(entries, SELECT_CATEGORY, value)
-        msg = f"Категория: {TEXT_CATEGORY}\n Расход: {MONEY_VALUE}"
-    db.session.commit()
-    item = bot.send_message(message.chat.id, msg, reply_markup=main_keyboard)
+        # если записи на текущий день нет, то она создается, а затем вносятся изменения
+        if entries is None or entries.date.strftime(
+            "%Y-%m-%d"
+        ) < datetime.datetime.now().strftime("%Y-%m-%d"):
+            new_entries = CurrentBalance()
+            db.session.add(new_entries)
+            db.session.commit()
+            entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
+            setattr(entries, SELECT_CATEGORY, MONEY_VALUE)
+            msg = f"Добалена новая запись\nКатегория: {SELECT_CATEGORY}\n Расход: {MONEY_VALUE}"
+        # если запись за текущий день найдена, то в нее вносятся изменения
+        else:
+            value = getattr(entries, SELECT_CATEGORY) + MONEY_VALUE
+            setattr(entries, SELECT_CATEGORY, value)
+            msg = f"Категория: {TEXT_CATEGORY}\n Расход: {MONEY_VALUE}"
+        db.session.commit()
+        item = bot.send_message(message.chat.id, msg, reply_markup=main_keyboard)
+    except Exception:
+        msg = "Что-то пошло не так!\n\nВвод только целого числа!!!"
+        item = bot.send_message(message.chat.id, msg, reply_markup=main_keyboard)
     set_state(States.START.value)
     SELECT_CATEGORY = None
     MONEY_VALUE = None
@@ -584,4 +738,4 @@ def shutdown_session(exception=None):
 bot.remove_webhook()
 time.sleep(0.1)
 
-bot.set_webhook(url="https://664e-79-133-105-41.eu.ngrok.io")
+bot.set_webhook(url="https://8faa-79-133-105-52.eu.ngrok.io")

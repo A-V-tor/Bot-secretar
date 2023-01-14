@@ -57,12 +57,13 @@ def set_state_edit(value):
 
 sl_weight = {}
 
-class StateslWeight(Enum):
+
+class StatesWeight(Enum):
     START = 0
     END = 1
 
 
-def get_current_statel_weight():
+def get_current_state_weight():
     try:
         return sl["state"]
     except:
@@ -75,3 +76,33 @@ def set_state_weight(value):
         return True
     except:
         return False
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         МАШИНА СОСТОЯНИЙ ДЛЯ ВЕДЕНИЯ  ЗАМЕТОК
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+sl_notes = {}
+
+
+class StatesNotes(Enum):
+    START = 0
+    END = 1
+
+
+def get_current_statel_notes():
+    try:
+        return sl["state"]
+    except:
+        return 0
+
+
+def set_state_notes(value):
+    try:
+        sl["state"] = value
+        return True
+    except:
+        return False
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

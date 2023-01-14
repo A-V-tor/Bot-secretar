@@ -1,7 +1,8 @@
+from wtforms import TextAreaField
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from finance.models import CurrentBalance
-from bot.models import MyWeight
+from bot.models import MyWeight, MyNotes
 from bot.handlers import current_user
 from bot import server, db
 
@@ -52,10 +53,22 @@ class CurrentBalanceView(ModelView):
 
 class MyWeightView(ModelView):
     column_display_pk = True
-    column_labels = dict(
-        date="дата",
-        value='вес'
-    )
+    column_labels = dict(date="дата", value="вес")
+    column_filters = ["date"]
+
+
+class MyNotesView(ModelView):
+    column_display_pk = True
+    column_labels = dict(date="дата", note="запись")
+    column_editable_list = ["note"]
+    form_widget_args = {
+        "note": {
+            "rows": 10,
+            "style": "font-family: monospace;",
+        }
+    }
+    form_overrides = dict(note=TextAreaField)
+    can_view_details = True
 
 
 admin.add_view(
@@ -72,8 +85,18 @@ admin.add_view(
     MyWeightView(
         MyWeight,
         db.session,
-        name='Вес',
+        name="Вес",
         menu_icon_type="glyph",
         menu_icon_value="glyphicon-hand-down",
+    )
+)
+
+admin.add_view(
+    MyNotesView(
+        MyNotes,
+        db.session,
+        name="Заметки",
+        menu_icon_type="glyph",
+        menu_icon_value="glyphicon-pencil",
     )
 )

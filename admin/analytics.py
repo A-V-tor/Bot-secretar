@@ -5,7 +5,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 from sqlalchemy import func, text
 from bot.handlers import current_user
-from bot import server, app, app2,  db
+from bot import server, app, app2, db
 
 
 def get_data_spend(server):
@@ -326,10 +326,14 @@ def get_data_weight(server):
             link_style = {"display": "none"}
             return welcome_msg, user_data, link_style
         return "Your Princess is in another castle", ""
-    
 
     def get_analytics_data():
-        data_weight = [i for i in db.engine.execute(text('SELECT date,value FROM  myweight GROUP BY date'))]
+        data_weight = [
+            i
+            for i in db.engine.execute(
+                text("SELECT date,value FROM  myweight GROUP BY date")
+            )
+        ]
         sl = {}
 
         for i in data_weight:
@@ -364,8 +368,9 @@ def get_data_weight(server):
                     },
                 ),
                 dcc.Interval(id="graph-update", interval=1 * 1000, n_intervals=0),
-            ])
-    
+            ]
+        )
+
     return app2.server
 
 
