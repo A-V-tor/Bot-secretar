@@ -14,3 +14,10 @@ class MyNotes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(), default=datetime.datetime.now)
     note = db.Column(db.String(500))
+
+
+class MyWorkouts(db.Model):
+    __tablename__ = "myworkout"
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime(), default=datetime.datetime.now)
+    entries = db.Column(db.String(255))

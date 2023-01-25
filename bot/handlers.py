@@ -1,8 +1,10 @@
 import os
 import time
+import calendar, locale
 import logging
 import datetime
 from collections import deque
+from sqlalchemy import text
 from flask import request, abort, session, flash, redirect, url_for, render_template
 from flask_login import (
     LoginManager,
@@ -12,6 +14,7 @@ from flask_login import (
     logout_user,
 )
 import telebot
+from telebot import types
 from dotenv import find_dotenv, load_dotenv
 from admin.models import AdminUser
 from finance.markets import (
@@ -32,14 +35,20 @@ from .other import (
     set_state,
     get_current_state_edit,
     set_state_edit,
+    set_state_workout,
     get_current_state_weight,
     set_state_weight,
-    get_current_statel_notes,
+    get_current_state_notes,
     set_state_notes,
+    get_current_date,
+    get_current_state_workout,
+    get_number_month,
+    get_str_month,
     States,
     StatesEdit,
     StatesWeight,
     StatesNotes,
+    StatesWorkout,
 )
 from .keyboards import (
     main_keyboard,
@@ -52,8 +61,9 @@ from .keyboards import (
     news_keyboard,
     notes_keyboard,
     piligrim__keyboard,
+    trein_keyboard,
 )
-from .models import MyWeight, MyNotes
+from .models import MyWeight, MyNotes, MyWorkouts
 from finance.models import CurrentBalance
 from news.news import get_news
 
@@ -113,6 +123,17 @@ def start_chat(message=None, callback=None):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
+@bot.callback_query_handler(func=lambda callback: callback.data == "training")
+def get_training_keyboard(callback):
+    """Получение клавиатуры с кнопками по тренировкам."""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    item = bot.send_message(
+        callback.message.chat.id, "ТРЕНИРОВКИ", reply_markup=trein_keyboard
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
 @bot.callback_query_handler(func=lambda callback: callback.data == "notes")
 def get_notes_keyboard(callback):
     """Получение клавиатуры с кнопками по заметкам."""
@@ -130,7 +151,7 @@ def make_entries_weight_keyboard(callback):
     [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
     DEL_MESSEGE_ID.clear()
     item = bot.send_message(callback.message.chat.id, "Сколько сегодня ?")
-    set_state(StatesWeight.START.value)
+    set_state_weight(StatesWeight.START.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -180,7 +201,7 @@ def get_categories_edit_finance_keyboard(callback):
         "Выбор категории для редактирования",
         reply_markup=categories_edit_finance_keyboard,
     )
-    set_state_edit(StatesEdit.ENTER_CATEGORY.value)
+    set_state_edit(StatesEdit.ENTER_CATEGORY_EDIT.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -208,7 +229,7 @@ def reset_state_edit(callback):
         "Что ж, начнём по-новой. Выбор категории",
         reply_markup=categories_edit_finance_keyboard,
     )
-    set_state_edit(StatesEdit.ENTER_CATEGORY.value)
+    set_state_edit(StatesEdit.ENTER_CATEGORY_EDIT.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
@@ -269,7 +290,7 @@ def add_note_start(callback):
 
 
 @bot.message_handler(
-    func=lambda message: get_current_statel_notes() == StatesNotes.START.value
+    func=lambda message: get_current_state_notes() == StatesNotes.START.value
 )
 def add_note_end(message):
     """Добавлению заметки в базу данных или обработка исключений в случае неудачи"""
@@ -444,7 +465,8 @@ def get_my_current_balance(callback):
 
 
 @bot.callback_query_handler(
-    func=lambda callback: get_current_state_edit() == StatesEdit.ENTER_CATEGORY.value
+    func=lambda callback: get_current_state_edit()
+    == StatesEdit.ENTER_CATEGORY_EDIT.value
 )
 def change_entries(callback):
     """Редактирование записи."""
@@ -474,12 +496,12 @@ def change_entries(callback):
     item = bot.send_message(
         callback.message.chat.id, msg, reply_markup=current_state_edit_keyboard
     )
-    set_state_edit(StatesEdit.ENTER_MONEY.value)
+    set_state_edit(StatesEdit.ENTER_MONEY_EDIT.value)
     DEL_MESSEGE_ID.append(item.message_id)
 
 
 @bot.message_handler(
-    func=lambda message: get_current_state_edit() == StatesEdit.ENTER_MONEY.value
+    func=lambda message: get_current_state_edit() == StatesEdit.ENTER_MONEY_EDIT.value
 )
 def change_money(message):
     """Добавлении суммы изменения"""
@@ -490,12 +512,14 @@ def change_money(message):
     global TEXT_CATEGORY
     MONEY_VALUE = int(msg)
     entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
+
     # если записи на текущий день нет,информирование сообщением
     if entries is None or entries.date.strftime(
         "%Y-%m-%d"
     ) < datetime.datetime.now().strftime("%Y-%m-%d"):
         msg = "НЕТ данных на сегодня!"
         bot.send_message(message.chat.id, msg)
+
     # если запись за текущий день найдена, то в нее вносятся изменения
     else:
         setattr(entries, SELECT_CATEGORY[:-5], MONEY_VALUE)
@@ -560,6 +584,7 @@ def spend_money(message):
     try:
         MONEY_VALUE = int(msg)
         entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
+
         # если записи на текущий день нет, то она создается, а затем вносятся изменения
         if entries is None or entries.date.strftime(
             "%Y-%m-%d"
@@ -570,6 +595,7 @@ def spend_money(message):
             entries = CurrentBalance.query.order_by(CurrentBalance.date.desc()).first()
             setattr(entries, SELECT_CATEGORY, MONEY_VALUE)
             msg = f"Добалена новая запись\nКатегория: {SELECT_CATEGORY}\n Расход: {MONEY_VALUE}"
+
         # если запись за текущий день найдена, то в нее вносятся изменения
         else:
             value = getattr(entries, SELECT_CATEGORY) + MONEY_VALUE
@@ -686,6 +712,323 @@ def get_market_technologies(callback):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         ОБРАБОТКА  ВЕДЕНИЯ ЗАПИСЕЙ ТРЕНИРОВОК
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+@bot.callback_query_handler(func=lambda callback: callback.data == "add-trein")
+def add_workout(callback):
+    """Добавление записи тренировки"""
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    msg = "Запиши нужные данные"
+    item = bot.send_message(callback.message.chat.id, msg)
+    DEL_MESSEGE_ID.append(item.message_id)
+    set_state_workout(StatesWorkout.START.value)
+
+
+@bot.message_handler(
+    func=lambda message: get_current_state_workout() == StatesWorkout.START.value
+)
+def data_workout(message):
+    """Ввод данных тренировки"""
+    msg = message.text
+    new_workout = MyWorkouts(entries=msg)
+    db.session.add(new_workout)
+    db.session.commit()
+    item = bot.send_message(
+        message.chat.id, f"ДОБАВЛЕНА ТРЕНИРОВКА\n {msg}", reply_markup=main_keyboard
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+    set_state(StatesWorkout.END.value)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "show-trein")
+def show_workout(callback):
+    """Просмотр тренировок в календаре"""
+
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    chat_id = callback.message.chat.id
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 7
+    lst_but = []
+
+    cl = calendar.TextCalendar(firstweekday=0)
+    year, month = get_current_date(datetime.datetime.now().strftime("%Y,%m"))
+
+    all_date = [
+        i
+        for i in db.engine.execute(
+            text('SELECT strftime("%Y-%m-%d", date) FROM myworkout GROUP BY date')
+        )
+    ]
+    lst_date = []
+    for i in all_date:
+        lst_date.append(i[0])
+
+    # множество дат тренировок
+    ready_date = set(lst_date)
+    # список дней тренировок для последубщего сравнения
+    data_num = [
+        int(i.split("-")[2])
+        for i in ready_date
+        if i[:4] == str(year) and int(i[5:7]) == month
+    ]
+
+    for i in cl.itermonthdays(year, month):
+        # итерация по текущему месяцу и создания кнопки с числом месяца или отображением записи трениновки
+        if i != 0:
+            if i in data_num:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        "💪", callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+            else:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        i, callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+        else:
+            lst_but.append(
+                types.InlineKeyboardButton(
+                    " ", callback_data=f"workout_{i}_{month}_{year}"
+                )
+            )
+
+    # добавление кнопок в клавиатуру
+    keyboard.add(
+        types.InlineKeyboardButton("Пн", callback_data="_"),
+        types.InlineKeyboardButton("Вт", callback_data="_"),
+        types.InlineKeyboardButton("Ср", callback_data="_"),
+        types.InlineKeyboardButton("Чт", callback_data="_"),
+        types.InlineKeyboardButton("Пт", callback_data="_"),
+        types.InlineKeyboardButton("Сб", callback_data="_"),
+        types.InlineKeyboardButton("Вс", callback_data="_"),
+    )
+    keyboard.add(*lst_but)
+    month = get_number_month(month)
+
+    keyboard.add(
+        types.InlineKeyboardButton("назад", callback_data=f"-{month} {year}"),
+        types.InlineKeyboardButton("вперед", callback_data=f"+{month} {year}"),
+    )
+    item = bot.send_message(
+        chat_id, f"{month} {year}", reply_markup=keyboard, parse_mode="HTML"
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(lambda callback: callback.data.startswith("-"))
+def calendar_back(callback):
+    """Проход по календарю назад"""
+
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    chat_id = callback.message.chat.id
+    data_date = []
+
+    for i in callback.data[1:].split(" "):
+        data_date.append(i)
+
+    num_value_month = get_str_month(data_date[0])
+    month = num_value_month - 1
+    year = int(data_date[1])
+
+    if month == 0:
+        month = 12
+        year -= 1
+
+    lst_date = [
+        i[0]
+        for i in db.engine.execute(
+            text('SELECT strftime("%Y-%m-%d", date) FROM myworkout GROUP BY date')
+        )
+    ]
+
+    # множество дат тренировок
+    ready_date = set(lst_date)
+    # список дней тренировок для последубщего сравнения
+    data_num = [
+        int(i.split("-")[2])
+        for i in ready_date
+        if i[:4] == str(year) and int(i[5:7]) == month
+    ]
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 7
+    lst_but = []
+
+    cl = calendar.TextCalendar(firstweekday=0)
+
+    for i in cl.itermonthdays(year, month):
+        # итерация по текущему месяцу и создания кнопки с числом месяца
+        if i != 0:
+            if i in data_num:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        "💪", callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+            else:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        i, callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+        else:
+            lst_but.append(
+                types.InlineKeyboardButton(
+                    " ", callback_data=f"workout_{i}_{month}_{year}"
+                )
+            )
+
+    # добавление кнопок в клавиатуру
+    keyboard.add(
+        types.InlineKeyboardButton("Пн", callback_data="_"),
+        types.InlineKeyboardButton("Вт", callback_data="_"),
+        types.InlineKeyboardButton("Ср", callback_data="_"),
+        types.InlineKeyboardButton("Чт", callback_data="_"),
+        types.InlineKeyboardButton("Пт", callback_data="_"),
+        types.InlineKeyboardButton("Сб", callback_data="_"),
+        types.InlineKeyboardButton("Вс", callback_data="_"),
+    )
+    keyboard.add(*lst_but)
+    month = get_number_month(month)
+
+    keyboard.add(
+        types.InlineKeyboardButton("назад", callback_data=f"-{month} {year}"),
+        types.InlineKeyboardButton("вперед", callback_data=f"+{month} {year}"),
+    )
+    item = bot.send_message(
+        chat_id, f"{month} {year}", reply_markup=keyboard, parse_mode="HTML"
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(lambda callback: callback.data.startswith("+"))
+def calendar_next(callback):
+    """Проход по календарю вперед"""
+
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    chat_id = callback.message.chat.id
+    data_date = []
+
+    for i in callback.data[1:].split(" "):
+        data_date.append(i)
+
+    num_value_month = get_str_month(data_date[0])
+    month = num_value_month + 1
+    year = int(data_date[1])
+
+    if month > 12:
+        month = 1
+        year += 1
+
+    lst_date = [
+        i[0]
+        for i in db.engine.execute(
+            text('SELECT strftime("%Y-%m-%d", date) FROM myworkout GROUP BY date')
+        )
+    ]
+
+    # множество дат тренировок
+    ready_date = set(lst_date)
+    # список дней тренировок для последубщего сравнения
+    data_num = [
+        int(i.split("-")[2])
+        for i in ready_date
+        if i[:4] == str(year) and int(i[5:7]) == month
+    ]
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 7
+    lst_but = []
+
+    cl = calendar.TextCalendar(firstweekday=0)
+
+    for i in cl.itermonthdays(year, month):
+        # итерация по текущему месяцу и создания кнопки с числом месяца
+        if i != 0:
+            if i in data_num:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        "💪", callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+            else:
+                lst_but.append(
+                    types.InlineKeyboardButton(
+                        i, callback_data=f"workout_{i}_{month}_{year}"
+                    )
+                )
+        else:
+            lst_but.append(
+                types.InlineKeyboardButton(
+                    " ", callback_data=f"workout_{i}_{month}_{year}"
+                )
+            )
+
+    # добавление кнопок в клавиатуру
+    keyboard.add(
+        types.InlineKeyboardButton("Пн", callback_data="_"),
+        types.InlineKeyboardButton("Вт", callback_data="_"),
+        types.InlineKeyboardButton("Ср", callback_data="_"),
+        types.InlineKeyboardButton("Чт", callback_data="_"),
+        types.InlineKeyboardButton("Пт", callback_data="_"),
+        types.InlineKeyboardButton("Сб", callback_data="_"),
+        types.InlineKeyboardButton("Вс", callback_data="_"),
+    )
+    keyboard.add(*lst_but)
+    month = get_number_month(month)
+
+    keyboard.add(
+        types.InlineKeyboardButton("назад", callback_data=f"-{month} {year}"),
+        types.InlineKeyboardButton("вперед", callback_data=f"+{month} {year}"),
+    )
+    item = bot.send_message(
+        chat_id, f"{month} {year}", reply_markup=keyboard, parse_mode="HTML"
+    )
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+@bot.callback_query_handler(lambda callback: callback.data.startswith("workout"))
+def current_workout(callback):
+    """Просмотр записей тренировок конкретного дня"""
+
+    [bot.delete_message(callback.message.chat.id, id) for id in DEL_MESSEGE_ID]
+    DEL_MESSEGE_ID.clear()
+    chat_id = callback.message.chat.id
+    data = []
+
+    for i in callback.data.split("_"):
+        data.append(i)
+
+    current_date_workout = datetime.date(int(data[3]), int(data[2]), int(data[1]))
+    sql_query = [
+        i
+        for i in db.engine.execute(
+            text(
+                f'SELECT entries FROM myworkout WHERE date LIKE "{current_date_workout}%"'
+            )
+        )
+    ]
+    if sql_query:
+        msg = ""
+        for i in sql_query:
+            msg += f"<b>ТРЕНИРОВКА ОТ {current_date_workout}</b>\n\n"
+            msg += i[0]
+            msg += "\n\n"
+    else:
+        msg = "Нет записей"
+    item = bot.send_message(chat_id, msg, parse_mode="HTML")
+    DEL_MESSEGE_ID.append(item.message_id)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 
 @babel.localeselector
 def get_locale():
@@ -738,4 +1081,4 @@ def shutdown_session(exception=None):
 bot.remove_webhook()
 time.sleep(0.1)
 
-bot.set_webhook(url="https://8faa-79-133-105-52.eu.ngrok.io")
+bot.set_webhook(url="https://514f-79-133-105-48.eu.ngrok.io")

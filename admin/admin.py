@@ -2,7 +2,7 @@ from wtforms import TextAreaField
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from finance.models import CurrentBalance
-from bot.models import MyWeight, MyNotes
+from bot.models import MyWeight, MyNotes, MyWorkouts
 from bot.handlers import current_user
 from bot import server, db
 
@@ -71,6 +71,19 @@ class MyNotesView(ModelView):
     can_view_details = True
 
 
+class MyWorkoutView(ModelView):
+    column_display_pk = True
+    column_labels = dict(date="дата", entries="тренировка")
+    column_editable_list = ["entries"]
+    form_widget_args = {
+        "entries": {
+            "rows": 10,
+            "style": "font-family: monospace;",
+        }
+    }
+    form_overrides = dict(entries=TextAreaField)
+
+
 admin.add_view(
     CurrentBalanceView(
         CurrentBalance,
@@ -98,5 +111,15 @@ admin.add_view(
         name="Заметки",
         menu_icon_type="glyph",
         menu_icon_value="glyphicon-pencil",
+    )
+)
+
+admin.add_view(
+    MyWorkoutView(
+        MyWorkouts,
+        db.session,
+        name="Тренировки",
+        menu_icon_type="glyph",
+        menu_icon_value="glyphicon-heart-empty",
     )
 )

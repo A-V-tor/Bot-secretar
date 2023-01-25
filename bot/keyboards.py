@@ -141,3 +141,12 @@ next_note = types.InlineKeyboardButton(text="▶", callback_data="next-note")
 del_note = types.InlineKeyboardButton(text="удалить", callback_data="del-note")
 
 piligrim__keyboard.add(back_note, next_note).add(del_note).add(close_entries)
+
+""" Клавиатура тренировок """
+
+trein_keyboard = types.InlineKeyboardMarkup()
+
+add_trein = types.InlineKeyboardButton(text="добавить", callback_data="add-trein")
+show_trein = types.InlineKeyboardButton(text="просмотр", callback_data="show-trein")
+
+trein_keyboard.add(add_trein).add(show_trein).add(close_entries)
