@@ -2,7 +2,7 @@ from wtforms import TextAreaField
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from finance.models import CurrentBalance
-from bot.models import MyWeight, MyNotes, MyWorkouts
+from bot.models import MyWeight, MyNotes, MyWorkouts, MyNutrition
 from bot.handlers import current_user
 from bot import server, db
 
@@ -18,10 +18,12 @@ class MyAdminIndexView(AdminIndexView):
 
 admin = Admin(
     server,
-    name="",
-    template_mode="bootstrap3",
+    name='',
+    template_mode='bootstrap3',
     index_view=MyAdminIndexView(
-        name="Админка", menu_icon_type="glyph", menu_icon_value="glyphicon-send"
+        name='Админка',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-send',
     ),
 )
 
@@ -29,15 +31,15 @@ admin = Admin(
 class CurrentBalanceView(ModelView):
     column_display_pk = True
     column_labels = dict(
-        date="дата",
-        transport="транспорт",
-        food="еда",
-        entertainment="развлечения",
-        clothes="одежда",
-        present="подарки",
-        health="здоровье",
-        hobby="хобби",
-        other="прочее",
+        date='дата',
+        transport='транспорт',
+        food='еда',
+        entertainment='развлечения',
+        clothes='одежда',
+        present='подарки',
+        health='здоровье',
+        hobby='хобби',
+        other='прочее',
     )
     can_view_details = True
     create_modal = True
@@ -53,18 +55,18 @@ class CurrentBalanceView(ModelView):
 
 class MyWeightView(ModelView):
     column_display_pk = True
-    column_labels = dict(date="дата", value="вес")
-    column_filters = ["date"]
+    column_labels = dict(date='дата', value='вес')
+    column_filters = ['date']
 
 
 class MyNotesView(ModelView):
     column_display_pk = True
-    column_labels = dict(date="дата", note="запись")
-    column_editable_list = ["note"]
+    column_labels = dict(date='дата', note='запись')
+    column_editable_list = ['note']
     form_widget_args = {
-        "note": {
-            "rows": 10,
-            "style": "font-family: monospace;",
+        'note': {
+            'rows': 10,
+            'style': 'font-family: monospace;',
         }
     }
     form_overrides = dict(note=TextAreaField)
@@ -73,24 +75,37 @@ class MyNotesView(ModelView):
 
 class MyWorkoutView(ModelView):
     column_display_pk = True
-    column_labels = dict(date="дата", entries="тренировка")
-    column_editable_list = ["entries"]
+    column_labels = dict(date='дата', entries='тренировка')
+    column_editable_list = ['entries']
     form_widget_args = {
-        "entries": {
-            "rows": 10,
-            "style": "font-family: monospace;",
+        'entries': {
+            'rows': 10,
+            'style': 'font-family: monospace;',
         }
     }
     form_overrides = dict(entries=TextAreaField)
+
+
+class MyNutritionView(ModelView):
+    column_display_pk = True
+    column_labels = dict(
+        date='дата',
+        name='продукт',
+        proteins='белки',
+        fats='жиры',
+        carbohydrates='углеводы',
+        energy='Енергия/Ккал',
+    )
+    column_filters = ['date']
 
 
 admin.add_view(
     CurrentBalanceView(
         CurrentBalance,
         db.session,
-        name="Расходы",
-        menu_icon_type="glyph",
-        menu_icon_value="glyphicon-shopping-cart",
+        name='Расходы',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-shopping-cart',
     )
 )
 
@@ -98,9 +113,9 @@ admin.add_view(
     MyWeightView(
         MyWeight,
         db.session,
-        name="Вес",
-        menu_icon_type="glyph",
-        menu_icon_value="glyphicon-hand-down",
+        name='Вес',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-hand-down',
     )
 )
 
@@ -108,9 +123,9 @@ admin.add_view(
     MyNotesView(
         MyNotes,
         db.session,
-        name="Заметки",
-        menu_icon_type="glyph",
-        menu_icon_value="glyphicon-pencil",
+        name='Заметки',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-pencil',
     )
 )
 
@@ -118,8 +133,18 @@ admin.add_view(
     MyWorkoutView(
         MyWorkouts,
         db.session,
-        name="Тренировки",
-        menu_icon_type="glyph",
-        menu_icon_value="glyphicon-heart-empty",
+        name='Тренировки',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-heart-empty',
+    )
+)
+
+admin.add_view(
+    MyNutritionView(
+        MyNutrition,
+        db.session,
+        name='БЖУ',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-apple',
     )
 )

@@ -6,22 +6,29 @@ from dash import Dash
 
 server = Flask(__name__)
 
-external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = Dash(
     __name__,
     server=server,
-    url_base_pathname="/admin/analytics/",
+    url_base_pathname='/admin/analytics/',
     external_stylesheets=external_stylesheets,
 )
 
 app2 = Dash(
     __name__,
     server=server,
-    url_base_pathname="/admin/analytics/weight/",
+    url_base_pathname='/admin/analytics/weight/',
     external_stylesheets=external_stylesheets,
 )
 
-server.config.from_object("config.TestConfig")
+app3 = Dash(
+    __name__,
+    server=server,
+    url_base_pathname='/admin/analytics/nutrition/',
+    external_stylesheets=external_stylesheets,
+)
+
+server.config.from_object('config.TestConfig')
 db = SQLAlchemy(server)
 babel = Babel(server)
 

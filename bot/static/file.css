@@ -1,9 +1,10 @@
 .analytic {
     display: inline-block;
     text-align: center;
-    width: 180px;
-    height: 180px;
+    width: 100px;
+    height: 100px;
     position: relative;
+    margin-left: 30px;
 }
 
 

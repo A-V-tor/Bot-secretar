@@ -6,31 +6,32 @@ from dotenv import find_dotenv, load_dotenv
 from datetime import datetime
 
 load_dotenv(find_dotenv())
-headers = {"user-agent": os.getenv("headers")}
+headers = {'user-agent': os.getenv('headers')}
 
 
 def get_product():
     """Получение цен на нефть и газ"""
     mytable = PrettyTable()
-    mytable.field_names = ["товар", "цена 💰", "📈 $", "📉 %"]
+    mytable.field_names = ['товар', 'цена 💰', '📈 $', '📉 %']
     ses = requests.Session()
 
     try:
         response = ses.get(
-            f"https://ru.tradingview.com/markets/futures/quotes-energy/",
+            f'https://ru.tradingview.com/markets/futures/quotes-energy/',
             headers=headers,
         )
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = BeautifulSoup(response.text, 'html.parser')
 
         # список данных для извлечении имен
         data_list_names = soup.find_all(
-            "sup", class_="apply-common-tooltip tickerDescription-hMpTPJiS"
+            'sup', class_='apply-common-tooltip tickerDescription-hMpTPJiS'
         )
         # список имен
         list_names = [i.text for i in data_list_names][:10]
         # список данных
         list_data = [
-            i.text for i in soup.find_all("td", class_="cell-TKkxf89L right-TKkxf89L")
+            i.text
+            for i in soup.find_all('td', class_='cell-TKkxf89L right-TKkxf89L')
         ]
         lst = []
 
@@ -55,6 +56,6 @@ def get_product():
             data_table.extend([name, price, rub_change, percent_change])
             mytable.add_row(data_table)
     except Exception:
-        mytable.add_row(["Что-то", "пошло", "не так", "!"])
+        mytable.add_row(['Что-то', 'пошло', 'не так', '!'])
 
-    return f"<pre>{datetime.now()}\n{mytable}</pre>"
+    return f'<pre>{datetime.now()}\n{mytable}</pre>'
