@@ -21,10 +21,14 @@ prettytable = "^3.5.0"
 pandas = "^1.5.2"
 aiogram = "^2.25.1"
 flask-sqlalchemy = "^3.0.5"
+scrapy = "^2.9.0"
+alembic = "^1.11.1"
+
 
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.19.4"
+blue = "^0.9.1"
 
 [build-system]
 requires = ["poetry-core"]

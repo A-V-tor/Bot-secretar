@@ -18,7 +18,9 @@ app = create_app()
 @app.route('/', methods=['GET', 'POST'])
 def index():
     try:
-        weight, date = db.execute(select(MyWeight.value, MyWeight.date)).first()
+        weight, date = db.execute(
+            select(MyWeight.value, MyWeight.date)
+        ).first()
         return f'На {date} вес составляет {weight} кг'
     except Exception:
         return 'Hi man'
