@@ -7,7 +7,7 @@ from project.database.models import Base
 
 if __name__ == '__main__':
     # создание таблиц бд
-    Base.metadata.create_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
 
     tg = Process(target=bot_run)
     web = Process(target=web_run)

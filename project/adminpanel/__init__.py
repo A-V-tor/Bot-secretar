@@ -9,6 +9,8 @@ def create_app():
     app.config.from_object('config.DevelopConfig')
 
     with app.app_context():
+        from project.adminpanel.admin import admin
+
         return app
 
 
