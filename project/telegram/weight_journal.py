@@ -14,6 +14,7 @@ class NewJournalEntries(StatesGroup):
 
 class ChangeJournalEntries(StatesGroup):
     change_value = State()
+    cancel = State()
 
 
 async def weight_journal_root(callback: types.CallbackQuery):
@@ -35,17 +36,27 @@ async def weight_journal_root(callback: types.CallbackQuery):
 
 async def add_in_weight_journal(callback: types.CallbackQuery):
     """Запуск автомата по добавлению значения веса."""
+    kb = WeightInlineKeyboard()
+    kb.add_button('отмена', 'cancel')
     await NewJournalEntries.add_value.set()
-    await callback.message.reply('Введи текущий вес: ')
+    await callback.message.reply(
+        'Введи текущий вес: ', reply_markup=kb.keyboard
+    )
 
 
 async def change_value_weight(callback: types.CallbackQuery):
     """Запуск автомата по добавлению значения веса."""
+    kb = WeightInlineKeyboard()
+    kb.add_button('отмена', 'cancel')
     await ChangeJournalEntries.change_value.set()
-    await callback.message.reply('Введи значение веса: ')
+    await callback.message.reply(
+        'Введи значение веса: ', reply_markup=kb.keyboard
+    )
 
 
-async def add_new_value(message: types.Message, state: NewJournalEntries):
+async def write_to_database_new_value_weight(
+    message: types.Message, state: NewJournalEntries
+):
     """Запись веса в бд."""
     # Получаем введенный вес
     value_weight = message.text
@@ -55,7 +66,7 @@ async def add_new_value(message: types.Message, state: NewJournalEntries):
     await state.finish()
 
     try:
-        if MyWeight.check_note():
+        if MyWeight():
             new_note = MyWeight(value=float(value_weight))
             db.add(new_note)
             db.commit()

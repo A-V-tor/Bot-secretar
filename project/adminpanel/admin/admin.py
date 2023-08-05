@@ -2,7 +2,7 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask import current_app as app
 from flask_admin.contrib.sqla import ModelView
 from project.database.database import db
-from project.database.models import MyWeight
+from project.database.models import MyWeight, MyWorkout
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -41,4 +41,16 @@ class MyWeightView(ModelView):
     edit_modal = True
 
 
+class MyWorkoutView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    column_labels = dict(
+        date='Дата',
+        value='Значение',
+    )
+    create_modal = True
+    edit_modal = True
+
+
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
+admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))

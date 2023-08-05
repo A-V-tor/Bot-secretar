@@ -7,13 +7,28 @@ from .keyboards import StartInlineKeyboard
 from .weight_journal import (
     weight_journal_root,
     add_in_weight_journal,
-    add_new_value,
+    write_to_database_new_value_weight,
     change_value_weight,
     change_weight_value,
     NewJournalEntries,
     ChangeJournalEntries,
 )
+from .workout_journal import (
+    workout_journal_root,
+    get_workout_journal,
+    previous_month_of_workout,
+    next_month_of_workout,
+    get_workout_for_day,
+    delete_current_record,
+    get_workout_record_next_or_back,
+    add_workout_in_journal,
+    write_to_database_new_value_workout,
+    NewRecordWorkout,
+)
+import locale
 
+# установка родной локали, чтобы название месяца Python стал выводить кириллицей
+locale.setlocale(locale.LC_ALL, '')
 
 load_dotenv(find_dotenv())
 API_TOKEN = os.getenv('token')
@@ -23,23 +38,74 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=storage)
 
 
+k = StartInlineKeyboard()
+k.add_button('журнал веса', 'weight journal')
+k.add_button('журнал тренировок', 'workout journal')
+
+
 @dp.message_handler(commands=['start', 'help'])
 @dp.message_handler(Text(equals=['старт', 'start', 'Старт', 'Start']))
 async def send_welcome(message: types.Message):
     """
     This handler will be called when user sends `/start` or `/help` command.
     """
-    k = StartInlineKeyboard()
-    k.add_button('журнал веса', 'weight journal')
     await message.reply(f'Hi!\nman', reply_markup=k.keyboard)
 
 
+@dp.callback_query_handler(
+    lambda callback_query: callback_query.data == 'start'
+)
+async def root_menu(callback: types.CallbackQuery):
+    await callback.message.answer('Главное меню', reply_markup=k.keyboard)
+
+
+async def cancel_handler_inline(callback: types.CallbackQuery, state):
+    """Сброс машины состояний."""
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await callback.message.delete()
+    await callback.answer('Добавление записи отменено!')
+
+
+dp.register_callback_query_handler(
+    cancel_handler_inline, text='cancel', state='*'
+)
+
+# хендлеры журнала веса
 dp.register_callback_query_handler(weight_journal_root, text='weight journal')
 dp.register_callback_query_handler(add_in_weight_journal, text='add weight')
 dp.register_callback_query_handler(change_value_weight, text='change weight')
-dp.register_message_handler(add_new_value, state=NewJournalEntries.add_value)
+dp.register_message_handler(
+    write_to_database_new_value_weight, state=NewJournalEntries.add_value
+)
 dp.register_message_handler(
     change_weight_value, state=ChangeJournalEntries.change_value
+)
+
+# хендлеры журнала тренировок
+dp.register_callback_query_handler(
+    workout_journal_root, text='workout journal'
+)
+dp.register_callback_query_handler(get_workout_journal, text='show workout')
+dp.register_callback_query_handler(
+    previous_month_of_workout, lambda callback: callback.data.startswith('-')
+)
+dp.register_callback_query_handler(
+    next_month_of_workout, lambda callback: callback.data.startswith('+')
+)
+dp.register_callback_query_handler(
+    get_workout_for_day, lambda callback: callback.data.startswith('_')
+)
+dp.register_callback_query_handler(delete_current_record, text='del workout')
+dp.register_callback_query_handler(
+    get_workout_record_next_or_back,
+    lambda callback: callback.data.startswith('&'),
+)
+dp.register_callback_query_handler(add_workout_in_journal, text='add workout')
+dp.register_message_handler(
+    write_to_database_new_value_workout, state=NewRecordWorkout.add_record
 )
 
 
