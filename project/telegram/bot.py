@@ -36,6 +36,7 @@ from .expense_journal import (
     change_last_record,
     write_to_database_change_expense,
 )
+from .middlewares import AccessMiddleware
 import locale
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
@@ -47,6 +48,9 @@ API_TOKEN = os.getenv('token')
 storage = MemoryStorage()
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=storage)
+
+
+dp.middleware.setup(AccessMiddleware())
 
 
 k = StartInlineKeyboard()
