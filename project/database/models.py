@@ -19,3 +19,29 @@ class MyWorkout(Base):
     id = Column(Integer, primary_key=True)
     date = Column(DateTime(), default=datetime.datetime.now)
     value = Column(Text)
+
+
+class MyExpenses(Base):
+    __tablename__ = 'myexpenses'
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime(), default=datetime.datetime.now)
+    health = Column(Integer, default=0)
+    transport = Column(Integer, default=0)
+    food = Column(Integer, default=0)
+    entertainment = Column(Integer, default=0)
+    purchases = Column(Integer, default=0)
+    present = Column(Integer, default=0)
+    other = Column(Integer, default=0)
+
+
+class DayReport(Base):
+    __tablename__ = 'dayreport'
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime(), nullable=False)
+    health = Column(Integer, default=0)
+    transport = Column(Integer, default=0)
+    food = Column(Integer, default=0)
+    entertainment = Column(Integer, default=0)
+    purchases = Column(Integer, default=0)
+    present = Column(Integer, default=0)
+    other = Column(Integer, default=0)

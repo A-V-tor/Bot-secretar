@@ -11,30 +11,6 @@ class AbstractInlineKeyboard(ABC):
     def __init__(self):
         self.keyboard = InlineKeyboardMarkup(resize_keyboard=True)
 
-    @abstractmethod
-    def add_button(self, text, callback_data):
-        pass
-
-
-class StartInlineKeyboard(AbstractInlineKeyboard):
-    def add_button(self, text, callback_data):
-        self.keyboard.add(
-            InlineKeyboardButton(text, callback_data=callback_data)
-        )
-
-
-class WeightInlineKeyboard(AbstractInlineKeyboard):
-    def __init__(self):
-        super().__init__()
-        self.add_button('/', 'start')
-
-    def add_button(self, text, callback_data):
-        self.keyboard.add(
-            InlineKeyboardButton(text, callback_data=callback_data)
-        )
-
-
-class WorkoutInlineKeyboard(AbstractInlineKeyboard):
     def add_button(self, text, callback_data):
         self.keyboard.add(
             InlineKeyboardButton(text, callback_data=callback_data)
@@ -48,6 +24,22 @@ class WorkoutInlineKeyboard(AbstractInlineKeyboard):
     def make_row_width(self, num):
         self.keyboard.row_width = num
 
+    def button_start_menu(self):
+        self.add_button('/', 'start')
+
+    def button_cancel(self):
+        self.add_button('отмена', 'cancel')
+
+
+class StartInlineKeyboard(AbstractInlineKeyboard):
+    pass
+
+
+class WeightInlineKeyboard(AbstractInlineKeyboard):
+    pass
+
+
+class WorkoutInlineKeyboard(AbstractInlineKeyboard):
     def get_buttons_next_or_back_record(self):
         self.add_button('следующая', callback_data='& next workout')
         self.add_button('предыдущая', callback_data='& back workout')
@@ -59,8 +51,16 @@ class WorkoutInlineKeyboard(AbstractInlineKeyboard):
         self.add_button('назад', f'-{month} {year}')
         self.insert_button('вперед', f'+{month} {year}')
 
-    def button_start_menu(self):
-        self.add_button('/', 'start')
 
-    def button_cancel(self):
-        self.add_button('отмена', 'cancel')
+class ExpenseInlineKeyboard(AbstractInlineKeyboard):
+    def button_root_expense(self):
+        self.add_button('<<', 'expencse journal')
+
+    def expense_category_buttons(self):
+        self.add_button('здоровье', '^ health')
+        self.add_button('транспорт', '^ transport')
+        self.add_button('еда', '^ food')
+        self.add_button('развлечения', '^ entertainment')
+        self.add_button('покупки', '^ purchases')
+        self.add_button('подарки', '^ present')
+        self.add_button('прочее', '^ other')

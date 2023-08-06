@@ -63,3 +63,29 @@ def get_msg_for_records_workout(
     ----------------------------------------\n
     {text_record}
     """
+
+
+def get_russian_category_name(category: str) -> str:
+    res = None
+    if category == 'health':
+        res = 'здоровье'
+    if category == 'transport':
+        res = 'транспорт'
+    if category == 'food':
+        res = 'еда'
+    if category == 'entertainment':
+        res = 'развлечения'
+    if category == 'purchases':
+        res = 'покупки'
+    if category == 'present':
+        res = 'подарки'
+    if category == 'other':
+        res = 'прочее'
+
+    return res
+
+
+def get_non_zero_keys(d: dict) -> str:
+    for key, value in d.items():
+        if key not in ('id', 'date', '_sa_instance_state') and value != 0:
+            return key

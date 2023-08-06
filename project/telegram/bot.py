@@ -25,6 +25,17 @@ from .workout_journal import (
     write_to_database_new_value_workout,
     NewRecordWorkout,
 )
+from .expense_journal import (
+    expencse_journal_root,
+    get_expenses_for_day,
+    add_expenses_in_journal,
+    parse_categories_for_expenses,
+    NewRecordExpense,
+    ChangeRecordExpense,
+    write_to_database_new_expense,
+    change_last_record,
+    write_to_database_change_expense,
+)
 import locale
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
@@ -41,6 +52,7 @@ dp = Dispatcher(bot, storage=storage)
 k = StartInlineKeyboard()
 k.add_button('журнал веса', 'weight journal')
 k.add_button('журнал тренировок', 'workout journal')
+k.add_button('журнал расходов', 'expencse journal')
 
 
 @dp.message_handler(commands=['start', 'help'])
@@ -107,6 +119,28 @@ dp.register_callback_query_handler(add_workout_in_journal, text='add workout')
 dp.register_message_handler(
     write_to_database_new_value_workout, state=NewRecordWorkout.add_record
 )
+
+# хендлеры журнала расходов
+dp.register_callback_query_handler(
+    expencse_journal_root, text='expencse journal'
+)
+dp.register_callback_query_handler(
+    get_expenses_for_day, text='get current table'
+)
+dp.register_callback_query_handler(
+    add_expenses_in_journal, text='add  expense'
+)
+dp.register_callback_query_handler(
+    parse_categories_for_expenses,
+    lambda callback: callback.data.startswith('^'),
+)
+dp.register_message_handler(
+    write_to_database_new_expense, state=NewRecordExpense.add_record
+)
+dp.register_message_handler(
+    write_to_database_change_expense, state=ChangeRecordExpense.change_record
+)
+dp.register_callback_query_handler(change_last_record, text='change expence')
 
 
 def bot_run():
