@@ -1,4 +1,5 @@
 from aiogram import types
+import logging
 from .keyboards import WorkoutInlineKeyboard
 from .utils import (
     get_current_month_and_year,
@@ -12,6 +13,9 @@ from sqlalchemy import extract
 import datetime
 import calendar
 from collections import deque
+
+
+logger = logging.getLogger(__name__)
 
 
 LIST_RECORDS_FOR_THE_DAY = deque()
@@ -244,8 +248,8 @@ async def write_to_database_new_value_workout(
         db.add(new_note)
         db.commit()
         msg = 'Тренировка добавлена'
-    except Exception as e:
-        # позже записать ошибку в лог-файл
-        msg = 'Некорректное значение!'
+    except ValueError as e:
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Значение должно быть числом!'
 
     await message.reply(msg)

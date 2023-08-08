@@ -3,6 +3,7 @@ import os
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 env_values = os.getenv('owner_id')
@@ -15,7 +16,7 @@ allowed_user_id = [int(value) for value in values_list]
 class NotAccessRights(Exception):
     def __init__(
         self,
-        message='У вас нет прав доступа к этой команде: user ',
+        message='Неправомерный доступ: user ',
         user_id=None,
     ):
         self.message = message + str(user_id)
@@ -29,4 +30,5 @@ class AccessMiddleware(BaseMiddleware):
         if user_id not in allowed_user_id:
 
             # Если пользователь не имеет доступа
+
             raise NotAccessRights(user_id=user_id)

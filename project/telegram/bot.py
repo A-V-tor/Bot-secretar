@@ -39,10 +39,14 @@ from .expense_journal import (
 from .middlewares import AccessMiddleware
 import locale
 
+from .logger import get_loggs
+
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
 locale.setlocale(locale.LC_ALL, '')
 
 load_dotenv(find_dotenv())
+
+
 API_TOKEN = os.getenv('token')
 
 storage = MemoryStorage()
@@ -148,8 +152,10 @@ dp.register_callback_query_handler(change_last_record, text='change expence')
 
 
 def bot_run():
+    get_loggs()
     executor.start_polling(dp, skip_updates=True)
 
 
 if __name__ == '__main__':
+    get_loggs()
     executor.start_polling(dp, skip_updates=True)

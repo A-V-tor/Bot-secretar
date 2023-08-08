@@ -1,3 +1,4 @@
+import logging
 from aiogram import types
 from .keyboards import ExpenseInlineKeyboard
 from prettytable import PrettyTable
@@ -11,6 +12,9 @@ import datetime
 
 SELECT_CATEGORY = None
 CHANGE_CATEGORY = None
+
+
+logger = logging.getLogger(__name__)
 
 
 class NewRecordExpense(StatesGroup):
@@ -75,7 +79,11 @@ async def get_expenses_for_day(callback: types.CallbackQuery):
         mytable.add_row(['Всего', total])
 
         msg = mytable
+    except TypeError as e:
+        logger.exception(f'Ошибка- журнал пуст: {str(e)}')
+        msg = 'Журнал пуст!'
     except Exception as e:
+        logger.exception(f'Ошибка: {str(e)}')
         msg = 'Что-то пошло не так'
 
     await callback.message.answer(
@@ -119,8 +127,9 @@ async def write_to_database_new_expense(
         db.add(new_record)
         db.commit()
         msg = 'Запись сделана!'
-    except Exception as e:
-        msg = 'Ошибка'
+    except ValueError as e:
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Значение должно быть числом!'
 
     SELECT_CATEGORY = None
     kb = ExpenseInlineKeyboard()
@@ -164,8 +173,9 @@ async def write_to_database_change_expense(
         db.add(note)
         db.commit()
         msg = 'Запись сделана!'
-    except Exception as e:
-        msg = 'Ошибка'
+    except ValueError as e:
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Значение должно быть числом!'
 
     CHANGE_CATEGORY = None
 

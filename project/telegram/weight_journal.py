@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types
 from .keyboards import WeightInlineKeyboard
 from project.database.database import db
@@ -6,6 +8,9 @@ import datetime
 
 from project.database.models import MyWeight
 from sqlalchemy import desc
+
+
+logger = logging.getLogger(__name__)
 
 
 class NewJournalEntries(StatesGroup):
@@ -71,9 +76,9 @@ async def write_to_database_new_value_weight(
             db.add(new_note)
             db.commit()
             msg = f'Текущий вес: {str(new_note.value)[:-2]}  кг'
-    except Exception as e:
-        # позже записать ошибку в лог-файл
-        msg = 'Некорректное значение!'
+    except ValueError as e:
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Значение должно быть числом!'
     await message.reply(msg)
 
 
@@ -93,7 +98,8 @@ async def change_weight_value(
         today_record.date = datetime.datetime.now()
         db.commit()
         msg = f'{str(today_record.value)[:-2]} кг'
-    except Exception as e:
-        # позже записать ошибку в лог-файл
-        msg = 'Некорректное значение!'
+    except ValueError as e:
+        logger.exception(f'Ошибка записи значения: {str(e)}')
+        msg = 'Ошибка\n Значение должно быть числом!'
+
     await message.reply(msg)
