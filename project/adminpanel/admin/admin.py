@@ -1,8 +1,10 @@
 from flask_admin import Admin, AdminIndexView, expose
 from flask import current_app as app
 from flask_admin.contrib.sqla import ModelView
+from flask_login import current_user
 from project.database.database import db
 from project.database.models import MyWeight, MyWorkout, MyExpenses, DayReport
+from project.adminpanel.admin.models import AdminUser
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -12,7 +14,8 @@ class MyAdminIndexView(AdminIndexView):
 
     def is_accessible(self):
         try:
-            return True
+            if current_user.is_authenticated:
+                return True
         except Exception as e:
             pass
 
@@ -40,6 +43,13 @@ class MyWeightView(ModelView):
     create_modal = True
     edit_modal = True
 
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
 
 class MyWorkoutView(ModelView):
     column_display_pk = True
@@ -50,6 +60,13 @@ class MyWorkoutView(ModelView):
     )
     create_modal = True
     edit_modal = True
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
 
 
 class MyExpensesView(ModelView):
@@ -69,7 +86,31 @@ class MyExpensesView(ModelView):
     create_modal = True
     edit_modal = True
 
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
+
+class AdminUserView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    column_labels = dict(
+        name='Логин',
+        psw='Пароль',
+    )
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
 
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
 admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))
 admin.add_view(MyExpensesView(MyExpenses, db, name='Расходы'))
+admin.add_view(AdminUserView(AdminUser, db, name='Администраторы'))

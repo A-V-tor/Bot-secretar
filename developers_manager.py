@@ -1,8 +1,6 @@
 from multiprocessing import Process
 from project.adminpanel import web_run
 from project.telegram import bot_run
-from project.database.database import engine
-from project.database.models import Base
 
 
 if __name__ == '__main__':
