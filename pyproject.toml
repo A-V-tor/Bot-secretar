@@ -23,6 +23,7 @@ aiogram = "^2.25.1"
 flask-sqlalchemy = "^3.0.5"
 scrapy = "^2.9.0"
 alembic = "^1.11.1"
+gunicorn = "^21.2.0"
 
 
 
