@@ -18,7 +18,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ~  # Перейти в домашний каталог, если необходимо
-          git clone https://github.com/yourusername/Bot-secretar.git
+          git clone https://github.com/A-V-tor/Bot-secretar.git
           cd Bot-secretar
           chmod +x start.sh
           ./start.sh
