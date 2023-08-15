@@ -16,13 +16,13 @@ class AdminUser(BaseAdmin, UserMixin):
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name')
-        self.psw = generate_password_hash(kwargs.get('psw'))
+        self.psw = kwargs.get('psw')
 
     def __str__(self):
         return self.name
 
 
-# хеширование пароля в админке
+# хеширование пароля перед записью в бд
 @event.listens_for(AdminUser, 'before_insert')
 def hash_password(mapper, connection, target):
     target.psw = generate_password_hash(target.psw)
