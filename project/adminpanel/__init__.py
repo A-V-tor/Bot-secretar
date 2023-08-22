@@ -1,3 +1,6 @@
+import logging
+from datetime import datetime
+
 from flask import (
     Flask,
     flash,
@@ -18,12 +21,19 @@ from sqlalchemy import select
 
 def create_app():
     app = Flask(__name__)
+
     app.config.from_object('config.DevelopConfig')
 
     with app.app_context():
         from project.adminpanel.admin import admin
 
         return app
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+filehandler = logging.FileHandler('flask-logs.log')
+logger.addHandler(filehandler)
 
 
 login_manager = LoginManager()
@@ -49,6 +59,10 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    date = datetime.now()
+    logger.info(f'{date} Запрос с ip {request.access_route[0]}\n')
+    logger.info(f'{request.user_agent}\n')
+    logger.info(f'{request.cookies}\n\n')
     return 'Hi man'
 
 
@@ -76,6 +90,24 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.errorhandler(404)
+def pageNot(error):
+    date = datetime.now()
+    logger.error(
+        f'{date} !!! Запрос с ip {request.access_route[0]} на несуществующий адрес {request.url}\n'
+    )
+    return 'Адрес не существует'
+
+
+@app.errorhandler(403)
+def notAllowed(error):
+    date = datetime.now()
+    logger.error(
+        f'{date} !!! Запрос с ip {request.access_route[0]} на запрещеный адрес {request.url}\n'
+    )
+    return redirect('https://www.google.com/')
 
 
 def web_run():
