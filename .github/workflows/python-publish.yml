@@ -19,3 +19,8 @@ jobs:
         script: |
           cd Bot-secretar
           git pull
+          chmod +x start.sh
+          ./start.sh
+          systemctl restart bot.service
+          systemctl restart adminpanel.service
+          systemctl restart nginx
