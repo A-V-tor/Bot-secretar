@@ -33,6 +33,7 @@ async def workout_journal_root(callback: types.CallbackQuery):
     kb.add_button('журнал', 'show workout')
     kb.add_button('добавить', 'add workout')
     msg = 'Меню'
+    await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -47,6 +48,7 @@ async def previous_month_of_workout(callback: types.CallbackQuery):
     """Назад по календарю."""
     month, year = callback.data[1:].split(' ')
     month, year = get_current_month_and_year(month, year, 'back')
+    await callback.message.delete()
     await show_calendar(callback, int(year), int(month))
 
 
@@ -54,6 +56,7 @@ async def next_month_of_workout(callback: types.CallbackQuery):
     """Вперед по календарю."""
     month, year = callback.data[1:].split(' ')
     month, year = get_current_month_and_year(month, year, 'next')
+    await callback.message.delete()
     await show_calendar(callback, int(year), int(month))
 
 
@@ -107,6 +110,7 @@ async def show_calendar(callback, year, month, selected_day=None):
     )
     kb.button_start_menu()
     kb.add_button('<<', 'workout journal')
+    await callback.message.delete() if selected_day else None
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -117,6 +121,8 @@ async def get_workout_for_day(callback: types.CallbackQuery):
     global LIST_RECORDS_FOR_THE_DAY
     global DEL_RECORD
     LIST_RECORDS_FOR_THE_DAY.clear()
+
+    await callback.message.delete()
 
     workout_notes = (
         db.query(MyWorkout)
@@ -192,6 +198,7 @@ async def delete_current_record(callback: types.CallbackQuery):
         LIST_RECORDS_FOR_THE_DAY = None
         DEL_RECORD = None
 
+    await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -223,6 +230,7 @@ async def get_workout_record_next_or_back(callback: types.CallbackQuery):
     if records_amount > 1:
         kb.get_buttons_next_or_back_record()
 
+    await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -231,6 +239,7 @@ async def add_workout_in_journal(callback: types.CallbackQuery):
     kb.button_start_menu()
     kb.button_cancel()
     await NewRecordWorkout.add_record.set()
+    await callback.message.delete()
     await callback.message.answer(
         'Запиши тренировку: ', reply_markup=kb.keyboard
     )
@@ -243,6 +252,10 @@ async def write_to_database_new_value_workout(
     text_record = message.text
     await state.finish()
 
+    # удаление предыдущего сообщения
+    message.message_id -= 1
+    await message.delete()
+
     try:
         new_note = MyWorkout(value=text_record)
         db.add(new_note)
@@ -252,4 +265,4 @@ async def write_to_database_new_value_workout(
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
 
-    await message.reply(msg)
+    await message.answer(msg)

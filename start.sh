@@ -1,14 +1,12 @@
 #!/bin/bash
 
-# Обработка сигнала Ctrl+C
-trap 'echo "Terminating processes..."; pkill -P $$; exit' SIGINT
 
-# Запуск Flask
-gunicorn -b 0.0.0.0:5000 app:app &
-#python  app.py &
+# Генерируем случайное имя ревизии
+REVISION_NAME=$(date +'%Y%m%d%H%M%S')
 
-# Запуск бота
-python app_bot.py &
+# Генерируем миграции
+alembic revision --autogenerate -m "Revision $REVISION_NAME"
 
-# Ожидание завершения обоих процессов
-wait
+# Применяем миграции
+alembic upgrade head
+

@@ -25,7 +25,7 @@ class AbstractInlineKeyboard(ABC):
         self.keyboard.row_width = num
 
     def button_start_menu(self):
-        self.add_button('/', 'start')
+        self.add_button('🗂️', 'start')
 
     def button_cancel(self):
         self.add_button('отмена', 'cancel')

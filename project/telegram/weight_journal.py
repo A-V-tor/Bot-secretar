@@ -1,5 +1,4 @@
 import logging
-
 from aiogram import types
 from .keyboards import WeightInlineKeyboard
 from project.database.database import db
@@ -35,6 +34,7 @@ async def weight_journal_root(callback: types.CallbackQuery):
     else:
         msg = f'Нет записи на {today}'
         kb.add_button('добавить запись', 'add weight')
+        kb.button_start_menu()
     await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
@@ -44,9 +44,11 @@ async def add_in_weight_journal(callback: types.CallbackQuery):
     kb = WeightInlineKeyboard()
     kb.add_button('отмена', 'cancel')
     await NewJournalEntries.add_value.set()
-    await callback.message.reply(
+    await callback.message.delete()
+    await callback.message.answer(
         'Введи текущий вес: ', reply_markup=kb.keyboard
     )
+    await callback.message.delete()
 
 
 async def change_value_weight(callback: types.CallbackQuery):
@@ -54,7 +56,8 @@ async def change_value_weight(callback: types.CallbackQuery):
     kb = WeightInlineKeyboard()
     kb.add_button('отмена', 'cancel')
     await ChangeJournalEntries.change_value.set()
-    await callback.message.reply(
+    await callback.message.delete()
+    await callback.message.answer(
         'Введи значение веса: ', reply_markup=kb.keyboard
     )
 
@@ -69,6 +72,12 @@ async def write_to_database_new_value_weight(
         value_weight = value_weight.replace(',', '.')
 
     await state.finish()
+    kb = WeightInlineKeyboard()
+    kb.button_start_menu()
+
+    # удаление предыдущего сообщения
+    message.message_id -= 1
+    await message.delete()
 
     try:
         if MyWeight():
@@ -79,7 +88,7 @@ async def write_to_database_new_value_weight(
     except ValueError as e:
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
-    await message.reply(msg)
+    await message.answer(msg, reply_markup=kb.keyboard)
 
 
 async def change_weight_value(
@@ -91,8 +100,14 @@ async def change_weight_value(
         value_weight = value_weight.replace(',', '.')
 
     await state.finish()
-    try:
+    kb = WeightInlineKeyboard()
+    kb.button_start_menu()
 
+    # удаление предыдущего сообщения
+    message.message_id -= 1
+    await message.delete()
+
+    try:
         today_record = db.query(MyWeight).order_by(desc(MyWeight.date)).first()
         today_record.value = float(value_weight)
         today_record.date = datetime.datetime.now()
@@ -102,4 +117,4 @@ async def change_weight_value(
         logger.exception(f'Ошибка записи значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
 
-    await message.reply(msg)
+    await message.answer(msg, reply_markup=kb.keyboard)

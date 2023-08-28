@@ -31,6 +31,7 @@ async def expencse_journal_root(callback: types.CallbackQuery):
     kb.add_button('журнал', 'get current table')
     kb.add_button('новая запись', 'add  expense')
     kb.add_button('изменить значение', 'change expence')
+    await callback.message.delete()
     await callback.message.answer('Журнал расходов', reply_markup=kb.keyboard)
 
 
@@ -41,6 +42,8 @@ async def get_expenses_for_day(callback: types.CallbackQuery):
     kb = ExpenseInlineKeyboard()
     kb.button_start_menu()
     kb.button_root_expense()
+
+    await callback.message.delete()
 
     try:
         query_ = (
@@ -97,6 +100,7 @@ async def add_expenses_in_journal(callback: types.CallbackQuery):
     kb.button_start_menu()
     kb.button_root_expense()
     msg = 'Выбери категорию трат'
+    await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -111,6 +115,7 @@ async def parse_categories_for_expenses(callback: types.CallbackQuery):
     kb.button_start_menu()
     kb.button_root_expense()
     kb.button_cancel()
+    await callback.message.delete()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -120,6 +125,10 @@ async def write_to_database_new_expense(
     global SELECT_CATEGORY
     value = message.text
     await state.finish()
+
+    # удаление предыдущего сообщения
+    message.message_id -= 1
+    await message.delete()
 
     try:
         new_record = MyExpenses()
@@ -152,6 +161,7 @@ async def change_last_record(callback: types.CallbackQuery):
     category = get_russian_category_name(category)
     msg = f'Введи значение для последней записи категории: {category}'
 
+    await callback.message.delete()
     await ChangeRecordExpense.change_record.set()
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
@@ -162,6 +172,10 @@ async def write_to_database_change_expense(
     global CHANGE_CATEGORY
     value = message.text
     await state.finish()
+
+    # удаление предыдущего сообщения
+    message.message_id -= 1
+    await message.delete()
 
     kb = ExpenseInlineKeyboard()
     kb.button_start_menu()

@@ -50,17 +50,17 @@ load_dotenv(find_dotenv())
 API_TOKEN = os.getenv('token')
 
 storage = MemoryStorage()
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot, storage=storage)
+mybot = Bot(token=API_TOKEN)
+dp = Dispatcher(mybot, storage=storage)
 
 
 dp.middleware.setup(AccessMiddleware())
 
 
 k = StartInlineKeyboard()
-k.add_button('журнал веса', 'weight journal')
-k.add_button('журнал тренировок', 'workout journal')
-k.add_button('журнал расходов', 'expencse journal')
+k.add_button('журнал веса ⚖️', 'weight journal')
+k.add_button('журнал тренировок 🏋️', 'workout journal')
+k.add_button('журнал расходов 💵', 'expencse journal')
 
 
 @dp.message_handler(commands=['start', 'help'])
@@ -76,6 +76,7 @@ async def send_welcome(message: types.Message):
     lambda callback_query: callback_query.data == 'start'
 )
 async def root_menu(callback: types.CallbackQuery):
+    await callback.message.delete()
     await callback.message.answer('Главное меню', reply_markup=k.keyboard)
 
 
