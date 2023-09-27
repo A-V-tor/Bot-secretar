@@ -1,0 +1,75 @@
+/* Убираем подчеркивание для наведения */
+a:hover {
+    text-decoration: none;
+}
+
+/* Убираем обводку (outline) после нажатия */
+a:active,
+a:focus {
+    outline: none;
+}
+
+.notes-container {
+
+}
+
+.link-note {
+    color: #3498db;
+    font-family: Helvetica, sans-serif;
+    font-size: 24px;
+}
+
+.add-note {
+    color: #050505;
+    margin-left: 52px;
+    background-color: #3498db;
+    background-image: linear-gradient(to right, #B2F2DB, #259797);
+    width: 210px;
+}
+
+.area-admin-index {
+    margin-left: 50px;
+    border: 3px solid #259797;
+    border-radius: 5%;
+}
+
+.btn-note {
+    color: #050505;
+    background-image: linear-gradient(to right, #259797, #B2F2DB);
+    position: absolute;
+    bottom: 3px;
+    left: 35%;
+}
+
+.btn-note-github {
+    color: #050505;
+    background-image: linear-gradient(to right, #a028eb, #28d4eb);
+    position: absolute;
+    bottom: 3px;
+    left: 35%;
+}
+
+.btn-note-secret {
+    color: #050505;
+    background-image: linear-gradient(to right, #dbde217c, #f1f50cf5);
+    position: absolute;
+    bottom: 3px;
+    left: 35%;
+}
+.notes li {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle; /* выровнить элементы внутри внешнего блока */
+  width: 250px; /* Задайте ширину по вашему выбору */
+  height: 250px; /* Задайте высоту по вашему выбору */
+  border: 1px solid #ccc; /* Добавьте границу для визуального разделения */
+  border-radius: 10%;
+  border-style:dashed;
+  padding: 10px; /* Добавьте отступ внутри элемента */
+  margin: 5px; /* Добавьте отступ вокруг элемента */
+  text-align: center; /* Выравнивание текста по центру */
+  list-style-type: none; /* Убираем маркеры списка */
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* тени */
+  word-wrap: break-word; /* перенос текста внутри элемента */
+}
+

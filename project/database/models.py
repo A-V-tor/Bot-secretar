@@ -1,6 +1,15 @@
 import datetime
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Integer, String, Column, DECIMAL, DateTime, Text, desc
+from sqlalchemy import (
+    Integer,
+    String,
+    Column,
+    DECIMAL,
+    DateTime,
+    Text,
+    desc,
+    event,
+)
 
 
 class Base(DeclarativeBase):
@@ -45,3 +54,15 @@ class DayReport(Base):
     purchases = Column(Integer, default=0)
     present = Column(Integer, default=0)
     other = Column(Integer, default=0)
+
+
+class MyNotes(Base):
+    __tablename__ = 'mynotes'
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime(), nullable=False)
+    note = Column(Text)
+
+    def to_dict(self):
+        return {
+            key: value for key, value in self.__dict__.items() if key == 'note'
+        }

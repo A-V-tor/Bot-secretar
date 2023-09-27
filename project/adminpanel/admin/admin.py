@@ -3,7 +3,13 @@ from flask import current_app as app
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from project.database.database import db
-from project.database.models import MyWeight, MyWorkout, MyExpenses, DayReport
+from project.database.models import (
+    MyWeight,
+    MyWorkout,
+    MyExpenses,
+    DayReport,
+    MyNotes,
+)
 from project.adminpanel.admin.models import AdminUser
 
 
@@ -110,7 +116,24 @@ class AdminUserView(ModelView):
             pass
 
 
+class MyNotesView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    column_labels = dict(
+        date='ДАТА',
+        note='Заметка',
+    )
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
+
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
 admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))
 admin.add_view(MyExpensesView(MyExpenses, db, name='Расходы'))
 admin.add_view(AdminUserView(AdminUser, db, name='Администраторы'))
+admin.add_view(MyNotesView(MyNotes, db, name='Заметки'))

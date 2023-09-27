@@ -1,10 +1,16 @@
+import os
 from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
+from dotenv import load_dotenv
 from abc import ABC, abstractmethod
+
+
+load_dotenv()
+URL_ADMIN = os.getenv('URL_ADMIN')
 
 
 class AbstractInlineKeyboard(ABC):
@@ -32,7 +38,11 @@ class AbstractInlineKeyboard(ABC):
 
 
 class StartInlineKeyboard(AbstractInlineKeyboard):
-    pass
+    def __init__(self):
+        """Конпка входа в админку."""
+        super().__init__()
+        kb_web = InlineKeyboardButton('📟 Админка 📟', url=URL_ADMIN)
+        self.keyboard.add(kb_web)
 
 
 class WeightInlineKeyboard(AbstractInlineKeyboard):

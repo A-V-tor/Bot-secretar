@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from dotenv import find_dotenv, load_dotenv
 
 from flask import (
     Flask,
@@ -11,21 +12,27 @@ from flask import (
     session,
 )
 from flask_login import LoginManager, login_user, logout_user, current_user
+
+from project.adminpanel.api.routes import api
 from project.database.database import db
 from werkzeug.security import check_password_hash
-from project.database.models import MyWeight
 from flask_babelex import Babel
 from project.adminpanel.admin.models import AdminUser
-from sqlalchemy import select
+
+
+load_dotenv(find_dotenv())
 
 
 def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config.DevelopConfig')
+    # app.config.from_object('config.ProductionConfig')
 
     with app.app_context():
         from project.adminpanel.admin import admin
+
+        app.register_blueprint(api)
 
         return app
 

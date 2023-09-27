@@ -42,7 +42,7 @@ import locale
 from .logger import get_loggs
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
-locale.setlocale(locale.LC_ALL, '')
+locale.setlocale(locale.LC_ALL, 'ru_RU')
 
 load_dotenv(find_dotenv())
 
