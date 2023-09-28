@@ -256,13 +256,22 @@ async def write_to_database_new_value_workout(
     message.message_id -= 1
     await message.delete()
 
+    kb = WorkoutInlineKeyboard()
+    kb.button_start_menu()
+
     try:
         new_note = MyWorkout(value=text_record)
         db.add(new_note)
         db.commit()
         msg = 'Тренировка добавлена'
+
     except ValueError as e:
+        db.rollback()
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
+    except Exception as e:
+        db.rollback()
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Что то случилось и все сломалось'
 
-    await message.answer(msg)
+    await message.answer(msg, reply_markup=kb.keyboard)

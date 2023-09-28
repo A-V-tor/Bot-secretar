@@ -31,6 +31,7 @@ async def weight_journal_root(callback: types.CallbackQuery):
     if today_record is not None and today_record.date.date() == today:
         msg = f'Вес сегодня ({today}): {str(today_record.value)[:-2]} кг'
         kb.add_button('изменить запись', 'change weight')
+        kb.button_start_menu()
     else:
         msg = f'Нет записи на {today}'
         kb.add_button('добавить запись', 'add weight')
@@ -86,8 +87,14 @@ async def write_to_database_new_value_weight(
             db.commit()
             msg = f'Текущий вес: {str(new_note.value)[:-2]}  кг'
     except ValueError as e:
+        db.rollback()
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
+    except Exception as e:
+        db.rollback()
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Что то случилось и все сломалось'
+
     await message.answer(msg, reply_markup=kb.keyboard)
 
 
@@ -114,7 +121,12 @@ async def change_weight_value(
         db.commit()
         msg = f'{str(today_record.value)[:-2]} кг'
     except ValueError as e:
+        db.rollback()
         logger.exception(f'Ошибка записи значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
+    except Exception as e:
+        db.rollback()
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Что то случилось и все сломалось'
 
     await message.answer(msg, reply_markup=kb.keyboard)

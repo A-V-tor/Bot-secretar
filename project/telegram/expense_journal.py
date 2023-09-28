@@ -137,8 +137,13 @@ async def write_to_database_new_expense(
         db.commit()
         msg = 'Запись сделана!'
     except ValueError as e:
+        db.rollback()
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
+    except Exception as e:
+        db.rollback()
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Что то случилось и все сломалось'
 
     SELECT_CATEGORY = None
     kb = ExpenseInlineKeyboard()
@@ -188,8 +193,13 @@ async def write_to_database_change_expense(
         db.commit()
         msg = 'Запись сделана!'
     except ValueError as e:
+        db.rollback()
         logger.exception(f'Ошибка значения: {str(e)}')
         msg = 'Ошибка\n Значение должно быть числом!'
+    except Exception as e:
+        db.rollback()
+        logger.exception(f'Ошибка значения: {str(e)}')
+        msg = 'Ошибка\n Что то случилось и все сломалось'
 
     CHANGE_CATEGORY = None
 

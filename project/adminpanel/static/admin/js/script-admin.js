@@ -38,7 +38,7 @@ const App = {
           try {
             const res = await fetch(this.notesUrl, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey},
               body : JSON.stringify({data: `<a href="${link}" class="link-note" target="_blank">${textNoLink}</a>`})
             });
             if (!res.ok) {
