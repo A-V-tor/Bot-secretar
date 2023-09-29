@@ -42,5 +42,35 @@ def all_notes():
             db.commit()
             return {'message': 'Entry added successfully'}, 200
         except Exception as e:
-            return jsonify({'message': 'Error'}), 503
+            return {'message': 'Error'}, 503
     return jsonify({'all_notes': [i.to_dict()['note'] for i in all_notes]})
+
+
+@api.route('/flask-logs', methods=['GET'])
+def get_flask_logs():
+    '''Отдача логов Flask приложения на админ-панель.'''
+    try:
+        with open('flask-logs.log') as f:
+            lines = f.readlines()
+
+            # переворачиваем список строк
+            reversed_lines = reversed(lines)
+
+            # преобразуем обратно в строку
+            reversed_content = ''.join(reversed_lines)
+            return reversed_content
+    except FileNotFoundError:
+        return "Файл не найден"
+
+
+@api.route('/bot-logs', methods=['GET'])
+def get_bot_logs():
+    '''Отдача логов телеграм приложения на админ-панель.'''
+    try:
+        with open('bot.log') as f:
+            lines = f.readlines()
+            reversed_lines = reversed(lines)
+            reversed_content = ''.join(reversed_lines)
+            return reversed_content
+    except FileNotFoundError:
+        return "Файл не найден"

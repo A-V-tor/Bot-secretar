@@ -1,4 +1,4 @@
-from flask_admin import Admin, AdminIndexView, expose
+from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask import current_app as app
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
@@ -37,6 +37,19 @@ admin = Admin(
         menu_icon_value='glyphicon-send',
     ),
 )
+
+
+class MyLogsView(BaseView):
+    @expose('/')
+    def default_view(self):
+        return self.render('admin/logs-show.html')
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
 
 
 class MyWeightView(ModelView):
@@ -132,6 +145,7 @@ class MyNotesView(ModelView):
             pass
 
 
+admin.add_view(MyLogsView(name='Журнал логов', endpoint='my-logs', menu_icon_type='glyph', menu_icon_value='glyphicon-eye-open'))
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
 admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))
 admin.add_view(MyExpensesView(MyExpenses, db, name='Расходы'))
