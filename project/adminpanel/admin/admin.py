@@ -145,7 +145,14 @@ class MyNotesView(ModelView):
             pass
 
 
-admin.add_view(MyLogsView(name='Журнал логов', endpoint='my-logs', menu_icon_type='glyph', menu_icon_value='glyphicon-eye-open'))
+admin.add_view(
+    MyLogsView(
+        name='Журнал логов',
+        endpoint='my-logs',
+        menu_icon_type='glyph',
+        menu_icon_value='glyphicon-eye-open',
+    )
+)
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
 admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))
 admin.add_view(MyExpensesView(MyExpenses, db, name='Расходы'))

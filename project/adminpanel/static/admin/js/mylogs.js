@@ -1,8 +1,13 @@
+import json from './.env.json' assert { type: "json" };
+
 const App = {
     data() {
     return {
       Logs: 'нет логов',
-      getClass: 'switch-btn'
+      getClass: 'switch-btn',
+      botLogsUrl: json.botLogsUrl,
+      flaskLogsUrl: json.flaskLogsUrl,
+      authorizationKey: json.authorizationKey
     }
   },
   delimiters: ['[[', ']]'],
@@ -18,9 +23,9 @@ const App = {
     async get_flask_logs() {
         try {
             const res = await fetch(
-                'http://localhost:5000/api/flask-logs', {
+                this.flaskLogsUrl, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json'}
+                    headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey}
                 }
             )
         const data_res = await res.text()
@@ -32,9 +37,9 @@ const App = {
     async get_bot_logs() {
         try {
             const res = await fetch(
-                'http://localhost:5000/api/bot-logs', {
+                this.botLogsUrl, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json'}
+                    headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey}
                 }
             )
         const data_res = await res.text()

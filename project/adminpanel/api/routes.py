@@ -48,7 +48,13 @@ def all_notes():
 
 @api.route('/flask-logs', methods=['GET'])
 def get_flask_logs():
-    '''Отдача логов Flask приложения на админ-панель.'''
+    """Отдача логов Flask приложения на админ-панель."""
+
+    check = request.headers.get('Authorization', None)
+
+    if not check or check != AUTHORIZATION_KEY:
+        return {'message': 'No access'}, 405
+
     try:
         with open('flask-logs.log') as f:
             lines = f.readlines()
@@ -60,12 +66,18 @@ def get_flask_logs():
             reversed_content = ''.join(reversed_lines)
             return reversed_content
     except FileNotFoundError:
-        return "Файл не найден"
+        return 'Файл не найден'
 
 
 @api.route('/bot-logs', methods=['GET'])
 def get_bot_logs():
-    '''Отдача логов телеграм приложения на админ-панель.'''
+    """Отдача логов телеграм приложения на админ-панель."""
+
+    check = request.headers.get('Authorization', None)
+
+    if not check or check != AUTHORIZATION_KEY:
+        return {'message': 'No access'}, 405
+
     try:
         with open('bot.log') as f:
             lines = f.readlines()
@@ -73,4 +85,4 @@ def get_bot_logs():
             reversed_content = ''.join(reversed_lines)
             return reversed_content
     except FileNotFoundError:
-        return "Файл не найден"
+        return 'Файл не найден'
