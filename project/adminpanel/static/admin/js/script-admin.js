@@ -38,39 +38,40 @@ const App = {
             textNoLink = 'Неизвестная ссылка'
           }
 
-          this.notes.push(`<a href="${link}" class="link-note" target="_blank">${textNoLink}</a>`)
           try {
             const res = await fetch(this.notesUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey},
               body : JSON.stringify({data: `<a href="${link}" class="link-note" target="_blank">${textNoLink}</a>`})
             });
-            if (!res.ok) {
-              throw new Error('Сетевой ответ не был успешным');
-            }
             const data_res = await res.json();
             this.valueForNote = ''
-            return data_res.res; // Обращение к свойству 'res' в JSON-ответе
+            this.get_data_notes().then((data) => {
+              this.notes = data;
+              this.fillListBtDisabled()
+            })
+            return data_res
           } catch (error) {
-            return []; // Возвращаем пустой массив в случае ошибки
+            return "Error"
           }
 
         } else {
-          this.notes.push(this.valueForNote)
           try {
             const res = await fetch(this.notesUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey },
               body : JSON.stringify({data: this.valueForNote})
             });
-            if (!res.ok) {
-              throw new Error('Сетевой ответ не был успешным');
-            }
+
             const data_res = await res.json();
             this.valueForNote = ''
-            return data_res.res; // Обращение к свойству 'res' в JSON-ответе
+            this.get_data_notes().then((data) => {
+              this.notes = data;
+              this.fillListBtDisabled()
+            })
+            return data_res
           } catch (error) {
-            return []; // Возвращаем пустой массив в случае ошибки
+            return "Error"
           }
         }
       }
@@ -84,13 +85,10 @@ const App = {
           headers: { 'Content-Type': 'application/json', 'Authorization': this.authorizationKey},
           body : JSON.stringify({id: indx})
         });
-        if (!res.ok) {
-          throw new Error('Сетевой ответ не был успешным');
-        }
         const data_res = await res.json();
-        return data_res.res; // Обращение к свойству 'res' в JSON-ответе
+        return data_res
       } catch (error) {
-        return []; // Возвращаем пустой массив в случае ошибки
+        return "Error"
       }
     },
     check_text_note(text) {
@@ -121,9 +119,9 @@ const App = {
           throw new Error('Сетевой ответ не был успешным');
         }
         const data_res = await res.json();
-        return data_res.all_notes; // Обращение к свойству 'res' в JSON-ответе
+        return data_res.all_notes;
       } catch (error) {
-        return []; // Возвращаем пустой массив в случае ошибки
+        return 'Error'
       }
     },
     makeSwitchDisabled(indx) {
