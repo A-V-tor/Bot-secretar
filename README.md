@@ -18,7 +18,7 @@
 - по пути `project/adminpanel/static/admin/js` создать файл `.env.json` по аналогии с `env.json.example`
   ```
   {
-    "notesUrl": "http://localhost:5000/all-notes", //  ендпоинт заметок
+    "notesUrl": "http://localhost:5000/api/all-notes", //  ендпоинт заметок
     "botLogsUrl": "http://localhost:5000/api/bot-logs",
     "flaskLogsUrl": "http://localhost:5000/api/flask-logs",
     "authorizationKey": "1234567" //  ключ для для запросов к API # должен совпадать со знчением "AUTHORIZATION_KEY"

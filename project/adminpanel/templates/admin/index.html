@@ -33,9 +33,11 @@
                 <div v-html="note"></div>
                 <button :class="getNoteButtonClasses(note)"
                         type="button"
-                        v-on:click="delNote(indx)">
+                        v-on:click="delNote(indx)"
+                :disabled="activeButtons[indx]">
                     удалить
                 </button>
+                <div class="position-switch switch-btn-2" :class="buttonClasses[indx]" v-on:click="makeSwitchDisabled(indx)"></div>
             </li>
         </ul>
     </div>

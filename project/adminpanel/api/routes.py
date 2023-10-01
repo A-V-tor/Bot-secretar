@@ -28,6 +28,7 @@ def all_notes():
         try:
             id_ = request.get_json()['id']
             db.delete(all_notes[int(id_) - 1])
+            db.commit()
             return {'message': 'Entry successfully deleted'}, 200
 
         except Exception as e:
@@ -56,6 +57,7 @@ def get_flask_logs():
         return {'message': 'No access'}, 405
 
     try:
+        size_kb = os.path.getsize('flask-logs.log') * 0.001
         with open('flask-logs.log') as f:
             lines = f.readlines()
 
@@ -64,7 +66,7 @@ def get_flask_logs():
 
             # преобразуем обратно в строку
             reversed_content = ''.join(reversed_lines)
-            return reversed_content
+            return str(size_kb) + ' Килобайт\n\n' + reversed_content
     except FileNotFoundError:
         return 'Файл не найден'
 
@@ -79,10 +81,11 @@ def get_bot_logs():
         return {'message': 'No access'}, 405
 
     try:
+        size_kb = os.path.getsize('bot.log') * 0.001
         with open('bot.log') as f:
             lines = f.readlines()
             reversed_lines = reversed(lines)
             reversed_content = ''.join(reversed_lines)
-            return reversed_content
+            return str(size_kb) + ' Килобайт\n\n' + reversed_content
     except FileNotFoundError:
         return 'Файл не найден'

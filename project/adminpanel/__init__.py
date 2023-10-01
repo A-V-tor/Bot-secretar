@@ -114,7 +114,7 @@ def logout():
 def pageNot(error):
     date = datetime.now()
     logger.error(
-        f'{date} !!! Запрос с ip {request.access_route[0]} на не существующий адрес {request.url}\n'
+        f'{date} Запрос с ip {request.access_route[0]} на не существующий адрес {request.url}\n'
     )
     return 'Адрес не существует'
 
@@ -123,7 +123,7 @@ def pageNot(error):
 def notAllowed(error):
     date = datetime.now()
     logger.error(
-        f'{date} !!! Запрос с ip {request.access_route[0]} на запрещенный адрес {request.url}\n'
+        f'{date} ❗️ Запрос с ip {request.access_route[0]} на запрещенный адрес {request.url}\n'
     )
     return redirect('https://www.google.com/')
 

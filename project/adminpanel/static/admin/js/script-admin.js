@@ -7,13 +7,17 @@ const App = {
       valueForNote: '',
       notes: [],
       notesUrl: json.notesUrl,
-      authorizationKey: json.authorizationKey
+      authorizationKey: json.authorizationKey,
+      getBt: true,
+      activeButtons: [], // массив булевых для блокировки кнопок
+      buttonClasses: [] // классы для отображения переключателя блокировки кнопки "Удалить"
     }
   },
   created() {
     // запрос списка заметок
     this.get_data_notes().then((data) => {
       this.notes = data;
+      this.fillListBtDisabled()
     }).catch((error) => {
       console.error('Ошибка при получении данных:', error);
     });
@@ -73,6 +77,7 @@ const App = {
     },
     async delNote(indx) {
       this.notes.splice(indx++, 1)
+      this.makeSwitchDisabled(indx-1)
       try {
         const res = await fetch(this.notesUrl, {
           method: 'DELETE',
@@ -120,7 +125,28 @@ const App = {
       } catch (error) {
         return []; // Возвращаем пустой массив в случае ошибки
       }
-},
+    },
+    makeSwitchDisabled(indx) {
+        // переключение доступности кнопки "Удалить"
+        if (this.buttonClasses[indx] === 'switch-on-2') {
+            this.buttonClasses[indx] = '' // отображение блокировки
+        } else {
+            this.buttonClasses[indx] = 'switch-on-2' // отображение доступности взаимодействия
+        }
+        if (this.activeButtons[indx]) {
+            this.activeButtons[indx] = false; // Открываем кнопку
+
+          } else {
+            this.activeButtons[indx] = true; // Закрываем кнопку
+
+          }
+    },
+    fillListBtDisabled() {
+        // заполнить массив изначально заблокированными свойствами
+        for (let i = 0; i < this.notes.length; i++) {
+        this.activeButtons[i] = true; // Изначально все кнопки закрыты
+        }
+    }
 
   },
 

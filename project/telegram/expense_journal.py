@@ -83,7 +83,7 @@ async def get_expenses_for_day(callback: types.CallbackQuery):
 
         msg = mytable
     except TypeError as e:
-        logger.exception(f'Ошибка- журнал пуст: {str(e)}')
+        logger.exception(f'Ошибка- журнал пуст')
         msg = 'Журнал пуст!'
     except Exception as e:
         logger.exception(f'Ошибка: {str(e)}')
