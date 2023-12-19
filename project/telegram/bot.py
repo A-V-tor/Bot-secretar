@@ -1,8 +1,10 @@
 import os
+
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from dotenv import find_dotenv, load_dotenv
+
 from .keyboards import StartInlineKeyboard
 from .weight_journal import (
     weight_journal_root,
@@ -61,6 +63,8 @@ k = StartInlineKeyboard()
 k.add_button('журнал веса ⚖️', 'weight journal')
 k.add_button('журнал тренировок 🏋️', 'workout journal')
 k.add_button('журнал расходов 💵', 'expencse journal')
+
+art = None
 
 
 @dp.message_handler(commands=['start', 'help'])

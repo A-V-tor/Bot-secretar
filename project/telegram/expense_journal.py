@@ -1,13 +1,12 @@
 import logging
 from aiogram import types
 from .keyboards import ExpenseInlineKeyboard
+from celery import shared_task
 from prettytable import PrettyTable
 from project.database.database import db
 from project.telegram.utils import get_russian_category_name, get_non_zero_keys
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from project.database.models import MyExpenses
-from sqlalchemy import extract, func
-import datetime
+from project.database.models import MyExpenses, DayReport
 
 
 SELECT_CATEGORY = None
@@ -36,9 +35,6 @@ async def expencse_journal_root(callback: types.CallbackQuery):
 
 
 async def get_expenses_for_day(callback: types.CallbackQuery):
-    today = datetime.date.today()
-    year, month, day = str(today).split('-')
-
     kb = ExpenseInlineKeyboard()
     kb.button_start_menu()
     kb.button_root_expense()
@@ -46,25 +42,7 @@ async def get_expenses_for_day(callback: types.CallbackQuery):
     await callback.message.delete()
 
     try:
-        query_ = (
-            db.query(
-                func.sum(MyExpenses.health).label('total_health'),
-                func.sum(MyExpenses.transport).label('total_transport'),
-                func.sum(MyExpenses.food).label('total_food'),
-                func.sum(MyExpenses.entertainment).label(
-                    'total_entertainment'
-                ),
-                func.sum(MyExpenses.purchases).label('total_purchases'),
-                func.sum(MyExpenses.present).label('total_present'),
-                func.sum(MyExpenses.other).label('total_other'),
-            )
-            .filter(
-                extract('year', MyExpenses.date) == year,
-                extract('month', MyExpenses.date) == month,
-                extract('day', MyExpenses.date) == day,
-            )
-            .first()
-        )
+        query_ = MyExpenses.get_total_category_values_for_the_current_day()
 
         # общее число потраченых едениц
         total = sum(query_)
@@ -204,3 +182,10 @@ async def write_to_database_change_expense(
     CHANGE_CATEGORY = None
 
     await message.answer(msg, reply_markup=kb.keyboard)
+
+
+@shared_task()
+def make_a_report_for_the_day():
+    """Запись отчета по тратам за день."""
+    query_ = MyExpenses.get_total_category_values_for_the_current_day()
+    DayReport.make_record_to_day(query_)

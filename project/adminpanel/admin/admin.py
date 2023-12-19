@@ -1,6 +1,10 @@
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask import current_app as app
+import os
+from dotenv import load_dotenv, find_dotenv
+from redis import Redis
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib import rediscli
 from flask_login import current_user
 from project.database.database import db
 from project.database.models import (
@@ -9,8 +13,13 @@ from project.database.models import (
     MyExpenses,
     DayReport,
     MyNotes,
+    MyReminders,
 )
 from project.adminpanel.admin.models import AdminUser
+
+
+load_dotenv(find_dotenv())
+password_redis = os.environ.get('REDIS_KEY')
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -145,6 +154,38 @@ class MyNotesView(ModelView):
             pass
 
 
+class MyRemindersView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    column_labels = dict(
+        createAt='Создано',
+        updateAt='Обновлено',
+        scheduledAt='Дата напоминания',
+        is_active='Активно ???',
+        comment='Напоминание',
+        importance_level='Уровень важности',
+    )
+    form_choices = {
+        'importance_level': [
+            ('Very important', 'ОЧЕНЬ ВАЖНО'),
+            ('Important', 'ВАЖНО'),
+            ("Don't miss it", 'Не пропусти'),
+            ("Doesn't matter", 'Не важно'),
+        ],
+    }
+    column_editable_list = ['is_active']
+    column_descriptions = dict(
+        importance_level="Very important - ОЧЕНЬ ВАЖНО Important - ВАЖНО Don't miss it - Не пропусти Doesn't matter - Не важно"
+    )
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
+
 admin.add_view(
     MyLogsView(
         name='Журнал логов',
@@ -153,8 +194,13 @@ admin.add_view(
         menu_icon_value='glyphicon-eye-open',
     )
 )
+
+
 admin.add_view(MyWeightView(MyWeight, db, name='Вес'))
 admin.add_view(MyWorkoutView(MyWorkout, db, name='Тренировки'))
 admin.add_view(MyExpensesView(MyExpenses, db, name='Расходы'))
 admin.add_view(AdminUserView(AdminUser, db, name='Администраторы'))
 admin.add_view(MyNotesView(MyNotes, db, name='Заметки'))
+admin.add_view(MyRemindersView(MyReminders, db, name='Напоминания'))
+admin.add_view(rediscli.RedisCli(Redis(password=password_redis)))
+admin.add_view(ModelView(DayReport, db))

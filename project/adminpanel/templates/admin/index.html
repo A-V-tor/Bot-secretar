@@ -1,13 +1,13 @@
 {% extends 'admin/master.html' %}
 
 {% block head %}
-    {{ super() }}
-    <link type="text/css" href="{{ url_for('static', filename='admin/css/styles.css')}}" rel="stylesheet" />
+{{ super() }}
+<link type="text/css" href="{{ url_for('static', filename='admin/css/styles.css')}}" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
-    {{ super() }}
-    <a href="/logout" style="display: inline-block;
+{{ super() }}
+<a href="/logout" style="display: inline-block;
                          padding: 10px 20px;
                          margin: 20px;
                          margin-left: 50px;
@@ -19,29 +19,29 @@
                          font-size: 16px;
                          font-weight: bold;">
     ВЫХОД <span style="color: #e74c3c;">{{ current_user }}</span>
-  </a>
-    <hr />
-    <div id="app" class="notes-container">
-        <div>
-            <textarea class="area-admin-index" rows="11" cols="30" name="text" v-model="valueForNote" v-on:keyup.enter.exact="addNote"></textarea>
-            <br>
-            <button class="btn add-note" v-on:click="addNote" type="button">добавить</button>
-        </div>
-        <hr />
-        <ul class="notes">
-            <li v-for="(note, indx) in notes">
-                <div v-html="note"></div>
-                <button :class="getNoteButtonClasses(note)"
-                        type="button"
-                        v-on:click="delNote(indx)"
-                :disabled="activeButtons[indx]">
-                    удалить
-                </button>
-                <div class="position-switch switch-btn-2" :class="buttonClasses[indx]" v-on:click="makeSwitchDisabled(indx)"></div>
-            </li>
-        </ul>
+</a>
+<hr />
+<div id="app" class="notes-container">
+    <div>
+        <textarea class="area-admin-index" rows="11" cols="30" name="text" v-model="valueForNote"
+            v-on:keyup.enter.exact="addNote"></textarea>
+        <br>
+        <button class="btn add-note" v-on:click="addNote" type="button">добавить</button>
     </div>
+    <hr />
+    <ul class="notes">
+        <li v-for="(note, indx) in notes">
+            <div v-html="note"></div>
+            <button :class="getNoteButtonClasses(note)" type="button" v-on:click="delNote(indx)"
+                :disabled="activeButtons[indx]">
+                удалить
+            </button>
+            <div class="position-switch switch-btn-2" :class="buttonClasses[indx]"
+                v-on:click="makeSwitchDisabled(indx)"></div>
+        </li>
+    </ul>
+</div>
 
-    <script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
-    <script type="module" src="{{ url_for('static', filename='admin/js/script-admin.js') }}"></script>
+<script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
+<script type="module" src="{{ url_for('static', filename='admin/js/script-admin.js') }}"></script>
 {% endblock %}

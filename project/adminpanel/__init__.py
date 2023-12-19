@@ -1,5 +1,6 @@
 import logging
 import os
+import urllib.parse
 from datetime import datetime
 from dotenv import find_dotenv, load_dotenv
 
@@ -28,10 +29,21 @@ load_dotenv(find_dotenv())
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_object('config.DevelopConfig')
-    # app.config.from_object('config.ProductionConfig')
+    # app.config.from_object('config.DevelopConfig')
+    app.config.from_object('config.ProductionConfig')
+
+    password_redis = os.environ.get('REDIS_KEY')
+    encoded_password = urllib.parse.quote(password_redis, safe='')
+    app.config.from_mapping(
+        CELERY=dict(
+            broker_url=f'redis://:{encoded_password}@localhost:6379',
+            result_backend=f'redis://:{encoded_password}@localhost:6379',
+            task_ignore_result=True,
+        ),
+    )
 
     with app.app_context():
+
         from project.adminpanel.admin import admin
 
         app.register_blueprint(api)
@@ -78,9 +90,15 @@ def favicon():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     date = datetime.now()
+    logger.info(
+        f'-----------------------------------------------------------------\n'
+    )
     logger.info(f'{date} Запрос с ip {request.access_route[0]}\n')
     logger.info(f'{request.user_agent}\n')
-    logger.info(f'{request.cookies}\n\n')
+    logger.info(f'{request.cookies}\n')
+    logger.info(
+        f'-----------------------------------------------------------------\n\n'
+    )
     return 'Hi man'
 
 
