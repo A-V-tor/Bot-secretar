@@ -26,4 +26,6 @@ jobs:
           systemctl restart redis.service
           systemctl restart bot.service
           systemctl restart adminpanel.service
+          systemctl restart celeryd
+          systemctl restart celerybeat
           systemctl restart nginx
