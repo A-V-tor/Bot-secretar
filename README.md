@@ -7,6 +7,7 @@
 <div id="header" align="center">
 <h5 align="center"><img src="https://github.com/A-V-tor/Bot-secretar/blob/main/bot.png"></h5>
 </div>
+
 ## Настройка и запуск
 - В корне проекта созать файл .env по аналогу с env.example 
   ```
