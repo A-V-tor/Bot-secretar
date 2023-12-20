@@ -19,11 +19,4 @@ jobs:
         script: |
           cd Bot-secretar
           git pull
-          chmod +x start.sh
-          ./start.sh
-          systemctl restart redis.service
-          systemctl restart bot.service
-          systemctl restart adminpanel.service
-          systemctl restart celeryd
-          systemctl restart celerybeat
-          systemctl restart nginx
+          make start REVISION_NAME=date +'%Y%m%d%H%M%S'

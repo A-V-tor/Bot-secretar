@@ -8,6 +8,26 @@
 <h5 align="center"><img src="https://github.com/A-V-tor/Bot-secretar/blob/main/bot.png"></h5>
 </div>
 
+<i>
+   <h3>Функционал</h3>
+
+  <ul>
+    <h4>Телеграм</h4>
+    <li>Журнал трат</li>
+    <li>Журнал веса</li>
+    <li>Журнал тренировок</li>
+    <li>Получение напоминаний</li>
+  </ul>
+  <ul>
+    <h4>Web админка</h4>
+    <li>Сервис заметок</li>
+    <li>Создание напоминаний</li>
+    <li>Доступ к моделям базы данных</li>
+    
+    
+  </ul>
+</i>
+
 ## Настройка и запуск
 - В корне проекта созать файл .env по аналогу с env.example 
   ```
@@ -118,7 +138,14 @@ ExecStart=/bin/sh -c '${CELERY_BIN}  \
 [Install]
 WantedBy=multi-user.target
 ```
+
 Логи celery
+
+```
+mkdir /var/log/celery /var/run/celery
+chown root:root /var/log/celery /var/run/celery
+```
+
 ```
 cat /var/log/celery/beat.log
 cat /var/log/celery/worker1.log

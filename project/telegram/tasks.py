@@ -13,9 +13,8 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 password_redis = os.environ.get('REDIS_KEY')
-API_TOKEN = os.getenv('token')
-CHAT_ID = os.getenv('CHAT_ID')
 encoded_password = urllib.parse.quote(password_redis, safe='')
+
 
 app = Celery(
     'tasks',

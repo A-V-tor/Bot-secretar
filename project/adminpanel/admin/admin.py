@@ -186,6 +186,31 @@ class MyRemindersView(ModelView):
             pass
 
 
+class DayReportView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    column_labels = dict(
+        date='Дата',
+        value='Значение',
+        health='Здоровье',
+        transport='Транспорт',
+        food='Еда',
+        entertainment='Развлечения',
+        purchases='Покупки',
+        present='Подарки',
+        other='Прочее',
+    )
+    create_modal = True
+    edit_modal = True
+
+    def is_accessible(self):
+        try:
+            if current_user.is_authenticated:
+                return True
+        except Exception as e:
+            pass
+
+
 admin.add_view(
     MyLogsView(
         name='Журнал логов',
@@ -203,4 +228,4 @@ admin.add_view(AdminUserView(AdminUser, db, name='Администраторы')
 admin.add_view(MyNotesView(MyNotes, db, name='Заметки'))
 admin.add_view(MyRemindersView(MyReminders, db, name='Напоминания'))
 admin.add_view(rediscli.RedisCli(Redis(password=password_redis)))
-admin.add_view(ModelView(DayReport, db))
+admin.add_view(DayReportView(DayReport, db, name='Дневной отчет'))
