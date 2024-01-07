@@ -1,3 +1,6 @@
+project/adminpanel/static/admin/js/.env.json
+poetry.lock
+alembic/versions/*
 *.db
 */.DS_Store
 */__pycache__/

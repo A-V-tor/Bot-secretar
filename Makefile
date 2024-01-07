@@ -1,6 +1,6 @@
 start: # обновление кодовой базы
-	alembic revision --autogenerate -m "Revision $(REVISION_NAME)"
-	alembic upgrade head
+	PATH=$$PATH:./alembic alembic revision --autogenerate -m "Revision $(REVISION_NAME)"
+	PATH=$$PATH:./alembic alembic upgrade head
 	systemctl restart redis.service
 	systemctl restart bot.service
 	systemctl restart adminpanel.service

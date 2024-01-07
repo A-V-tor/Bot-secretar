@@ -23,19 +23,19 @@
     <li>Сервис заметок</li>
     <li>Создание напоминаний</li>
     <li>Доступ к моделям базы данных</li>
-    
-    
+
+
   </ul>
 </i>
 
 ## Настройка и запуск
-- В корне проекта созать файл .env по аналогу с env.example 
+- В корне проекта созать файл .env по аналогу с env.example
   ```
-  token - токен от Botfather 
-  headers - заголовки для запросов (парсинг) 
-  owner_id -  id телеграм для владельца бота 
-  URL_ADMIN - url админки 
-  SECRET_KEY - секретный ключ для сессий 
+  token - токен от Botfather
+  headers - заголовки для запросов (парсинг)
+  owner_id -  id телеграм для владельца бота
+  URL_ADMIN - url админки
+  SECRET_KEY - секретный ключ для сессий
   AUTHORIZATION_KEY - ключ для для запросов к API # должен совпадать со знчением "authorizationKey"  из project/adminpanel/static/admin/js
   REDIS_KEY - ключ авторизации с redis
   CHAT_ID - ID телеграма юзера для отправки напоминаний
@@ -66,9 +66,14 @@
   alembic upgrade head
   ```
 - Запуск Celery
-  Запуск работника ` celery -A project.telegram worker --loglevel=info` </br>
-  Запуск планировщика  ` celery -A project.telegram beat --loglevel=info` </br>
-- ## Локальный запуск для разработки через `developers_manager.py` 
+  Запуск работника `celery -A project.telegram worker --loglevel=info` </br>
+  Запуск планировщика  `celery -A project.telegram beat --loglevel=info` </br>
+- ## Локальный запуск для разработки через `developers_manager.py`
+
+## Pre commit
+Включить в работу `pre-commit install` </br>
+Проверка создания файла `cat .git/hooks/pre-commit` </br>
+Проверка согласно конфигурации `pre-commit run --all-files` </br>
 
 
 ## Пример настройки демона Celery

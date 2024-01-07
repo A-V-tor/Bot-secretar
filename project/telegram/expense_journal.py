@@ -1,5 +1,6 @@
 import logging
 from aiogram import types
+from sqlalchemy import desc
 from .keyboards import ExpenseInlineKeyboard
 from celery import shared_task
 from prettytable import PrettyTable
@@ -164,7 +165,7 @@ async def write_to_database_change_expense(
     kb.button_start_menu()
     kb.button_root_expense()
 
-    note = db.query(MyExpenses).first()
+    note = db.query(MyExpenses).order_by(desc(MyExpenses.date)).first()
     try:
         setattr(note, CHANGE_CATEGORY, int(value))
         db.add(note)

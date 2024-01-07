@@ -1,6 +1,5 @@
 import logging
 import os
-import urllib.parse
 from datetime import datetime
 from dotenv import find_dotenv, load_dotenv
 
@@ -31,16 +30,6 @@ def create_app():
 
     # app.config.from_object('config.DevelopConfig')
     app.config.from_object('config.ProductionConfig')
-
-    password_redis = os.environ.get('REDIS_KEY')
-    encoded_password = urllib.parse.quote(password_redis, safe='')
-    app.config.from_mapping(
-        CELERY=dict(
-            broker_url=f'redis://:{encoded_password}@localhost:6379',
-            result_backend=f'redis://:{encoded_password}@localhost:6379',
-            task_ignore_result=True,
-        ),
-    )
 
     with app.app_context():
 

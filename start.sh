@@ -9,4 +9,3 @@ alembic revision --autogenerate -m "Revision $REVISION_NAME"
 
 # Применяем миграции
 alembic upgrade head
-

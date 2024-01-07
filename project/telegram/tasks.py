@@ -1,5 +1,4 @@
 """Импорты задач дся Celery используються неявно при запуске."""
-import datetime
 from celery import Celery
 import os
 import urllib
@@ -25,6 +24,10 @@ app.conf.update(
     task_ignore_result=False,
     timezone='Europe/Moscow',
 )
+
+# удаление результата задачи из redis спустя 61 секунду
+app.conf.result_expires = 61
+
 app.conf.beat_schedule = {
     'task-reminders': {
         'task': 'project.telegram.reminders_journal.make_check_for_reminders',

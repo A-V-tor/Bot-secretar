@@ -27,14 +27,11 @@ celery = "^5.3.4"
 redis = "^5.0.1"
 
 
-
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.19.4"
 blue = "^0.9.1"
+pre-commit = "^3.6.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-
