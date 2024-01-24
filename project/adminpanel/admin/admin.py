@@ -25,6 +25,7 @@ password_redis = os.environ.get('REDIS_KEY')
 class MyAdminIndexView(AdminIndexView):
     @expose('/admin')
     def default_view(self):
+        # weight_analytic_url = '/admin/analytics/weight/' надо бы брать из конфига и передавать в шаблон
         return self.render('admin/index.html')
 
     def is_accessible(self):

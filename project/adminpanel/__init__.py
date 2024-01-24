@@ -34,6 +34,7 @@ def create_app():
     with app.app_context():
 
         from project.adminpanel.admin import admin
+        from project.adminpanel.admin.analytics import dashboard_weight
 
         app.register_blueprint(api)
 
