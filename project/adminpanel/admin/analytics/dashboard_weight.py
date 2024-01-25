@@ -10,14 +10,20 @@ from .utils import DashboardManager
 
 def get_weight_analytics(server):
     """Страница дашборда по весу."""
-    datalist = db.query(MyWeight).filter_by().all()
-    timestamps = [i.date for i in datalist]
-    values_weight = [i.value for i in datalist]
-    group = pd.DataFrame({'дата': timestamps, 'значение': values_weight})
 
-    # Вычисление скользящей средней для второй линии
-    window_size = 3  # Размер окна для скользящей средней (можете изменить)
-    group['среднее'] = group['значение'].rolling(window=window_size).mean()
+    window_size = 3
+
+    def get_dataframe():
+        """Создание датафрейма данных."""
+        datalist = db.query(MyWeight).filter_by().all()
+        timestamps = [i.date for i in datalist]
+        values_weight = [i.value for i in datalist]
+        group = pd.DataFrame({'дата': timestamps, 'значение': values_weight})
+
+        # Вычисление скользящей средней для второй линии
+        group['среднее'] = group['значение'].rolling(window=window_size).mean()
+
+        return group
 
     config_layout = {
         'title': 'Отображение замеров',
@@ -36,6 +42,7 @@ def get_weight_analytics(server):
 
     def get_content():
         """Получение и отрисовка данных."""
+        group = get_dataframe()
         fig = go.Figure()
 
         # Добавление первой линии
@@ -132,6 +139,8 @@ def get_weight_analytics(server):
     )
     def update_graph(start_date, end_date):
         """Обработка выставленных границ-значений."""
+        group = get_dataframe()
+
         # Фильтрация данных по выбранному интервалу дат
         filtered_data = group[
             (group['дата'] >= start_date) & (group['дата'] <= end_date)

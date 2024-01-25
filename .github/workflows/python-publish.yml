@@ -19,4 +19,6 @@ jobs:
         script: |
           cd Bot-secretar
           git pull
+          poetry shell
+          poetry install
           make start REVISION_NAME=date +'%Y%m%d%H%M%S'
