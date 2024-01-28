@@ -193,6 +193,11 @@ def get_expense_analytics(server):
 
         content = html.Div(
             [
+                html.H2(
+                    [
+                        html.A('НАЗАД', href='/admin'),
+                    ]
+                ),
                 html.H1(f'Аналитика по тратам', style={'textAlign': 'center'}),
                 html.Br(),
                 # Флекс-контейнер для размещения списков в одной строке
