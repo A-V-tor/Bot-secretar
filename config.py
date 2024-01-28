@@ -7,6 +7,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class DevelopConfig:
+    DASHBOARD_EXPENSE = '/admin/analytics/expense/'
     DASHBOARD_WEIGHT = '/admin/analytics/weight/'
     SECRET_KEY = 'secret-key'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(
@@ -19,6 +20,7 @@ class DevelopConfig:
 
 
 class ProductionConfig:
+    DASHBOARD_EXPENSE = '/admin/analytics/expense/'
     DASHBOARD_WEIGHT = '/admin/analytics/weight/'
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(
