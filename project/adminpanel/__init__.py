@@ -83,15 +83,11 @@ def favicon():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     date = datetime.now()
-    logger.info(
-        f'-----------------------------------------------------------------\n'
-    )
+    logger.info(f'🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻\n')
     logger.info(f'{date} Запрос с ip {request.access_route[0]}\n')
     logger.info(f'{request.user_agent}\n')
     logger.info(f'{request.cookies}\n')
-    logger.info(
-        f'-----------------------------------------------------------------\n\n'
-    )
+    logger.info(f'🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺\n\n')
     return 'Hi man'
 
 
@@ -134,7 +130,7 @@ def pageNot(error):
 def notAllowed(error):
     date = datetime.now()
     logger.error(
-        f'{date} ❗️ Запрос с ip {request.access_route[0]} на запрещенный адрес {request.url}\n'
+        f'{date} ❗️ Запрос с ip {request.access_route[0]} на запрещенный адрес {request.url} 🚨 \n'
     )
     return redirect('https://www.google.com/')
 

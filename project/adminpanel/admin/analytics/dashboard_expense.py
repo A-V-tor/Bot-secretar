@@ -441,7 +441,7 @@ def get_expense_analytics(server):
         # Обновление макета графика
         updated_fig.update_layout(
             title='Отображение замеров',
-            yaxis_title='Вес в кг',
+            yaxis_title='Значение в ₽',
             xaxis_title='Дата',
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0, 0, 0, 0)',

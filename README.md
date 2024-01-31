@@ -55,11 +55,7 @@
   poetry shell
   poetry install
   ```
-- Установка дополнительных технологий
-  ```
-  https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-ru # redis Linux
-  https://gist.github.com/tomysmile/1b8a321e7c58499ef9f9441b2faa0aa8 # redis MAC OS
-  ```
+
 - Создание и применение миграций к бд
   ```
   alembic revision --autogenerate -m "initial revision"
@@ -76,82 +72,4 @@
 Проверка согласно конфигурации `pre-commit run --all-files` </br>
 
 
-## Пример настройки демона Celery
-`file /etc/default/celeryd` </br>
-```
-# The names of the workers. This example create one worker
-CELERYD_NODES="worker1"
-
-# The name of the Celery App, should be the same as the python file
-# where the Celery tasks are defined
-CELERY_APP="project.telegram.tasks:app"
-
-# Log and PID directories
-CELERYD_LOG_FILE="/var/log/celery/%n%I.log"
-CELERYD_PID_FILE="/var/run/celery/%n.pid"
-
-# Log level
-CELERYD_LOG_LEVEL=INFO
-
-# Path to celery binary, that is in your virtual environment
-CELERY_BIN=/root/Bot-secretar/.venv/bin/celery
-
-# Options for Celery Beat
-CELERYBEAT_PID_FILE="/var/run/celery/beat.pid"
-CELERYBEAT_LOG_FILE="/var/log/celery/beat.log"
-```
-`file /etc/systemd/system/celeryd.service`
-```
-[Unit]
-Description=Celery Service
-After=network.target
-
-[Service]
-Type=forking
-User=root
-Group=root
-EnvironmentFile=/etc/default/celeryd
-WorkingDirectory=/root/Bot-secretar
-ExecStart=/bin/sh -c '${CELERY_BIN} multi start ${CELERYD_NODES} \
-  -A ${CELERY_APP} --pidfile=${CELERYD_PID_FILE} \
-  --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
-ExecStop=/bin/sh -c '${CELERY_BIN} multi stopwait ${CELERYD_NODES} \
-  --pidfile=${CELERYD_PID_FILE}'
-ExecReload=/bin/sh -c '${CELERY_BIN} multi restart ${CELERYD_NODES} \
-  -A ${CELERY_APP} --pidfile=${CELERYD_PID_FILE} \
-  --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
-
-[Install]
-WantedBy=multi-user.target
-```
-`file /etc/systemd/system/celerybeat.service `
-```
-[Unit]
-Description=Celery Service
-After=network.target
-
-[Service]
-Type=simple
-User=root
-Group=root
-EnvironmentFile=/etc/default/celeryd
-WorkingDirectory=/root/Bot-secretar
-ExecStart=/bin/sh -c '${CELERY_BIN}  \
-  -A ${CELERY_APP} beat --pidfile=${CELERYBEAT_PID_FILE} \
-  --logfile=${CELERYBEAT_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL}'
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Логи celery
-
-```
-mkdir /var/log/celery /var/run/celery
-chown root:root /var/log/celery /var/run/celery
-```
-
-```
-cat /var/log/celery/beat.log
-cat /var/log/celery/worker1.log
-```
+## Дополнительное описание в [документации](https://github.com/A-V-tor/Bot-secretar/wiki)

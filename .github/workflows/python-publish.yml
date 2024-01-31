@@ -18,7 +18,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd Bot-secretar
-          git pull --rebase --autostash
-          poetry shell
+          git add .
+          git commit -m "Save changes before pull"
+          git pull
           poetry install
           make start REVISION_NAME=date +'%Y%m%d%H%M%S'
