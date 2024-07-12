@@ -16,16 +16,34 @@ def get_expense_analytics(server):
     def get_sample_results() -> dict:
         """Получение словаря с выборками."""
         datalist = db.query(DayReport).filter_by().all()
-        timestamps = [i.date for i in datalist]
+        timestamps = [
+            i.date
+            for i in datalist
+            if [
+                note
+                for note in [
+                    i.health,
+                    i.transport,
+                    i.food,
+                    i.entertainment,
+                    i.purchases,
+                    i.present,
+                    i.other,
+                ]
+                if note > 0
+            ]
+        ]
 
         # данные для линейного график отражающего все значения
-        health = [i.health for i in datalist]
-        transport = [i.transport for i in datalist]
-        food = [i.food for i in datalist]
-        entertainment = [i.entertainment for i in datalist]
-        purchases = [i.purchases for i in datalist]
-        present = [i.present for i in datalist]
-        other = [i.other for i in datalist]
+        health = [i.health for i in datalist if i.date in timestamps]
+        transport = [i.transport for i in datalist if i.date in timestamps]
+        food = [i.food for i in datalist if i.date in timestamps]
+        entertainment = [
+            i.entertainment for i in datalist if i.date in timestamps
+        ]
+        purchases = [i.purchases for i in datalist if i.date in timestamps]
+        present = [i.present for i in datalist if i.date in timestamps]
+        other = [i.other for i in datalist if i.date in timestamps]
 
         res = {
             'timestamps': timestamps,

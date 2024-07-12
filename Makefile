@@ -1,6 +1,6 @@
 start: # обновление кодовой базы
-	alembic revision --autogenerate -m "Revision $$REVISION_NAME"
-	alembic upgrade head
+	poetry run alembic revision --autogenerate -m "Revision $$REVISION_NAME"
+	poetry run alembic upgrade head
 	systemctl restart redis.service
 	systemctl restart bot.service
 	systemctl restart adminpanel.service

@@ -1,4 +1,4 @@
-import json from './.env.json' assert { type: "json" };
+import json from './.env.json' with { type: "json" };
 
 const App = {
     data() {

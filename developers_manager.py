@@ -4,8 +4,6 @@ from project.telegram import bot_run
 
 
 if __name__ == '__main__':
-    # создание таблиц бд
-    # Base.metadata.create_all(bind=engine)
 
     tg = Process(target=bot_run)
     web = Process(target=web_run)
