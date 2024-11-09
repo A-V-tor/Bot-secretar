@@ -6,9 +6,11 @@ from celery import shared_task
 from prettytable import PrettyTable
 from project.database.database import db
 from project.telegram.utils import get_russian_category_name, get_non_zero_keys
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.filters.state import State, StatesGroup
+from aiogram import Router, F
 from project.database.models import MyExpenses, DayReport
 
+router = Router(name = 'expanses')
 
 SELECT_CATEGORY = None
 CHANGE_CATEGORY = None
@@ -25,6 +27,7 @@ class ChangeRecordExpense(StatesGroup):
     change_record = State()
 
 
+@router.callback_query(F.data == 'expencse journal')
 async def expencse_journal_root(callback: types.CallbackQuery):
     kb = ExpenseInlineKeyboard()
     kb.button_start_menu()
@@ -35,6 +38,7 @@ async def expencse_journal_root(callback: types.CallbackQuery):
     await callback.message.answer('Журнал расходов', reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'get current table')
 async def get_expenses_for_day(callback: types.CallbackQuery):
     kb = ExpenseInlineKeyboard()
     kb.button_start_menu()
@@ -73,6 +77,7 @@ async def get_expenses_for_day(callback: types.CallbackQuery):
     )
 
 
+@router.callback_query(F.data == 'add  expense')
 async def add_expenses_in_journal(callback: types.CallbackQuery):
     kb = ExpenseInlineKeyboard()
     kb.expense_category_buttons()
@@ -83,6 +88,7 @@ async def add_expenses_in_journal(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data.startswith('^'))
 async def parse_categories_for_expenses(callback: types.CallbackQuery):
     global SELECT_CATEGORY
     _, category = callback.data.split(' ')
@@ -98,6 +104,7 @@ async def parse_categories_for_expenses(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(NewRecordExpense.add_record)
 async def write_to_database_new_expense(
     message: types.Message, state: NewRecordExpense
 ):
@@ -132,6 +139,7 @@ async def write_to_database_new_expense(
     await message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'change expence')
 async def change_last_record(callback: types.CallbackQuery):
     global CHANGE_CATEGORY
     kb = ExpenseInlineKeyboard()
@@ -150,6 +158,7 @@ async def change_last_record(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(ChangeRecordExpense.change_record)
 async def write_to_database_change_expense(
     message: types.Message, state: ChangeRecordExpense
 ):

@@ -1,2 +1,2 @@
 from .bot import bot_run
-from .tasks import app
+# from .tasks import app

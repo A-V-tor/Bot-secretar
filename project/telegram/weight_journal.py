@@ -2,7 +2,8 @@ import logging
 from aiogram import types
 from .keyboards import WeightInlineKeyboard
 from project.database.database import db
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.filters.state import State, StatesGroup
+from aiogram import Router, F
 import datetime
 
 from project.database.models import MyWeight
@@ -10,6 +11,7 @@ from sqlalchemy import desc
 
 
 logger = logging.getLogger(__name__)
+router = Router(name = 'weight')
 
 
 class NewJournalEntries(StatesGroup):
@@ -21,6 +23,7 @@ class ChangeJournalEntries(StatesGroup):
     cancel = State()
 
 
+@router.callback_query(F.data == 'weight journal')
 async def weight_journal_root(callback: types.CallbackQuery):
     """Корень журнала веса."""
     kb = WeightInlineKeyboard()
@@ -29,7 +32,7 @@ async def weight_journal_root(callback: types.CallbackQuery):
 
     # если присутствует запись за сегодня
     if today_record is not None and today_record.date.date() == today:
-        msg = f'Вес сегодня ({today}): {str(today_record.value)[:-2]} кг'
+        msg = f'Вес сегодня ({today}): {str(today_record.text_value)[:-2]} кг'
         kb.add_button('изменить запись', 'change weight')
         kb.button_start_menu()
     else:
@@ -40,6 +43,7 @@ async def weight_journal_root(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'add weight')
 async def add_in_weight_journal(callback: types.CallbackQuery):
     """Запуск автомата по добавлению значения веса."""
     kb = WeightInlineKeyboard()
@@ -52,6 +56,7 @@ async def add_in_weight_journal(callback: types.CallbackQuery):
     await callback.message.delete()
 
 
+@router.callback_query(F.data == 'change weight')
 async def change_value_weight(callback: types.CallbackQuery):
     """Запуск автомата по добавлению значения веса."""
     kb = WeightInlineKeyboard()
@@ -63,6 +68,7 @@ async def change_value_weight(callback: types.CallbackQuery):
     )
 
 
+@router.callback_query(NewJournalEntries.add_value)
 async def write_to_database_new_value_weight(
     message: types.Message, state: NewJournalEntries
 ):
@@ -98,6 +104,7 @@ async def write_to_database_new_value_weight(
     await message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(ChangeJournalEntries.change_value)
 async def change_weight_value(
     message: types.Message, state: ChangeJournalEntries
 ):
@@ -116,10 +123,10 @@ async def change_weight_value(
 
     try:
         today_record = db.query(MyWeight).order_by(desc(MyWeight.date)).first()
-        today_record.value = float(value_weight)
+        today_record.text_value = float(value_weight)
         today_record.date = datetime.datetime.now()
         db.commit()
-        msg = f'{str(today_record.value)[:-2]} кг'
+        msg = f'{str(today_record.text_value)[:-2]} кг'
     except ValueError as e:
         db.rollback()
         logger.exception(f'Ошибка записи значения: {str(e)}')

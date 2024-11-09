@@ -10,6 +10,7 @@ from flask import current_app as current_flask_app
 from .utils import DashboardManager
 
 
+
 def get_expense_analytics(server):
     """Страница дашборда по расходам."""
 
@@ -62,6 +63,7 @@ def get_expense_analytics(server):
         """Создание датафрейма данных."""
         df = pd.DataFrame(
             {
+                'background': 'linear-gradient(45deg, #f0f0f0 25%, #ffffff 25%, #ffffff 50%, #f0f0f0 50%, #f0f0f0 75%, #ffffff 75%, #ffffff)',
                 'дата': datadict['timestamps'],
                 'здоровье': datadict['health'],
                 'транспорт': datadict['transport'],

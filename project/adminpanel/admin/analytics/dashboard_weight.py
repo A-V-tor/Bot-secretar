@@ -17,7 +17,7 @@ def get_weight_analytics(server):
         """Создание датафрейма данных."""
         datalist = db.query(MyWeight).filter_by().all()
         timestamps = [i.date for i in datalist]
-        values_weight = [i.value for i in datalist]
+        values_weight = [i.text_value for i in datalist]
         group = pd.DataFrame({'дата': timestamps, 'значение': values_weight})
 
         # Вычисление скользящей средней для второй линии

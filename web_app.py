@@ -1,4 +1,4 @@
-from project.adminpanel import app
+from src.webapp.wsgi import app
 
 
 if __name__ == '__main__':

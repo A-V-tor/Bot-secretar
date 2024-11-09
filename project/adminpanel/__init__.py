@@ -14,7 +14,7 @@ from flask import (
     send_from_directory,
 )
 from flask_login import LoginManager, login_user, logout_user, current_user
-
+from config import get_config
 from project.adminpanel.api.routes import api
 from project.database.database import db
 from werkzeug.security import check_password_hash
@@ -28,12 +28,11 @@ load_dotenv(find_dotenv())
 def create_app():
     app = Flask(__name__)
 
-    # app.config.from_object('config.DevelopConfig')
-    app.config.from_object('config.ProductionConfig')
+    config = get_config()
+    app.config.from_object(config)
 
     with app.app_context():
 
-        from project.adminpanel.admin import admin
         from project.adminpanel.admin.analytics import (
             dashboard_weight,
             dashboard_expense,
@@ -107,6 +106,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('admin.index'))
     else:
+        pass
         flash('Введи пароль!')
     return render_template('login.html', title='Авторизация')
 
@@ -136,8 +136,8 @@ def notAllowed(error):
 
 
 def web_run():
-    app.run()
+    app.run(debug=True)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

@@ -7,16 +7,17 @@ from .utils import (
     get_msg_for_records_workout,
 )
 from project.database.database import db
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.filters.state import State, StatesGroup
 from project.database.models import MyWorkout
 from sqlalchemy import extract
 import datetime
+from aiogram import Router, F
 import calendar
 from collections import deque
 
 
 logger = logging.getLogger(__name__)
-
+router = Router(name = 'workout')
 
 LIST_RECORDS_FOR_THE_DAY = deque()
 DEL_RECORD = None
@@ -26,6 +27,7 @@ class NewRecordWorkout(StatesGroup):
     add_record = State()
 
 
+@router.callback_query(F.data == 'workout journal')
 async def workout_journal_root(callback: types.CallbackQuery):
     """Корень журнала тренировок."""
     kb = WorkoutInlineKeyboard()
@@ -37,6 +39,7 @@ async def workout_journal_root(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'show workout')
 async def get_workout_journal(callback: types.CallbackQuery):
     """Календарь текущего месяца."""
     today = datetime.date.today()
@@ -44,6 +47,7 @@ async def get_workout_journal(callback: types.CallbackQuery):
     await show_calendar(callback, int(year), int(month), day)
 
 
+@router.callback_query(F.data.startswith('-'))
 async def previous_month_of_workout(callback: types.CallbackQuery):
     """Назад по календарю."""
     month, year = callback.data[1:].split(' ')
@@ -52,6 +56,7 @@ async def previous_month_of_workout(callback: types.CallbackQuery):
     await show_calendar(callback, int(year), int(month))
 
 
+@router.callback_query(F.data.startswith('+'))
 async def next_month_of_workout(callback: types.CallbackQuery):
     """Вперед по календарю."""
     month, year = callback.data[1:].split(' ')
@@ -114,6 +119,7 @@ async def show_calendar(callback, year, month, selected_day=None):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data.startswith('_'))
 async def get_workout_for_day(callback: types.CallbackQuery):
     """Записи текущего дня."""
     day, month, year = callback.data[1:].split('-')
@@ -143,7 +149,7 @@ async def get_workout_for_day(callback: types.CallbackQuery):
         LIST_RECORDS_FOR_THE_DAY.append({i: value})
     #  получение записи и ее порядкового номера
     [record_db] = LIST_RECORDS_FOR_THE_DAY[0].values()
-    text_record = record_db.value.replace('\r\n', '\n')
+    text_record = record_db.text_value.replace('\r\n', '\n')
     [record_number] = LIST_RECORDS_FOR_THE_DAY[0].keys()
     records_amount = len(workout_notes)
     DEL_RECORD = record_db
@@ -160,6 +166,7 @@ async def get_workout_for_day(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'del workout')
 async def delete_current_record(callback: types.CallbackQuery):
     """Удаление записи тренировки."""
     global DEL_RECORD
@@ -184,7 +191,7 @@ async def delete_current_record(callback: types.CallbackQuery):
     if LIST_RECORDS_FOR_THE_DAY:
         LIST_RECORDS_FOR_THE_DAY.rotate(1)
         [record_db] = LIST_RECORDS_FOR_THE_DAY[0].values()
-        text_record = record_db.value.replace('\r\n', '\n')
+        text_record = record_db.text_value.replace('\r\n', '\n')
         [record_number] = LIST_RECORDS_FOR_THE_DAY[0].keys()
         records_amount = len(LIST_RECORDS_FOR_THE_DAY)
         DEL_RECORD = record_db
@@ -202,6 +209,7 @@ async def delete_current_record(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data.startswith('&'))
 async def get_workout_record_next_or_back(callback: types.CallbackQuery):
     """Вперед/назад по записям текущего дня."""
     global DEL_RECORD
@@ -214,7 +222,7 @@ async def get_workout_record_next_or_back(callback: types.CallbackQuery):
         LIST_RECORDS_FOR_THE_DAY.rotate(-1)
 
     [record_db] = LIST_RECORDS_FOR_THE_DAY[0].values()
-    text_record = record_db.value.replace('\r\n', '\n')
+    text_record = record_db.text_value.replace('\r\n', '\n')
     [record_number] = LIST_RECORDS_FOR_THE_DAY[0].keys()
     records_amount = len(LIST_RECORDS_FOR_THE_DAY)
 
@@ -234,6 +242,7 @@ async def get_workout_record_next_or_back(callback: types.CallbackQuery):
     await callback.message.answer(msg, reply_markup=kb.keyboard)
 
 
+@router.callback_query(F.data == 'add workout')
 async def add_workout_in_journal(callback: types.CallbackQuery):
     kb = WorkoutInlineKeyboard()
     kb.button_start_menu()
@@ -245,6 +254,7 @@ async def add_workout_in_journal(callback: types.CallbackQuery):
     )
 
 
+@router.message(NewRecordWorkout.add_record)
 async def write_to_database_new_value_workout(
     message: types.Message, state: NewRecordWorkout
 ):

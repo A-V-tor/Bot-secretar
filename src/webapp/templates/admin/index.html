@@ -1,0 +1,29 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" href="{{ url_for('static', filename='admin/css/styles.css')}}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<a href="/logout" style="display: inline-block;
+                         padding: 10px 20px;
+                         margin: 20px;
+                         margin-left: 50px;
+                         background-color: #3498db;
+                         color: white;
+                         text-decoration: none;
+                         border-radius: 5px;
+                         transition: background-color 0.3s ease;
+                         font-size: 16px;
+                         font-weight: bold;">
+    ВЫХОД <span style="color: #e74c3c;">{{ current_user.username }}</span>
+</a>
+
+<hr />
+
+
+<script src="https://unpkg.com/vue@3.4.5/dist/vue.global.prod.js"></script>
+<script type="module" src="{{ url_for('static', filename='admin/js/script-admin.js') }}"></script>
+{% endblock %}

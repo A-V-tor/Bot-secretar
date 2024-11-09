@@ -5,6 +5,7 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from dotenv import load_dotenv
 from abc import ABC, abstractmethod
 
@@ -43,6 +44,28 @@ class StartInlineKeyboard(AbstractInlineKeyboard):
         super().__init__()
         kb_web = InlineKeyboardButton('📟 Админка 📟', url=URL_ADMIN)
         self.keyboard.add(kb_web)
+
+async def start_kb(cancel: bool = False):
+    keyboard = InlineKeyboardBuilder()
+
+    weight = InlineKeyboardButton(text="журнал веса ⚖️", callback_data="workout journal")
+    workout = InlineKeyboardButton(text="журнал тренировок 🏋️", callback_data="weight journal")
+    expense = InlineKeyboardButton(text="журнал расходов 💵", callback_data="expencse journal")
+
+    keyboard.row(weight).row(workout).row(expense)
+
+    if cancel:
+        kb_cancel = InlineKeyboardButton(text="отмена", callback_data="cancel")
+        keyboard.row(kb_cancel)
+
+    return keyboard.as_markup()
+
+
+async def weight_journal_kb():
+    keyboard = InlineKeyboardBuilder()
+
+    change_weight = InlineKeyboardButton(text="изменить запись", callback_data="change weight")
+    add_weight = InlineKeyboardButton(text="добавить запись", callback_data="add weight")
 
 
 class WeightInlineKeyboard(AbstractInlineKeyboard):
