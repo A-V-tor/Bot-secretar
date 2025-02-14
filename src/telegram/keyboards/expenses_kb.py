@@ -19,6 +19,7 @@ async def root_menu_expanses_kb():
     journal = InlineKeyboardButton(text="журнал", callback_data="show expanses")
     new_note = InlineKeyboardButton(text="добавить", callback_data="add expanses")
 
+
     keyboard.row(root_menu).row(journal).row(new_note)
 
     return keyboard.as_markup()

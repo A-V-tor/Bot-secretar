@@ -10,7 +10,6 @@ a:focus {
 }
 
 .notes-container {
-
 }
 
 .link-note {
@@ -23,7 +22,7 @@ a:focus {
     color: #050505;
     margin-left: 52px;
     background-color: #3498db;
-    background-image: linear-gradient(to right, #B2F2DB, #259797);
+    background-image: linear-gradient(to right, #b2f2db, #259797);
     width: 210px;
 }
 
@@ -35,7 +34,7 @@ a:focus {
 
 .btn-note {
     color: #050505;
-    background-image: linear-gradient(to right, #259797, #B2F2DB);
+    background-image: linear-gradient(to right, #259797, #b2f2db);
     position: absolute;
     bottom: 3px;
     left: 35%;
@@ -57,20 +56,20 @@ a:focus {
     left: 35%;
 }
 .notes li {
-  position: relative;
-  display: inline-block;
-  vertical-align: middle; /* выровнить элементы внутри внешнего блока */
-  width: 250px; /* Задайте ширину по вашему выбору */
-  height: 250px; /* Задайте высоту по вашему выбору */
-  border: 1px solid #ccc; /* Добавьте границу для визуального разделения */
-  border-radius: 10%;
-  border-style:dashed;
-  padding: 10px; /* Добавьте отступ внутри элемента */
-  margin: 5px; /* Добавьте отступ вокруг элемента */
-  text-align: center; /* Выравнивание текста по центру */
-  list-style-type: none; /* Убираем маркеры списка */
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* тени */
-  word-wrap: break-word; /* перенос текста внутри элемента */
+    position: relative;
+    display: inline-block;
+    vertical-align: middle; /* выровнить элементы внутри внешнего блока */
+    width: 250px; /* Задайте ширину по вашему выбору */
+    height: 250px; /* Задайте высоту по вашему выбору */
+    border: 1px solid #ccc; /* Добавьте границу для визуального разделения */
+    border-radius: 10%;
+    border-style: dashed;
+    padding: 10px; /* Добавьте отступ внутри элемента */
+    margin: 5px; /* Добавьте отступ вокруг элемента */
+    text-align: center; /* Выравнивание текста по центру */
+    list-style-type: none; /* Убираем маркеры списка */
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* тени */
+    word-wrap: break-word; /* перенос текста внутри элемента */
 }
 
 /* logs-show.html */
@@ -80,84 +79,92 @@ a:focus {
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 }
 
-.switch-logs {text-align: center; font-size: 3em; font-weight: bold}
+.switch-logs {
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+}
 
 .switch-btn {
-  display: inline-block;
-  width: 62px; /* ширина переключателя */
-  height: 24px; /* высота переключателя */
-  border-radius: 12px; /* радиус скругления */
-  background: #bfbfbf; /* цвет фона */
-  z-index: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition-duration: 300ms; /* анимация */
+    display: inline-block;
+    width: 62px; /* ширина переключателя */
+    height: 24px; /* высота переключателя */
+    border-radius: 12px; /* радиус скругления */
+    background: #bfbfbf; /* цвет фона */
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms; /* анимация */
 }
 
 .switch-btn::after {
-  content: "";
-  height: 36px; /* высота кнопки */
-  width: 36px; /* ширина кнопки */
-  border-radius: 18px; /* радиус кнопки */
-  background: blue; /* цвет кнопки */
-  top: -6px; /* положение кнопки по вертикали относительно основы */
-  left: -6px; /* положение кнопки по горизонтали относительно основы */
-  transition-duration: 300ms; /* анимация */
-  box-shadow: 0 0 10px 0 #999999; /* тень */
-  position: absolute;
-  z-index: 1;
+    content: "";
+    height: 36px; /* высота кнопки */
+    width: 36px; /* ширина кнопки */
+    border-radius: 18px; /* радиус кнопки */
+    background: blue; /* цвет кнопки */
+    top: -6px; /* положение кнопки по вертикали относительно основы */
+    left: -6px; /* положение кнопки по горизонтали относительно основы */
+    transition-duration: 300ms; /* анимация */
+    box-shadow: 0 0 10px 0 #999999; /* тень */
+    position: absolute;
+    z-index: 1;
 }
 
 .switch-on {
-  background: #fff;
-  box-shadow: inset 0 0 10px 0 #999999; /* тень */
+    background: #fff;
+    box-shadow: inset 0 0 10px 0 #999999; /* тень */
 }
 
 .switch-on::after {
-  left: 30px;
-  background: #31A0EA;
+    left: 30px;
+    background: #31a0ea;
 }
 
 .switch-btn-2 {
-  display: inline-block;
-  width: 40px; /* ширина переключателя */
-  height: 14px; /* высота переключателя */
-  border-radius: 12px; /* радиус скругления */
-  background: #bfbfbf; /* цвет фона */
-  z-index: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition-duration: 300ms; /* анимация */
+    display: inline-block;
+    width: 40px; /* ширина переключателя */
+    height: 14px; /* высота переключателя */
+    border-radius: 12px; /* радиус скругления */
+    background: #bfbfbf; /* цвет фона */
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms; /* анимация */
 }
 
 .switch-btn-2::after {
-  content: "";
-  height: 25px; /* высота кнопки */
-  width: 25px; /* ширина кнопки */
-  border-radius: 18px; /* радиус кнопки */
-  background: grey; /* цвет кнопки */
-  top: -7px; /* положение кнопки по вертикали относительно основы */
-  left: -6px; /* положение кнопки по горизонтали относительно основы */
-  transition-duration: 300ms; /* анимация */
-  box-shadow: 0 0 10px 0 #999999; /* тень */
-  position: absolute;
-  z-index: 1;
+    content: "";
+    height: 25px; /* высота кнопки */
+    width: 25px; /* ширина кнопки */
+    border-radius: 18px; /* радиус кнопки */
+    background: grey; /* цвет кнопки */
+    top: -7px; /* положение кнопки по вертикали относительно основы */
+    left: -6px; /* положение кнопки по горизонтали относительно основы */
+    transition-duration: 300ms; /* анимация */
+    box-shadow: 0 0 10px 0 #999999; /* тень */
+    position: absolute;
+    z-index: 1;
 }
 
-.switch-on-2{
-  background: #fff;
-  box-shadow: inset 0 0 10px 0 #999999; /* тень */
+.switch-on-2 {
+    background: #fff;
+    box-shadow: inset 0 0 10px 0 #999999; /* тень */
 }
 
 .switch-on-2::after {
-  left: 30px;
-  background: #E70A0A;
+    left: 30px;
+    background: #e70a0a;
 }
 
-.position-switch {bottom: 4%;right: 10%;position: absolute;}
+.position-switch {
+    bottom: 4%;
+    right: 10%;
+    position: absolute;
+}

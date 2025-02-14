@@ -1,9 +1,13 @@
+import typing
 from ..base import Base, session_factory
 from sqlalchemy import Integer, String, Text, desc, and_, select, func, ForeignKey, extract
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.dialects.postgresql import ENUM
 from src.utils.tools import TypeExpenses
 
+
+if typing.TYPE_CHECKING:
+    from src.database.models.users import User
 
 class Expenses(Base):
     __tablename__ = 'expenses'

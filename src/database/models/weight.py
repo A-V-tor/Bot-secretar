@@ -3,7 +3,6 @@ from sqlalchemy import Integer, DECIMAL, Text, desc, and_, select, func, Foreign
 from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 
 
-
 class Weight(Base):
     __tablename__ = 'weight'
 
@@ -66,3 +65,18 @@ class Weight(Base):
                 session.commit()
 
                 return True
+
+    @classmethod
+    def get_all_weight_by_telegram_id(cls, telegram_id: int):
+        with session_factory() as session:
+            query = (
+                select(cls.value, cls.updated_at)
+                .filter(
+                    cls.user_telegram_id == telegram_id  # Фильтрация по telegram_id
+                )
+                .order_by(func.date(cls.created_at))
+            )
+
+            result = session.execute(query).fetchall()
+
+            return result

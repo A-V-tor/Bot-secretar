@@ -62,7 +62,7 @@ class ExpensesDashbordService:
 
     model = Expenses
 
-    def __init__(self, telegram_id: int ):
+    def __init__(self, telegram_id: int):
         self.user_telegram_id = telegram_id
 
     def get_all_expenses_by_telegram_id(self):

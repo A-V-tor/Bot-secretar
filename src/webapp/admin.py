@@ -1,3 +1,4 @@
+import os
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask import current_app as app
 from flask_ckeditor import CKEditorField
@@ -16,9 +17,11 @@ load_dotenv(find_dotenv())
 from src.utils.tools import UserPermissions, TypeExpenses
 
 class MyAdminIndexView(AdminIndexView):
-    @expose('/admin')
+    @expose('/')
     def default_view(self):
-        return self.render('admin/index.html')
+        expense_url = os.getenv('DASHBOARD_EXPENSE')
+        weight_url = os.getenv('DASHBOARD_WEIGHT')
+        return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url)
 
     def is_accessible(self):
 

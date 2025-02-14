@@ -28,8 +28,8 @@ class DatabaseConfig:
 
 
 class DevelopConfig:
-    DASHBOARD_EXPENSE = '/admin/analytics/expense/'
-    DASHBOARD_WEIGHT = '/admin/analytics/weight/'
+    DASHBOARD_EXPENSE = os.getenv('DASHBOARD_EXPENSE')
+    DASHBOARD_WEIGHT = os.getenv('DASHBOARD_WEIGHT')
     SECRET_KEY = 'secret-key'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(
         basedir, 'test-database.db'
@@ -54,7 +54,7 @@ class ProductionConfig:
     JSON_AS_ASCII = False
 
     BOT_TOKEN = os.getenv('token')
-    URL_ADMIN = os.getenv('URL_ADMIN')
+    URL_ADMIN = os.getenv("URL_ADMIN")
 
 
 settings = get_config()

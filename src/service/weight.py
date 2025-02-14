@@ -32,3 +32,17 @@ class WeightTelegramService:
 
         msg = "Запись сделана" if result else "Что-то пошло не так"
         return msg
+
+
+class WeightDashbordService:
+    """Сервис для работы с сущностью расходов."""
+
+    model = Weight
+
+    def __init__(self, telegram_id: int):
+        self.user_telegram_id = telegram_id
+
+    def get_all_weight_by_telegram_id(self):
+        result = self.model.get_all_weight_by_telegram_id(self.user_telegram_id)
+        
+        return result
