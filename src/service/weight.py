@@ -17,20 +17,22 @@ class WeightTelegramService:
     async def check_note(self):
         today = datetime.date.today()
         year, month, day = today.year, today.month, today.day
-        result = self.model.check_note_by_telegram_id(self.telegram_id, year, month, day)
+        result = self.model.check_note_by_telegram_id(
+            self.telegram_id, year, month, day
+        )
 
         return result
 
     async def save_change_weight(self, note_id: int, weight: float):
         result = self.model.update_note_by_telegram_id(note_id, weight)
-        msg = "Запись обновлена" if result else "Что-то пошло не так"
+        msg = 'Запись обновлена' if result else 'Что-то пошло не так'
 
         return msg
 
     async def save_weight(self, weight: float):
         result = self.model.new_note_weight(self.telegram_id, weight)
 
-        msg = "Запись сделана" if result else "Что-то пошло не так"
+        msg = 'Запись сделана' if result else 'Что-то пошло не так'
         return msg
 
 
@@ -43,6 +45,8 @@ class WeightDashbordService:
         self.user_telegram_id = telegram_id
 
     def get_all_weight_by_telegram_id(self):
-        result = self.model.get_all_weight_by_telegram_id(self.user_telegram_id)
-        
+        result = self.model.get_all_weight_notes_by_telegram_id(
+            self.user_telegram_id
+        )
+
         return result

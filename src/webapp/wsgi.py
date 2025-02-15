@@ -8,7 +8,7 @@ from flask import (
     url_for,
     session,
     send_from_directory,
-    g
+    g,
 )
 from flask_ckeditor import CKEditor
 from src.database.models.users import User
@@ -36,6 +36,7 @@ def create_app():
 
 login_manager = LoginManager()
 
+
 def get_locale():
     # if a user is logged in, use the locale from the user settings
     user = getattr(g, 'user', None)
@@ -46,10 +47,12 @@ def get_locale():
     # example.  The best match wins.
     return request.accept_languages.best_match(['de', 'fr', 'en'])
 
+
 def get_timezone():
     user = getattr(g, 'user', None)
     if user is not None:
         return user.timezone
+
 
 babel = Babel(locale_selector=get_locale, timezone_selector=get_timezone)
 

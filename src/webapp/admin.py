@@ -13,15 +13,19 @@ from flask_login import current_user
 from flask_admin.theme import Bootstrap4Theme
 
 from flask_admin.menu import MenuLink
+
 load_dotenv(find_dotenv())
 from src.utils.tools import UserPermissions, TypeExpenses
+
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def default_view(self):
         expense_url = os.getenv('DASHBOARD_EXPENSE')
         weight_url = os.getenv('DASHBOARD_WEIGHT')
-        return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url)
+        return self.render(
+            'admin/index.html', expense_url=expense_url, weight_url=weight_url
+        )
 
     def is_accessible(self):
 
@@ -49,11 +53,16 @@ class UserView(ModelView):
     # form_choices = {'permission': [
     #     (i.split(".")[-1], i.value) for i in UserPermissions
     # ]}
-    column_choices = {'permission': [
-        (i.split(".")[-1], i.value) for i in UserPermissions
-    ]}
+    column_choices = {
+        'permission': [(i.split('.')[-1], i.value) for i in UserPermissions]
+    }
     column_filters = ('username', 'telegram_id', 'is_active', 'permission')
-    column_default_sort = [('username', True), ('telegram_id', True), ('is_active', True), ('permission', True)]
+    column_default_sort = [
+        ('username', True),
+        ('telegram_id', True),
+        ('is_active', True),
+        ('permission', True),
+    ]
     column_labels = dict(
         username='Юзернейм',
         psw='Пароль',
@@ -67,11 +76,10 @@ class UserView(ModelView):
         updated_at='Дата обновления',
         weight='заметка по весу',
         expenses='заметка по тратам',
-        workouts='заметка по тренировке'
+        workouts='заметка по тренировке',
     )
     create_modal = True
     edit_modal = True
-
 
     def is_accessible(self):
         if current_user.is_authenticated:
@@ -96,7 +104,10 @@ class WeightView(ModelView):
     edit_modal = True
 
     def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
+        if (
+            current_user.is_authenticated
+            and current_user.permission.value in ['Админ', 'Владелец']
+        ):
             return True
 
         return False
@@ -104,12 +115,12 @@ class WeightView(ModelView):
 
 class ExpensesView(ModelView):
     can_view_details = True
-    form_columns = ["type_expenses", "value", "user", "created_at"]
+    form_columns = ['type_expenses', 'value', 'user', 'created_at']
     column_exclude_list = ('id',)
     column_default_sort = [('updated_at', True), ('created_at', True)]
-    column_choices = {'type_expenses': [
-        (i.split(".")[-1], i.value) for i in TypeExpenses
-    ]}
+    column_choices = {
+        'type_expenses': [(i.split('.')[-1], i.value) for i in TypeExpenses]
+    }
     column_labels = dict(
         type_expenses='Трата',
         value='Значение',
@@ -122,7 +133,10 @@ class ExpensesView(ModelView):
     edit_modal = True
 
     def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
+        if (
+            current_user.is_authenticated
+            and current_user.permission.value in ['Админ', 'Владелец']
+        ):
             return True
 
         return False
@@ -130,7 +144,7 @@ class ExpensesView(ModelView):
     def on_model_change(self, form, model, is_created):
         if is_created:
             # Логика при создании новой записи
-            print("Новая запись создана", model)
+            print('Новая запись создана', model)
             print(dir(form))
         return super().on_model_change(form, model, is_created)
 
@@ -138,7 +152,7 @@ class ExpensesView(ModelView):
 class WorkoutView(ModelView):
     can_view_details = True
     column_default_sort = [('updated_at', True), ('created_at', True)]
-    form_columns = ["text_value", "user", "is_active"]
+    form_columns = ['text_value', 'user', 'is_active']
     column_labels = dict(
         text_value='Значение',
         user='Пользователь',
@@ -152,7 +166,10 @@ class WorkoutView(ModelView):
     form_overrides = {'text_value': CKEditorField}
 
     def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
+        if (
+            current_user.is_authenticated
+            and current_user.permission.value in ['Админ', 'Владелец']
+        ):
             return True
 
         return False
@@ -160,8 +177,23 @@ class WorkoutView(ModelView):
 
 admin.add_view(UserView(User, session_factory(), name='Пользователи'))
 
-admin.add_view(WeightView(Weight, session_factory(), name='Журнал веса', category="Журналы"))
-admin.add_view(ExpensesView(Expenses, session_factory(), name='Журнал трат', category="Журналы"))
-admin.add_view(WorkoutView(Workout, session_factory(), name='Журнал тренировок', category="Журналы"))
+admin.add_view(
+    WeightView(
+        Weight, session_factory(), name='Журнал веса', category='Журналы'
+    )
+)
+admin.add_view(
+    ExpensesView(
+        Expenses, session_factory(), name='Журнал трат', category='Журналы'
+    )
+)
+admin.add_view(
+    WorkoutView(
+        Workout,
+        session_factory(),
+        name='Журнал тренировок',
+        category='Журналы',
+    )
+)
 
 # admin.add_link(MenuLink(name='Home Page', url='/', category='Links'))

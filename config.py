@@ -54,7 +54,7 @@ class ProductionConfig:
     JSON_AS_ASCII = False
 
     BOT_TOKEN = os.getenv('token')
-    URL_ADMIN = os.getenv("URL_ADMIN")
+    URL_ADMIN = os.getenv('URL_ADMIN')
 
 
 settings = get_config()

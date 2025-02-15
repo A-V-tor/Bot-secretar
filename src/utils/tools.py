@@ -2,7 +2,8 @@ import enum
 import re
 import html
 
-async def get_prev_month_and_year(month: int, year: int) -> (int, int):
+
+async def get_prev_month_and_year(month: int, year: int) -> tuple[int, int]:
     """
     Получение предыдущего месяца для инлайн календаря.
     Args:
@@ -17,7 +18,8 @@ async def get_prev_month_and_year(month: int, year: int) -> (int, int):
 
     return month, year
 
-async def get_next_month_and_year(month: int, year: int) -> (int, int):
+
+async def get_next_month_and_year(month: int, year: int) -> tuple[int, int]:
     """
     Получение следующего месяца для инлайн календаря.
     Args:
@@ -40,20 +42,20 @@ async def validate_weight(string_value: str) -> str | bool:
     Args:
         string_value: строковое представление веса
     """
-    kg, gr = "", ""
+    kg, gr = '', ''
     result = False
 
-    if "." in string_value:
-        kg, gr = string_value.split(".")
+    if '.' in string_value:
+        kg, gr = string_value.split('.')
         result = string_value
 
-    elif "," in string_value:
-        kg, gr = string_value.split(",")
-        result = f"{kg}.{gr}"
+    elif ',' in string_value:
+        kg, gr = string_value.split(',')
+        result = f'{kg}.{gr}'
 
     elif string_value.isdigit():
-        kg, gr = string_value, "00"
-        result = f"{kg}.{gr}"
+        kg, gr = string_value, '00'
+        result = f'{kg}.{gr}'
 
     if not kg.isdigit() or not gr.isdigit():
         result = False
@@ -73,7 +75,21 @@ def clean_unsupported_tags(html_text) -> str:
     html_text = html.unescape(html_text)
 
     # Список поддерживаемых Telegram API тегов
-    supported_tags = {'b', 'strong', 'i', 'em', 'u', 'ins', 's', 'strike', 'del', 'code', 'pre', 'a', 'br'}
+    supported_tags = {
+        'b',
+        'strong',
+        'i',
+        'em',
+        'u',
+        'ins',
+        's',
+        'strike',
+        'del',
+        'code',
+        'pre',
+        'a',
+        'br',
+    }
 
     # Заменяем <p> на двойную новую строку и <br> на одну новую строку
     html_text = re.sub(r'</?p[^>]*>', '\n', html_text)
