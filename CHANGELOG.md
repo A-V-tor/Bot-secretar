@@ -1,29 +1,30 @@
-# ЖУРНАЛ ИЗМЕНЕИЙ
+# ЖУРНАЛ ИЗМЕНЕНИЙ
 
 Все заметные изменения в этом проекте будут задокументированы в этом файле.
 
 ## Unreleased
 
-### ⚙️ Miscellaneous Tasks
+### ⚙️ Разные задачи
 
 - Мелкие правки ([db697b2](https://github.com/A-V-tor/Bot-secretar/commit/db697b2ca3111a1e850e912fc97ae252963f4452))
+- Правка cliff.toml, убрал опечатки, перевел текст ([8f26868](https://github.com/A-V-tor/Bot-secretar/commit/8f268680d7bd1f6a1dedd403c04af187705d88bc))
 
 ## 3.0.0 - 2025-02-15
 
 [cc831ee](cc831eeb8294e499813ef3c83aa0818d7554df99)...[1abf070](1abf070ecabbdea7f38366bebaab3d838020e173)
 
-### Add
-
-- Добавить аналитику по тратам ([15c7209](https://github.com/A-V-tor/Bot-secretar/commit/15c720912d7c8f887ae48159a37a203bfc8072e2))
-
-### 🙈 Bug Fixes
+### 🙈 Фикс бага
 
 - Обновление дашборда новыми записями из бд ([e52172c](https://github.com/A-V-tor/Bot-secretar/commit/e52172c29149b5a84955a60388a9cd3b301b1d17))
 - Добавить кнопку по тратам ([8a0b75a](https://github.com/A-V-tor/Bot-secretar/commit/8a0b75a1c6a62cee26667da67f9d73d686d3278f))
 - Заменить assert на with  для фронта ([6698127](https://github.com/A-V-tor/Bot-secretar/commit/6698127406368147f25191e31d82ef9eadecf7a4))
 - Устранить поблему со временем в логике дашьбордов ([5f27dd5](https://github.com/A-V-tor/Bot-secretar/commit/5f27dd55fb19b071ebe6921fcde60effce6fb759))
 
-### 🚀 Features
+### 🚀 Новый функционал
+
+- Добавить аналитику по тратам ([15c7209](https://github.com/A-V-tor/Bot-secretar/commit/15c720912d7c8f887ae48159a37a203bfc8072e2))
+
+### 🪄 Изменения функционала
 
 - Изменить описание ([9092dbf](https://github.com/A-V-tor/Bot-secretar/commit/9092dbfca169f343f21a549b24a64a145497412c))
 - Добавлены дашборды трат и журнала веса ([af827f6](https://github.com/A-V-tor/Bot-secretar/commit/af827f6552c490d1dda26fa3814d7bc462ab85e3))
@@ -32,29 +33,29 @@
 
 [6bc4516](6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)...[cc831ee](cc831eeb8294e499813ef3c83aa0818d7554df99)
 
-### Add
-
-- Добавить dash (дашбоард по весу) ([cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99))
-
-### 🙈 Bug Fixes
+### 🙈 Фикс бага
 
 - Указать версию Vue ([a5c5b40](https://github.com/A-V-tor/Bot-secretar/commit/a5c5b4029cfa38dbce7795c68bd46cce01f6084a))
+
+### 🚀 Новый функционал
+
+- Добавить dash (дашбоард по весу) ([cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99))
 
 ## 2.2 - 2023-12-20
 
 [fb299af](fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)...[6bc4516](6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)
 
-### Add
-
-- Добавить логику и задачи Celery ([d6caba1](https://github.com/A-V-tor/Bot-secretar/commit/d6caba12fecc9cb64ffd94972b80a3042c74b8c5))
-
-### 🙈 Bug Fixes
+### 🙈 Фикс бага
 
 - Убрать баг переноса стиля после удаления записи ([e8d0075](https://github.com/A-V-tor/Bot-secretar/commit/e8d0075b8a981feaa1da4feb16fdaf5a35b0f417))
 - Удалить локальный пример project/adminpanel/static/admin/js/.env.json ([03533fd](https://github.com/A-V-tor/Bot-secretar/commit/03533fda8cb797414d06d26c64de9fbbadf0babd))
 - Поправить readme и action ci/cd ([c515f30](https://github.com/A-V-tor/Bot-secretar/commit/c515f30f8eecf089bbf00186cafd2550bcd11eaf))
 
-### 🚀 Features
+### 🚀 Новый функционал
+
+- Добавить логику и задачи Celery ([d6caba1](https://github.com/A-V-tor/Bot-secretar/commit/d6caba12fecc9cb64ffd94972b80a3042c74b8c5))
+
+### 🪄 Изменения функционала
 
 - Добавить disabled для кнопок удаления заметок ([c7d44c7](https://github.com/A-V-tor/Bot-secretar/commit/c7d44c7fe43bfb53967de2a8e35683bbc4ac3319))
 - Добавить описание запуска celery в systemd ([633bc97](https://github.com/A-V-tor/Bot-secretar/commit/633bc97910a2483efdd234f0c02ff285e90637f4))
@@ -64,41 +65,24 @@
 
 [a127190](a1271908751cfbc1e9b54b5bfc0e7cd24b9e9913)...[fb299af](fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)
 
-### Add
+### 🙈 Фикс бага
+
+- Устранить баг добавления ссылки в заметки ([a1eb05e](https://github.com/A-V-tor/Bot-secretar/commit/a1eb05e1f09ef2d21a00d492f9668a58ea4b6e1a))
+- Взять валидный url из json ([fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad))
+
+### 🚀 Новый функционал
 
 - Logs for Flask and errorhandlers ([714ad80](https://github.com/A-V-tor/Bot-secretar/commit/714ad80d39935415d1ee33c693b62b5e55bee111))
 - Добавить логику ведения заметок ([66d5dbf](https://github.com/A-V-tor/Bot-secretar/commit/66d5dbfb2e4b8f1e8e3b6910bbaebdf4698f53be))
 - Добавить favicon журнал логов в админку ([955e110](https://github.com/A-V-tor/Bot-secretar/commit/955e110ceb19074f775921e1bb628f5d7a7eee53))
 
-### 🙈 Bug Fixes
-
-- Устранить баг добавления ссылки в заметки ([a1eb05e](https://github.com/A-V-tor/Bot-secretar/commit/a1eb05e1f09ef2d21a00d492f9668a58ea4b6e1a))
-- Взять валидный url из json ([fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad))
-
-### 🚀 Features
+### 🪄 Изменения функционала
 
 - Clearing chat ([8a5a85e](https://github.com/A-V-tor/Bot-secretar/commit/8a5a85e80376c0c433b6d0e3a2e3e0b00e44823c))
 - Python-publish.yml ([233d0ec](https://github.com/A-V-tor/Bot-secretar/commit/233d0eca3303207c82923c8659e4cd4a0d267d59))
 - Обновить readme ([71af91a](https://github.com/A-V-tor/Bot-secretar/commit/71af91af79b9b3be1ce097b3d9b59decf2473816))
 
 ## 2.0 - 2023-08-16
-
-### Add
-
-- Подключение и руссификация админки ([2e1f5a3](https://github.com/A-V-tor/Bot-secretar/commit/2e1f5a3eb97545582337b34f2be037d333070675))
-- Реализация ведения заметок ([73313d9](https://github.com/A-V-tor/Bot-secretar/commit/73313d9ec6126512dfca9700f2c0c2c52868a1c7))
-- Реализация записей тренировок ([520e727](https://github.com/A-V-tor/Bot-secretar/commit/520e727c5841b85e5fdc10a2b8760bc025969726))
-- Погода, таблица БЖУ ([3265d09](https://github.com/A-V-tor/Bot-secretar/commit/3265d09eaa54783f980a7a909f6bdaecc3817f85))
-- Add images ([f489e28](https://github.com/A-V-tor/Bot-secretar/commit/f489e2861fe8ec5e6ef8264ccd5936bedf52de90))
-- Weight journal logic ([1986314](https://github.com/A-V-tor/Bot-secretar/commit/1986314703e0ba9551997bf156dc5a35da1d4219))
-- Journal workout ([6f0faa2](https://github.com/A-V-tor/Bot-secretar/commit/6f0faa2b4e859ddb581f5e51a911961842139986))
-- Expense journal ([239e3f1](https://github.com/A-V-tor/Bot-secretar/commit/239e3f18c71ba27cc88efc8430cdcf580dee00c1))
-- Middlewares commands only owner ([5b439fb](https://github.com/A-V-tor/Bot-secretar/commit/5b439fbbb9c9da56e1e141409399e54736c8f83a))
-- Loggs for bot ([684ce5f](https://github.com/A-V-tor/Bot-secretar/commit/684ce5f78a09264ca3e9e2658254d28341c8e101))
-- Login ([cb69412](https://github.com/A-V-tor/Bot-secretar/commit/cb69412aa16ffe4b48ada8318ba026dd60e5c86e))
-- Сreate main.yml ([00134be](https://github.com/A-V-tor/Bot-secretar/commit/00134be0e7a5880d34b3edaf4078f7799de29df1))
-- Create ci/cd ([b280081](https://github.com/A-V-tor/Bot-secretar/commit/b280081caaed292d2597890622b82c3354eb2be1))
-- Test-release ([2f81ce3](https://github.com/A-V-tor/Bot-secretar/commit/2f81ce3f399b4f5cc894b9daf04156149da162f4))
 
 ### Init
 
@@ -120,7 +104,7 @@
 - Beta version ([86999f7](https://github.com/A-V-tor/Bot-secretar/commit/86999f710a066a5cbea1727f7488dad7d97c95ca))
 - Release ([a127190](https://github.com/A-V-tor/Bot-secretar/commit/a1271908751cfbc1e9b54b5bfc0e7cd24b9e9913))
 
-### 🙈 Bug Fixes
+### 🙈 Фикс бага
 
 - Fix: ([a4665ca](https://github.com/A-V-tor/Bot-secretar/commit/a4665ca38f65d56bcc725b29e8c51ef877090d10))
 - Conflict ([4d0bb4d](https://github.com/A-V-tor/Bot-secretar/commit/4d0bb4d0fb5a57790ef2ff0359af40ffa6e80052))
@@ -130,7 +114,24 @@
 - Python-publish.yml ([223d483](https://github.com/A-V-tor/Bot-secretar/commit/223d483a3ae18349a86d8abf3582c48586c37170))
 - Yml file ci/cd ([3fc31e4](https://github.com/A-V-tor/Bot-secretar/commit/3fc31e45ddde10e86d17bd2b580e36add63995e2))
 
-### 🚀 Features
+### 🚀 Новый функционал
+
+- Подключение и руссификация админки ([2e1f5a3](https://github.com/A-V-tor/Bot-secretar/commit/2e1f5a3eb97545582337b34f2be037d333070675))
+- Реализация ведения заметок ([73313d9](https://github.com/A-V-tor/Bot-secretar/commit/73313d9ec6126512dfca9700f2c0c2c52868a1c7))
+- Реализация записей тренировок ([520e727](https://github.com/A-V-tor/Bot-secretar/commit/520e727c5841b85e5fdc10a2b8760bc025969726))
+- Погода, таблица БЖУ ([3265d09](https://github.com/A-V-tor/Bot-secretar/commit/3265d09eaa54783f980a7a909f6bdaecc3817f85))
+- Add images ([f489e28](https://github.com/A-V-tor/Bot-secretar/commit/f489e2861fe8ec5e6ef8264ccd5936bedf52de90))
+- Weight journal logic ([1986314](https://github.com/A-V-tor/Bot-secretar/commit/1986314703e0ba9551997bf156dc5a35da1d4219))
+- Journal workout ([6f0faa2](https://github.com/A-V-tor/Bot-secretar/commit/6f0faa2b4e859ddb581f5e51a911961842139986))
+- Expense journal ([239e3f1](https://github.com/A-V-tor/Bot-secretar/commit/239e3f18c71ba27cc88efc8430cdcf580dee00c1))
+- Middlewares commands only owner ([5b439fb](https://github.com/A-V-tor/Bot-secretar/commit/5b439fbbb9c9da56e1e141409399e54736c8f83a))
+- Loggs for bot ([684ce5f](https://github.com/A-V-tor/Bot-secretar/commit/684ce5f78a09264ca3e9e2658254d28341c8e101))
+- Login ([cb69412](https://github.com/A-V-tor/Bot-secretar/commit/cb69412aa16ffe4b48ada8318ba026dd60e5c86e))
+- Сreate main.yml ([00134be](https://github.com/A-V-tor/Bot-secretar/commit/00134be0e7a5880d34b3edaf4078f7799de29df1))
+- Create ci/cd ([b280081](https://github.com/A-V-tor/Bot-secretar/commit/b280081caaed292d2597890622b82c3354eb2be1))
+- Test-release ([2f81ce3](https://github.com/A-V-tor/Bot-secretar/commit/2f81ce3f399b4f5cc894b9daf04156149da162f4))
+
+### 🪄 Изменения функционала
 
 - Build packet ([8e30bf6](https://github.com/A-V-tor/Bot-secretar/commit/8e30bf63a99909a576e1989d87c486cf8c56e0c1))
 - Reconstruction ([9f9f187](https://github.com/A-V-tor/Bot-secretar/commit/9f9f1873d9440fbec80f4485b8fb874c626b43f2))
