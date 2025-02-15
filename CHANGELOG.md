@@ -6,9 +6,7 @@
 
 ### ⚙️ Miscellaneous Tasks
 
-- Мелкие правки ([ab9660e](https://github.com/A-V-tor/Bot-secretar/commit/ab9660ec3d40d57eac10844ff58585f1ec3a60e5))
-- Правка конфига cliff.toml ([dabd84e](https://github.com/A-V-tor/Bot-secretar/commit/dabd84eaffa0ad9149ac3ad42c60eeef6ff0e17f))
-- Правка cliff.toml/указание правильного пути коммита ([ce4aace](https://github.com/A-V-tor/Bot-secretar/commit/ce4aacea708a080da426c8cf37cc4a038b6ef1c6))
+- Мелкие правки ([db697b2](https://github.com/A-V-tor/Bot-secretar/commit/db697b2ca3111a1e850e912fc97ae252963f4452))
 
 ## 3.0.0 - 2025-02-15
 
