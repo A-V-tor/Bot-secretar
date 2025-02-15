@@ -4,7 +4,7 @@
 [changelog]
 # template for the changelog header
 header = """
-# ЖУРНАЛ ИЗМЕНЕИЙ\n
+# ЖУРНАЛ ИЗМЕНЕНИЙ\n
 Все заметные изменения в этом проекте будут задокументированы в этом файле.\n
 """
 # template for the changelog body
@@ -38,19 +38,20 @@ conventional_commits = true
 filter_unconventional = false
 # regex for parsing and grouping commits
 commit_parsers = [
-    { message = "^feat", group = "🚀 Features" },
-    { message = "^fix", group = "🙈 Bug Fixes" },
-    { message = "^doc", group = "📚 Documentation" },
-    { message = "^perf", group = "🎉 Performance" },
-    { message = "^refactor", group = "👀 Refactor" },
-    { message = "^style", group = "💫 Styling" },
-    { message = "^test", group = "🧪 Testing" },
+    { message = "^feat", group = "🪄 Изменения функционала" },
+    { message = "^add", group = "🚀 Новый функционал" },
+    { message = "^fix", group = "🙈 Фикс бага" },
+    { message = "^doc", group = "📚 Документация" },
+    { message = "^perf", group = "🎉 Производительность" },
+    { message = "^refactor", group = "👀 Рефакторинг" },
+    { message = "^style", group = "💫 Стиль" },
+    { message = "^test", group = "🧪 Тесты" },
     { message = "^chore\\(deps.*\\)", skip = true },
     { message = "^chore\\(pr\\)", skip = true },
     { message = "^chore\\(pull\\)", skip = true },
     { message = "^chore\\(release\\): prepare for", skip = true },
-    { message = "^chore|^ci", group = "⚙️ Miscellaneous Tasks" },
-    { body = ".*security", group = "🛡️ Security" },
+    { message = "^chore|^ci", group = "⚙️ Разные задачи" },
+    { body = ".*security", group = "🛡️ Безопасность" },
 ]
 # filter out the commits that are not matched by commit parsers
 filter_commits = false
