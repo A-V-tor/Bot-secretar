@@ -8,10 +8,11 @@
 
 - Мелкие правки ([db697b2](https://github.com/A-V-tor/Bot-secretar/commit/db697b2ca3111a1e850e912fc97ae252963f4452))
 - Правка cliff.toml, убрал опечатки, перевел текст ([8f26868](https://github.com/A-V-tor/Bot-secretar/commit/8f268680d7bd1f6a1dedd403c04af187705d88bc))
+- Правка cliff.toml - правильный адрес для коммитов релиза ([62b937d](https://github.com/A-V-tor/Bot-secretar/commit/62b937d995787e07cfed7c84d6cc006b5f5cf209))
 
 ## 3.0.0 - 2025-02-15
 
-[cc831ee](cc831eeb8294e499813ef3c83aa0818d7554df99)...[1abf070](1abf070ecabbdea7f38366bebaab3d838020e173)
+[cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)...[1abf070](https://github.com/A-V-tor/Bot-secretar/commit/1abf070ecabbdea7f38366bebaab3d838020e173)
 
 ### 🙈 Фикс бага
 
@@ -31,7 +32,7 @@
 
 ## 2.3 - 2024-01-24
 
-[6bc4516](6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)...[cc831ee](cc831eeb8294e499813ef3c83aa0818d7554df99)
+[6bc4516](https://github.com/A-V-tor/Bot-secretar/commit/6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)...[cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)
 
 ### 🙈 Фикс бага
 
@@ -43,7 +44,7 @@
 
 ## 2.2 - 2023-12-20
 
-[fb299af](fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)...[6bc4516](6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)
+[fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)...[6bc4516](https://github.com/A-V-tor/Bot-secretar/commit/6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)
 
 ### 🙈 Фикс бага
 
@@ -63,7 +64,7 @@
 
 ## 2.1 - 2023-09-29
 
-[a127190](a1271908751cfbc1e9b54b5bfc0e7cd24b9e9913)...[fb299af](fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)
+[a127190](https://github.com/A-V-tor/Bot-secretar/commit/a1271908751cfbc1e9b54b5bfc0e7cd24b9e9913)...[fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)
 
 ### 🙈 Фикс бага
 
