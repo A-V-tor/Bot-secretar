@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Обновление дашборда новыми записями из бд
 - Добавить кнопку по тратам
 - Заменить assert на with  для фронта
+- Устранить поблему со временем в логике дашьбордов
 
 ### Add
 
