@@ -1,5 +1,5 @@
 from aiogram import Router, types, F
-from src.service.weight import WeightTelegramService
+from src.services.weight import WeightTelegramService
 from aiogram.fsm.context import FSMContext
 from src.telegram.states import NewValueWeight, ChangeValueWeight
 from src.telegram.keyboards.base_kb import cansel_kb, start_kb

@@ -8,7 +8,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 from src.webapp.dashbords.base import DashboardManager, StyleDash
 from flask_login import current_user
-from src.service.expenses import ExpensesDashbordService
+from src.services.expenses import ExpensesDashbordService
 from config import settings
 
 

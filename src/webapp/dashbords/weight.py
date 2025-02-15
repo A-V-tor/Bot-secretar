@@ -1,15 +1,11 @@
 from flask import session, current_app as current_flask_app
-from dash import dcc, html, set_props, callback
-import pandas as pd
-import time
+from dash import dcc, html
 from datetime import datetime
 import plotly.graph_objects as go
-from plotly.io import to_image, write_image
-import plotly.express as px
 from dash.dependencies import Input, Output
 from src.webapp.dashbords.base import DashboardManager, StyleDash
 from flask_login import current_user
-from src.service.weight import WeightDashbordService
+from src.services.weight import WeightDashbordService
 from config import settings
 
 
