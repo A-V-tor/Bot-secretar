@@ -1,31 +1,32 @@
 [tool.poetry]
-packages = [
-    {include = 'project'},
-]
+packages = [{ include = "src" }]
 name = "bot-secretar"
-version = "2.0.0"
+version = "3.0.0"
 description = "telegram bot"
-authors = ["Артем Торшин <avtorca4@gmail.com>"]
+authors = ["A-V-tor <avtorca4@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-flask = "^2.2.2"
 python-dotenv = "^0.21.0"
-flask-admin = "^1.6.0"
-pillow = "^9.3.0"
-flask-babelex = "^0.9.4"
+pillow = "10.0.0"
 flask-login = "^0.6.2"
 requests = "^2.28.1"
 beautifulsoup4 = "^4.11.1"
 prettytable = "^3.5.0"
-pandas = "^1.5.2"
-aiogram = "^2.25.1"
-flask-sqlalchemy = "^3.0.5"
 alembic = "^1.11.1"
 gunicorn = "^21.2.0"
-celery = "^5.3.4"
 redis = "^5.0.1"
 dash = "^2.14.2"
+aiogram = "^3.13.1"
+pandas = "^2.2.3"
+psycopg2 = "^2.9.10"
+sqlalchemy = "^2.0.36"
+wtforms = "3.0.1"
+flask-babel = "^4.0.0"
+flask = "3.0.0"
+flask-ckeditor = "^1.0.0"
+bleach = "^6.2.0"
+flask-admin = "2.0.0a1"
 
 
 [tool.poetry.group.dev.dependencies]

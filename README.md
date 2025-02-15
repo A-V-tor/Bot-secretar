@@ -73,3 +73,9 @@
 
 
 ## Дополнительное описание в [документации](https://github.com/A-V-tor/Bot-secretar/wiki)
+
+
+
+`DROP TYPE IF EXISTS typeexpenses;` - удаление типа enum
+
+`CREATE TYPE userpermissions AS ENUM ('user', 'moderator', 'admin', 'owner');`
