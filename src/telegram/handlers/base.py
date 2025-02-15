@@ -1,7 +1,7 @@
 from aiogram import Router, types, F
 from aiogram.filters.command import CommandStart
 from ..keyboards.base_kb import start_kb
-from src.service.users import UserTelegramService
+from src.services.users import UserTelegramService
 from aiogram.fsm.context import FSMContext
 
 router = Router(name='base')

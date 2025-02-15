@@ -7,7 +7,7 @@ from ..keyboards.workout_kb import (
     rotation_workout,
 )
 from ..keyboards.base_kb import cansel_kb
-from src.service.workouts import WorkoutTelegramService
+from src.services.workouts import WorkoutTelegramService
 from aiogram.fsm.context import FSMContext
 from src.telegram.states import DayWorkouts
 from collections import deque

@@ -7,7 +7,7 @@ from src.telegram.keyboards.expenses_kb import (
     category_expenses_last_name_kb,
     yes_or_no_save_last_note_expenses_kb,
 )
-from src.service.expenses import ExpensesTelegramService
+from src.services.expenses import ExpensesTelegramService
 from aiogram.fsm.context import FSMContext
 from src.telegram.states import AddExpenses, EditLastNoteExpenses
 from src.telegram.keyboards.base_kb import cansel_kb, start_kb
