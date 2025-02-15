@@ -23,7 +23,9 @@ class WorkoutTelegramService:
         month_string = datetime.datetime(year, month, 1).strftime('%B')
         msg = f'С 1 {month_string} {year} года'
 
-        workout_days = self.model.get_workouts_for_month(self.telegram_id, month, year)
+        workout_days = self.model.get_workouts_for_month(
+            self.telegram_id, month, year
+        )
 
         return workout_days, msg
 
@@ -31,13 +33,15 @@ class WorkoutTelegramService:
         """Получение дней тренировок юзера за выбранный день."""
 
         msg = 'Нет записей в этот день'
-        workouts_day = self.model.get_workouts_for_timestamp(self.telegram_id, day, month, year)
+        workouts_day = self.model.get_workouts_for_timestamp(
+            self.telegram_id, day, month, year
+        )
 
         if workouts_day:
             msg = note_workout.format(
                 date=workouts_day[0].created_at,
                 len_workouts=len(workouts_day),
-                text=workouts_day[0].text_value
+                text=workouts_day[0].text_value,
             )
             msg = clean_unsupported_tags(msg)
 
@@ -46,7 +50,11 @@ class WorkoutTelegramService:
     async def save_workout(self, text: str):
         check = self.model.new_workout(self.telegram_id, text)
 
-        msg = 'Тренировка добавлена' if check else 'Запись не сохранена, попробуйте позже'
+        msg = (
+            'Тренировка добавлена'
+            if check
+            else 'Запись не сохранена, попробуйте позже'
+        )
 
         return msg
 
@@ -55,13 +63,15 @@ class WorkoutTelegramService:
         current_workouts: deque = data.get('workouts')
         len_notes = len(current_workouts)
 
-        current_workouts.rotate(-1) if move == 'forward' else current_workouts.rotate(1)
+        current_workouts.rotate(
+            -1
+        ) if move == 'forward' else current_workouts.rotate(1)
         current_note = current_workouts[0]
 
         msg = note_workout.format(
             date=current_note.created_at,
             len_workouts=len_notes,
-            text=current_note.text_value
+            text=current_note.text_value,
         )
 
         return current_workouts, msg
@@ -80,5 +90,3 @@ class WorkoutTelegramService:
             msg = 'Не удалось удалить запись\n'
 
         return current_workouts, msg
-
-

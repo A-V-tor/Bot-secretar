@@ -4,7 +4,7 @@ from ..keyboards.base_kb import start_kb
 from src.service.users import UserTelegramService
 from aiogram.fsm.context import FSMContext
 
-router = Router(name = 'base')
+router = Router(name='base')
 
 
 @router.message(CommandStart())
@@ -31,11 +31,15 @@ async def root_menu(callback: types.CallbackQuery):
         msg = await user_service.create_new_user()
 
     await callback.message.delete()
-    await callback.message.answer(msg, reply_markup=await start_kb(), parse_mode='HTML')
+    await callback.message.answer(
+        msg, reply_markup=await start_kb(), parse_mode='HTML'
+    )
 
 
 @router.callback_query(F.data == 'cancel')
-async def cancel_handler_inline(callback: types.CallbackQuery, state: FSMContext):
+async def cancel_handler_inline(
+    callback: types.CallbackQuery, state: FSMContext
+):
     """Сброс машины состояний."""
 
     await state.clear()

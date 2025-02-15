@@ -1,10 +1,16 @@
+import typing
 from ..base import Base, session_factory
 from flask_login import UserMixin
-from sqlalchemy import BigInteger, String, Text, Boolean, and_, select, event
+from sqlalchemy import BigInteger, String, Text, Boolean, select, event
 from werkzeug.security import generate_password_hash
-from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.utils.tools import UserPermissions
 from sqlalchemy.dialects.postgresql import ENUM
+
+if typing.TYPE_CHECKING:
+    from src.database.models.expenses import Expenses
+    from src.database.models.workouts import Workout
+    from src.database.models.weight import Weight
 
 
 class User(Base, UserMixin):
@@ -22,9 +28,13 @@ class User(Base, UserMixin):
 
     __tablename__ = 'users'
 
-    username: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    username: Mapped[str] = mapped_column(
+        String(255), nullable=False, unique=True, index=True
+    )
     psw: Mapped[str] = mapped_column(String(255))
-    permission: Mapped[UserPermissions] = mapped_column(ENUM(UserPermissions), default=UserPermissions.user, nullable=True)
+    permission: Mapped[UserPermissions] = mapped_column(
+        ENUM(UserPermissions), default=UserPermissions.user, nullable=True
+    )
     first_surname: Mapped[str] = mapped_column(String(255), nullable=True)
     last_surname: Mapped[str] = mapped_column(String(255), nullable=True)
     description: Mapped[str] = mapped_column(Text(), nullable=True)
@@ -34,25 +44,28 @@ class User(Base, UserMixin):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     workouts: Mapped[list['Workout']] = relationship(
-        'Workout', back_populates='user',
-        uselist=True
+        'Workout', back_populates='user', uselist=True
     )
     expenses: Mapped[list['Expenses']] = relationship(
-        'Expenses', back_populates='user',
-        uselist=True
+        'Expenses', back_populates='user', uselist=True
     )
 
     weight: Mapped[list['Weight']] = relationship(
-        'Weight', back_populates='user',
-        uselist=True
+        'Weight', back_populates='user', uselist=True
     )
 
     def __str__(self):
-        return f"Пользователь: {self.username} - {self.telegram_id}"
+        return f'Пользователь: {self.username} - {self.telegram_id}'
 
     @classmethod
-    def create_user(cls, username: str, telegram_id: int, first_surname: str | None = None, last_surname: str | None = None):
-        generate_psw = "admin"
+    def create_user(
+        cls,
+        username: str,
+        telegram_id: int,
+        first_surname: str | None = None,
+        last_surname: str | None = None,
+    ):
+        generate_psw = 'admin'
 
         with session_factory() as session:
             stmt = cls(
@@ -60,7 +73,7 @@ class User(Base, UserMixin):
                 psw=generate_psw,
                 telegram_id=telegram_id,
                 first_surname=first_surname,
-                last_surname=last_surname
+                last_surname=last_surname,
             )
 
             session.add(stmt)

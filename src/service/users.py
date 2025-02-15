@@ -31,15 +31,11 @@ class UserTelegramService:
         """Создание нового пользователя в бд."""
 
         user_psw = self.model.create_user(
-            self.username,
-            self.telegram_id,
-            self.first_name,
-            self.last_name
+            self.username, self.telegram_id, self.first_name, self.last_name
         )
 
         msg = text_for_new_user.format(
-            telegram_id=self.telegram_id,
-            user_psw=user_psw
+            telegram_id=self.telegram_id, user_psw=user_psw
         )
         result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
 

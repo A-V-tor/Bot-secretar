@@ -18,5 +18,6 @@ class EditLastNoteExpenses(StatesGroup):
 class NewValueWeight(StatesGroup):
     start = State()
 
+
 class ChangeValueWeight(StatesGroup):
     start = State()

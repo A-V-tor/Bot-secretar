@@ -4,7 +4,7 @@ from aiogram.types import (
     KeyboardButton,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
-    WebAppInfo
+    WebAppInfo,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from config import settings
@@ -16,9 +16,15 @@ async def start_kb():
         text='📟 Админка 📟',
         web_app=WebAppInfo(url=f'{settings.URL_ADMIN}'),
     )
-    weight = InlineKeyboardButton(text="журнал веса ⚖️", callback_data="weight journal")
-    workout = InlineKeyboardButton(text="журнал тренировок 🏋️", callback_data="workout journal")
-    expense = InlineKeyboardButton(text="журнал расходов 💵", callback_data="expense journal")
+    weight = InlineKeyboardButton(
+        text='журнал веса ⚖️', callback_data='weight journal'
+    )
+    workout = InlineKeyboardButton(
+        text='журнал тренировок 🏋️', callback_data='workout journal'
+    )
+    expense = InlineKeyboardButton(
+        text='журнал расходов 💵', callback_data='expense journal'
+    )
 
     keyboard.row(kb_web).row(weight).row(workout).row(expense)
 
@@ -28,7 +34,7 @@ async def start_kb():
 async def cansel_kb():
     keyboard = InlineKeyboardBuilder()
 
-    kb_cancel = InlineKeyboardButton(text="отмена", callback_data="cancel")
+    kb_cancel = InlineKeyboardButton(text='отмена', callback_data='cancel')
     keyboard.row(kb_cancel)
 
     return keyboard.as_markup()

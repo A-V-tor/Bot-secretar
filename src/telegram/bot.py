@@ -20,8 +20,8 @@ async def bot_run():
     logging.basicConfig(
         level=logging.INFO,
         stream=sys.stdout,
-        format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s",
-        datefmt="%Y-%m-%d,%H:%M:%S",
+        format='%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s',
+        datefmt='%Y-%m-%d,%H:%M:%S',
     )
     bot = Bot(settings.BOT_TOKEN)
     dp = Dispatcher()
@@ -34,6 +34,7 @@ async def bot_run():
         bot,
         skip_updates=True,
     )
+
 
 if __name__ == '__main__':
     asyncio.run(bot_run())
