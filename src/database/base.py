@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, func, AsyncSession
+from sqlalchemy import DateTime, Integer, func
 
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -37,6 +37,6 @@ session_factory = sessionmaker(
 )
 
 
-def get_session() -> AsyncSession:
+def get_session():
     with session_factory() as session:
         yield session

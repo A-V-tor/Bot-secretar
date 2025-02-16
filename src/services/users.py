@@ -35,7 +35,7 @@ class UserTelegramService:
         )
 
         msg = text_for_new_user.format(
-            telegram_id=self.telegram_id, user_psw=user_psw
+            username=self.username, user_psw=user_psw
         )
         result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
 

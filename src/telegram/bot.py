@@ -13,6 +13,7 @@ import locale
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
 locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 load_dotenv(find_dotenv())
 
 
@@ -23,6 +24,10 @@ async def bot_run():
         format='%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s',
         datefmt='%Y-%m-%d,%H:%M:%S',
     )
+
+    if not settings.BOT_TOKEN:
+        raise ValueError('Отсутствует токен для бота')
+
     bot = Bot(settings.BOT_TOKEN)
     dp = Dispatcher()
     dp.include_router(base_router)
