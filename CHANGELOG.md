@@ -10,6 +10,10 @@
 - Правка cliff.toml, убрал опечатки, перевел текст ([8f26868](https://github.com/A-V-tor/Bot-secretar/commit/8f268680d7bd1f6a1dedd403c04af187705d88bc))
 - Правка cliff.toml - правильный адрес для коммитов релиза ([62b937d](https://github.com/A-V-tor/Bot-secretar/commit/62b937d995787e07cfed7c84d6cc006b5f5cf209))
 
+### 🚀 Новый функционал
+
+- Добавлена сборка докера ([d5bfdab](https://github.com/A-V-tor/Bot-secretar/commit/d5bfdab9bceb7544cfa8d4c32d7cebe3e6314cdf))
+
 ## 3.0.0 - 2025-02-15
 
 [cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)...[1abf070](https://github.com/A-V-tor/Bot-secretar/commit/1abf070ecabbdea7f38366bebaab3d838020e173)
