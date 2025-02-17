@@ -14,6 +14,10 @@
 
 - Добавлена сборка докера ([d5bfdab](https://github.com/A-V-tor/Bot-secretar/commit/d5bfdab9bceb7544cfa8d4c32d7cebe3e6314cdf))
 
+### 🪄 Изменения функционала
+
+- Поправил команду запуска в компоузе ([2685fe8](https://github.com/A-V-tor/Bot-secretar/commit/2685fe86ae72d547291530af005656dd67432a21))
+
 ## 3.0.0 - 2025-02-15
 
 [cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)...[1abf070](https://github.com/A-V-tor/Bot-secretar/commit/1abf070ecabbdea7f38366bebaab3d838020e173)
@@ -36,29 +40,19 @@
 
 ## 2.3 - 2024-01-24
 
-[6bc4516](https://github.com/A-V-tor/Bot-secretar/commit/6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)...[cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)
-
-### 🙈 Фикс бага
-
-- Указать версию Vue ([a5c5b40](https://github.com/A-V-tor/Bot-secretar/commit/a5c5b4029cfa38dbce7795c68bd46cce01f6084a))
-
-### 🚀 Новый функционал
-
-- Добавить dash (дашбоард по весу) ([cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99))
-
-## 2.2 - 2023-12-20
-
-[fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)...[6bc4516](https://github.com/A-V-tor/Bot-secretar/commit/6bc451684f8fdfe1ab89d8f96cc3d0da9af914fc)
+[fb299af](https://github.com/A-V-tor/Bot-secretar/commit/fb299afa4a91d75bfc86e254f1cb7d3c5abf73ad)...[cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99)
 
 ### 🙈 Фикс бага
 
 - Убрать баг переноса стиля после удаления записи ([e8d0075](https://github.com/A-V-tor/Bot-secretar/commit/e8d0075b8a981feaa1da4feb16fdaf5a35b0f417))
 - Удалить локальный пример project/adminpanel/static/admin/js/.env.json ([03533fd](https://github.com/A-V-tor/Bot-secretar/commit/03533fda8cb797414d06d26c64de9fbbadf0babd))
 - Поправить readme и action ci/cd ([c515f30](https://github.com/A-V-tor/Bot-secretar/commit/c515f30f8eecf089bbf00186cafd2550bcd11eaf))
+- Указать версию Vue ([a5c5b40](https://github.com/A-V-tor/Bot-secretar/commit/a5c5b4029cfa38dbce7795c68bd46cce01f6084a))
 
 ### 🚀 Новый функционал
 
 - Добавить логику и задачи Celery ([d6caba1](https://github.com/A-V-tor/Bot-secretar/commit/d6caba12fecc9cb64ffd94972b80a3042c74b8c5))
+- Добавить dash (дашбоард по весу) ([cc831ee](https://github.com/A-V-tor/Bot-secretar/commit/cc831eeb8294e499813ef3c83aa0818d7554df99))
 
 ### 🪄 Изменения функционала
 
