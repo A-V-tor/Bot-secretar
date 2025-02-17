@@ -17,9 +17,15 @@ def get_weight_analytics(current_flask_app):
         data_weight = weight_manager.get_all_weight_by_telegram_id()
         list_timestamp = sorted(set([i[1] for i in data_weight]))
 
-        # хранение отрезка, в случае удаления в web точки отрезка
-        session['start_date'] = list_timestamp[0].strftime('%Y-%m-%d')
-        session['end_date'] = list_timestamp[-1].strftime('%Y-%m-%d')
+        try:
+            # хранение отрезка, в случае удаления в web точки отрезка
+            session['start_date'] = list_timestamp[0].strftime('%Y-%m-%d')
+            session['end_date'] = list_timestamp[-1].strftime('%Y-%m-%d')
+        except IndexError:
+            # TODO: залогировать
+            print('Нет записи')
+            session['start_date'] = datetime.now().date()
+            session['end_date'] = datetime.now().date()
 
         fig = go.Figure()
         fig.update_layout(

@@ -29,3 +29,5 @@
 Включить в работу `pre-commit install` </br>
 Проверка создания файла `cat .git/hooks/pre-commit` </br>
 Проверка согласно конфигурации `pre-commit run --all-files` </br>
+
+<a href="https://github.com/A-V-tor/Bot-secretar/blob/main/CHANGELOG.md">Журнал изменений<a/>
