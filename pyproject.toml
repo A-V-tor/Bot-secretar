@@ -27,6 +27,7 @@ flask = "3.0.0"
 flask-ckeditor = "^1.0.0"
 bleach = "^6.2.0"
 flask-admin = "2.0.0a1"
+python-nginx = "^1.5.7"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -37,3 +38,6 @@ pre-commit = "^3.6.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+bot = "main:main"
