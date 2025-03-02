@@ -30,7 +30,7 @@ class Workout(Base):
     @classmethod
     def new_workout(cls, telegram_id: int, text: str):
         with session_factory() as session:
-            new_note = cls(value=text, user_telegram_id=telegram_id)
+            new_note = cls(text_value=text, user_telegram_id=telegram_id)
 
             session.add(new_note)
             session.commit()

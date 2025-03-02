@@ -40,6 +40,8 @@ async def add_workout_in_journal(
 
 @router.message(DayWorkouts.save_workout)
 async def save_new_workout(message: types.Message, state: FSMContext):
+    await message.bot.delete_message(message.chat.id, message.message_id - 1)
+
     text_workout = message.text
     workout_service = WorkoutTelegramService(message)
 

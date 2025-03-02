@@ -71,7 +71,7 @@ async def get_category_for_expenses(
 
 @router.message(AddExpenses.end)
 async def get_money_for_expenses(message: types.Message, state: FSMContext):
-    await message.delete()
+    await message.bot.delete_message(message.chat.id, message.message_id - 1)
 
     money: str = message.text
     if money.isdigit():
@@ -157,7 +157,7 @@ async def edit_last_note_for_new_choice_category(
 async def edit_last_note_set_new_money_value(
     message: types.Message, state: FSMContext
 ):
-    await message.delete()
+    await message.bot.delete_message(message.chat.id, message.message_id - 1)
 
     money: str = message.text
     if money.isdigit():
