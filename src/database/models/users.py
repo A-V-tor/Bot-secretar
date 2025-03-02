@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from sqlalchemy import BigInteger, String, Text, Boolean, select, event
 from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from src.utils.tools import UserPermissions
+from src.utils.tools import UserPermissions, generate_password
 from sqlalchemy.dialects.postgresql import ENUM
 
 if typing.TYPE_CHECKING:
@@ -65,7 +65,7 @@ class User(Base, UserMixin):
         first_surname: str | None = None,
         last_surname: str | None = None,
     ):
-        generate_psw = 'admin'
+        generate_psw = generate_password()
 
         with session_factory() as session:
             stmt = cls(
@@ -104,6 +104,17 @@ class User(Base, UserMixin):
             result = session.get(cls, note_id)
 
             return result
+
+    @classmethod
+    def set_new_password(cls, password: str, telegram_id: int):
+        with session_factory() as session:
+            user = cls.get_user_by_telegram_id(telegram_id)
+            if user:
+                user.psw = generate_password_hash(password)
+                session.add(user)
+                session.commit()
+
+                return password
 
 
 # хеширование пароля перед записью в бд

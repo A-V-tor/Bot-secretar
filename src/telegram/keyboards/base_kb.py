@@ -25,8 +25,9 @@ async def start_kb():
     expense = InlineKeyboardButton(
         text='журнал расходов 💵', callback_data='expense journal'
     )
+    profile = InlineKeyboardButton(text='профиль 👤', callback_data='profile')
 
-    keyboard.row(kb_web).row(weight).row(workout).row(expense)
+    keyboard.row(kb_web).row(weight).row(workout).row(expense).row(profile)
 
     return keyboard.as_markup()
 

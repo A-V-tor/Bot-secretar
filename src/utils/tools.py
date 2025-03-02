@@ -1,6 +1,8 @@
 import enum
 import re
 import html
+import string
+import secrets
 
 
 async def get_prev_month_and_year(month: int, year: int) -> tuple[int, int]:
@@ -112,6 +114,11 @@ def clean_unsupported_tags(html_text) -> str:
     cleaned_text = re.sub(r'\n\s*\n', '\n\n', cleaned_text.strip())
 
     return cleaned_text
+
+
+def generate_password():
+    alphabet = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(alphabet) for i in range(20))
 
 
 class TypeExpenses(str, enum.Enum):

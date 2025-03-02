@@ -7,6 +7,7 @@ from src.telegram.handlers.base import router as base_router
 from src.telegram.handlers.workout import router as workout_router
 from src.telegram.handlers.expenses import router as expenses_router
 from src.telegram.handlers.weight import router as weight_router
+from src.telegram.handlers.profile import router as profile_router
 
 from config import settings
 import locale
@@ -34,6 +35,7 @@ async def bot_run():
     dp.include_router(workout_router)
     dp.include_router(expenses_router)
     dp.include_router(weight_router)
+    dp.include_router(profile_router)
 
     await dp.start_polling(
         bot,
