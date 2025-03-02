@@ -4,14 +4,16 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install poetry
+RUN pip install --upgrade pip \
+    && pip install "poetry==1.2.2" --no-cache-dir
 
 RUN poetry install
 
 RUN apt-get update \
-    && apt-get install -y vim
-
-RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -y vim locales \
+    && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
 ENV LANG ru_RU.UTF-8
+
+CMD ["bash", "-c", "poetry run alembic upgrade head && poetry run bot"]

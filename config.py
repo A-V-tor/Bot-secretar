@@ -17,23 +17,26 @@ def get_config():
 
 
 class DatabaseConfig:
-    db_driver: str = os.getenv('DB_DRIVER')
-    db_host: str = os.getenv('DB_HOST')
-    db_port: str = os.getenv('DB_PORT')
-    db_name: str = os.getenv('DB_NAME')
-    db_user: str = os.getenv('DB_USER')
-    db_pass: str = os.getenv('DB_PASS')
+    dokku_deploy: str | None = os.getenv('IS_DOKKU') or None
+    db_driver: str = os.getenv('DB_DRIVER') or 'postgresql+psycopg2'
+    db_host: str = os.getenv('DB_HOST') or 'localhost'
+    db_port: str = os.getenv('DB_PORT') or '5432'
+    db_name: str = os.getenv('DB_NAME') or 'postgres'
+    db_user: str = os.getenv('DB_USER') or 'postgres'
+    db_pass: str = os.getenv('DB_PASS') or 'postgres'
 
-    db_url = f'{db_driver}://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+    db_url = (
+        f'{db_driver}://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+        if not dokku_deploy
+        else os.getenv('DATABASE_URL')
+    )
 
 
 class DevelopConfig:
     DASHBOARD_EXPENSE = os.getenv('DASHBOARD_EXPENSE')
     DASHBOARD_WEIGHT = os.getenv('DASHBOARD_WEIGHT')
     SECRET_KEY = 'secret-key'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(
-        basedir, 'test-database.db'
-    )
+    SQLALCHEMY_DATABASE_URI = DatabaseConfig.db_url
     BABEL_DEFAULT_LOCALE = 'ru'
 
     # почему-то не работает
@@ -44,8 +47,8 @@ class DevelopConfig:
 
 
 class ProductionConfig:
-    DASHBOARD_EXPENSE = '/admin/analytics/expense/'
-    DASHBOARD_WEIGHT = '/admin/analytics/weight/'
+    DASHBOARD_EXPENSE = os.getenv('DASHBOARD_EXPENSE')
+    DASHBOARD_WEIGHT = os.getenv('DASHBOARD_WEIGHT')
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = DatabaseConfig.db_url
     BABEL_DEFAULT_LOCALE = 'ru'
