@@ -19,6 +19,7 @@
 - Добавлена сборка докера ([d5bfdab](https://github.com/A-V-tor/Bot-secretar/commit/d5bfdab9bceb7544cfa8d4c32d7cebe3e6314cdf))
 - Добавление конфигов и скриптов для деплоя через dokku ([e376796](https://github.com/A-V-tor/Bot-secretar/commit/e376796ef4e35561f34127d4b40daf72c6c03433))
 - Добавлена смена пароля ([881e72b](https://github.com/A-V-tor/Bot-secretar/commit/881e72bc4b7ee70fc59de5b47b5327bb2c457874))
+- Добавлен функционал напоминаний в бот ([8c24212](https://github.com/A-V-tor/Bot-secretar/commit/8c24212da7e2ac20ae5b566a8452cc5caf3799a3))
 
 ### 🪄 Изменения функционала
 
