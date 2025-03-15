@@ -52,7 +52,6 @@ class Workout(Base):
 
     @classmethod
     def get_workouts_for_month(cls, telegram_id: int, month: int, year: int):
-
         with session_factory() as session:
             query = select(extract('day', cls.created_at)).where(
                 and_(

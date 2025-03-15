@@ -56,7 +56,7 @@ async def get_workout_journal(callback: types.CallbackQuery):
     """Календарь текущего месяца."""
 
     today = datetime.date.today()
-    year, month, day = today.year, today.month, today.day
+    year, month = today.year, today.month
     await callback.message.delete()
 
     workout_service = WorkoutTelegramService(callback)

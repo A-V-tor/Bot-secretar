@@ -1,4 +1,6 @@
 import typing
+
+from src.database.models.reminders import Reminder
 from ..base import Base, session_factory
 from flask_login import UserMixin
 from sqlalchemy import BigInteger, String, Text, Boolean, select, event
@@ -49,9 +51,11 @@ class User(Base, UserMixin):
     expenses: Mapped[list['Expenses']] = relationship(
         'Expenses', back_populates='user', uselist=True
     )
-
     weight: Mapped[list['Weight']] = relationship(
         'Weight', back_populates='user', uselist=True
+    )
+    reminders: Mapped[list['Reminder']] = relationship(
+        'Reminder', back_populates='user', uselist=True
     )
 
     def __str__(self):

@@ -21,3 +21,8 @@ class NewValueWeight(StatesGroup):
 
 class ChangeValueWeight(StatesGroup):
     start = State()
+
+
+class AddReminder(StatesGroup):
+    start_save_reminder = State()
+    add_timestamp = State()

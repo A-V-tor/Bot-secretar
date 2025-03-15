@@ -138,3 +138,9 @@ class UserPermissions(str, enum.Enum):
     moderator = 'Модератор'
     admin = 'Админ'
     owner = 'Владелец'
+
+
+class ReminderLevel(str, enum.Enum):
+    very_important = 'очень важно'
+    important = 'важно'
+    doesnot_matter = 'не важно'

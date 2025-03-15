@@ -73,8 +73,8 @@ async def get_category_for_expenses(
 async def get_money_for_expenses(message: types.Message, state: FSMContext):
     await message.bot.delete_message(message.chat.id, message.message_id - 1)
 
-    money: str = message.text
-    if money.isdigit():
+    money: str | None = message.text
+    if money and money.isdigit():
         state_data = await state.get_data()
         category = state_data['category']
         await state.update_data({'money': money})
