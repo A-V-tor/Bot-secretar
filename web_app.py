@@ -1,4 +1,5 @@
 import os
+
 from src.webapp.wsgi import app
 
 check_environment = os.getenv('FLASK_ENV')

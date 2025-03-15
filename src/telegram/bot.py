@@ -1,20 +1,21 @@
-import sys
-import logging
 import asyncio
+import locale
+import logging
+import sys
+
+from aiogram import Bot, Dispatcher
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from dotenv import find_dotenv, load_dotenv
-from aiogram import Dispatcher, Bot
-from src.telegram.handlers.base import router as base_router
-from src.telegram.handlers.workout import router as workout_router
-from src.telegram.handlers.expenses import router as expenses_router
-from src.telegram.handlers.weight import router as weight_router
-from src.telegram.handlers.profile import router as profile_router
-from src.telegram.handlers.reminders import router as reminder_router
-from src.services.reminders import RemindersScheduleService
 
 from config import settings
-import locale
+from src.services.reminders import RemindersScheduleService
+from src.telegram.handlers.base import router as base_router
+from src.telegram.handlers.expenses import router as expenses_router
+from src.telegram.handlers.profile import router as profile_router
+from src.telegram.handlers.reminders import router as reminder_router
+from src.telegram.handlers.weight import router as weight_router
+from src.telegram.handlers.workout import router as workout_router
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
 locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')

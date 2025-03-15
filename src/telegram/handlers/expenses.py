@@ -1,18 +1,18 @@
-from aiogram import Router, types, F
+from aiogram import F, Router, types
+from aiogram.fsm.context import FSMContext
+
+from src.services.expenses import ExpensesTelegramService
+from src.telegram.keyboards.base_kb import cansel_kb, start_kb
 from src.telegram.keyboards.expenses_kb import (
-    root_menu_expanses_kb,
     category_expenses_kb,
-    yes_or_no_save_expenses_kb,
-    expanses_journal_kb,
     category_expenses_last_name_kb,
+    expanses_journal_kb,
+    root_menu_expanses_kb,
+    yes_or_no_save_expenses_kb,
     yes_or_no_save_last_note_expenses_kb,
 )
-from src.services.expenses import ExpensesTelegramService
-from aiogram.fsm.context import FSMContext
 from src.telegram.states import AddExpenses, EditLastNoteExpenses
-from src.telegram.keyboards.base_kb import cansel_kb, start_kb
 from src.utils.tools import TypeExpenses
-
 
 router = Router(name='expenses')
 
@@ -22,9 +22,7 @@ async def root_expenses_menu(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await state.clear()
     msg = 'Журнал ведения расходов'
-    await callback.message.answer(
-        msg, reply_markup=await root_menu_expanses_kb()
-    )
+    await callback.message.answer(msg, reply_markup=await root_menu_expanses_kb())
 
 
 @router.callback_query(F.data == 'show expanses')
@@ -42,21 +40,15 @@ async def show_expanses_for_day(callback: types.CallbackQuery):
 
 
 @router.callback_query(F.data == 'add expanses')
-async def start_add_expenses_in_journal(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def start_add_expenses_in_journal(callback: types.CallbackQuery, state: FSMContext):
     msg = 'Выбери категорию трат'
     await callback.message.delete()
     await state.set_state(AddExpenses.start)
-    await callback.message.answer(
-        msg, reply_markup=await category_expenses_kb()
-    )
+    await callback.message.answer(msg, reply_markup=await category_expenses_kb())
 
 
 @router.callback_query(AddExpenses.start)
-async def get_category_for_expenses(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def get_category_for_expenses(callback: types.CallbackQuery, state: FSMContext):
     category = callback.data.split('.')[-1]
 
     rus_category = getattr(TypeExpenses, category).value
@@ -64,9 +56,7 @@ async def get_category_for_expenses(
     await callback.message.delete()
     await state.set_data({'category': category})
     await state.set_state(AddExpenses.end)
-    await callback.message.answer(
-        msg, reply_markup=await cansel_kb(), parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=await cansel_kb(), parse_mode='HTML')
 
 
 @router.message(AddExpenses.end)
@@ -123,23 +113,17 @@ async def edit_last_note(callback: types.CallbackQuery, state: FSMContext):
 
 
 @router.callback_query(F.data == 'current_last_expenses')
-async def edit_last_note_for_current_category(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def edit_last_note_for_current_category(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await state.update_data({'category': 'current'})
     msg = 'Введи новое денежное значение для записи'
     await state.set_state(EditLastNoteExpenses.money)
 
-    await callback.message.answer(
-        msg, reply_markup=await cansel_kb(), parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=await cansel_kb(), parse_mode='HTML')
 
 
 @router.callback_query(F.data.startswith('last_'))
-async def edit_last_note_for_new_choice_category(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def edit_last_note_for_new_choice_category(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     category = callback.data.split('_')[1]
     rus_category = getattr(TypeExpenses, category.split('.')[-1]).value
@@ -148,15 +132,11 @@ async def edit_last_note_for_new_choice_category(
     msg = f'Выбрана категория: <b>{rus_category}</b>\n\nВведи новое денежное значение для записи'
     await state.set_state(EditLastNoteExpenses.money)
 
-    await callback.message.answer(
-        msg, reply_markup=await cansel_kb(), parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=await cansel_kb(), parse_mode='HTML')
 
 
 @router.message(EditLastNoteExpenses.money)
-async def edit_last_note_set_new_money_value(
-    message: types.Message, state: FSMContext
-):
+async def edit_last_note_set_new_money_value(message: types.Message, state: FSMContext):
     await message.bot.delete_message(message.chat.id, message.message_id - 1)
 
     money: str = message.text
@@ -174,9 +154,7 @@ async def edit_last_note_set_new_money_value(
 
 
 @router.callback_query(F.data == 'yes_last_expenses')
-async def save_changes_last_note(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def save_changes_last_note(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     state_data = await state.get_data()
 
@@ -184,8 +162,6 @@ async def save_changes_last_note(
     note_id = state_data['last_note'].id
     category = state_data.get('category')
     money = state_data.get('money')
-    msg = await expenses_service.update_last_note(
-        note_id, int(money), category
-    )
+    msg = await expenses_service.update_last_note(note_id, int(money), category)
 
     await callback.message.answer(msg, reply_markup=await start_kb())

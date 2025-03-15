@@ -1,6 +1,8 @@
 import datetime
-from src.database.models.weight import Weight
+
 from aiogram import types
+
+from src.database.models.weight import Weight
 
 
 class WeightTelegramService:
@@ -17,9 +19,7 @@ class WeightTelegramService:
     async def check_note(self):
         today = datetime.date.today()
         year, month, day = today.year, today.month, today.day
-        result = self.model.check_note_by_telegram_id(
-            self.telegram_id, year, month, day
-        )
+        result = self.model.check_note_by_telegram_id(self.telegram_id, year, month, day)
 
         return result
 
@@ -45,8 +45,6 @@ class WeightDashbordService:
         self.user_telegram_id = telegram_id
 
     def get_all_weight_by_telegram_id(self):
-        result = self.model.get_all_weight_notes_by_telegram_id(
-            self.user_telegram_id
-        )
+        result = self.model.get_all_weight_notes_by_telegram_id(self.user_telegram_id)
 
         return result

@@ -1,21 +1,21 @@
 import os
-from flask_admin import Admin, AdminIndexView, expose, BaseView
+
+from dotenv import find_dotenv, load_dotenv
 from flask import current_app as app
+from flask_admin import Admin, AdminIndexView, expose
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.theme import Bootstrap4Theme
 from flask_ckeditor import CKEditorField
-from src.database.base import session_factory, get_session
-from dotenv import load_dotenv, find_dotenv
+from flask_login import current_user
+
+from src.database.base import session_factory
+from src.database.models.expenses import Expenses
 from src.database.models.users import User
 from src.database.models.weight import Weight
-from flask_admin.contrib.sqla import ModelView
-from src.database.models.expenses import Expenses
 from src.database.models.workouts import Workout
-from flask_login import current_user
-from flask_admin.theme import Bootstrap4Theme
-
-from flask_admin.menu import MenuLink
+from src.utils.tools import TypeExpenses, UserPermissions
 
 load_dotenv(find_dotenv())
-from src.utils.tools import UserPermissions, TypeExpenses
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -23,12 +23,9 @@ class MyAdminIndexView(AdminIndexView):
     def default_view(self):
         expense_url = os.getenv('DASHBOARD_EXPENSE')
         weight_url = os.getenv('DASHBOARD_WEIGHT')
-        return self.render(
-            'admin/index.html', expense_url=expense_url, weight_url=weight_url
-        )
+        return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url)
 
     def is_accessible(self):
-
         if current_user.is_authenticated:
             return True
 
@@ -53,9 +50,7 @@ class UserView(ModelView):
     # form_choices = {'permission': [
     #     (i.split(".")[-1], i.value) for i in UserPermissions
     # ]}
-    column_choices = {
-        'permission': [(i.split('.')[-1], i.value) for i in UserPermissions]
-    }
+    column_choices = {'permission': [(i.split('.')[-1], i.value) for i in UserPermissions]}
     column_filters = ('username', 'telegram_id', 'is_active', 'permission')
     column_default_sort = [
         ('username', True),
@@ -104,10 +99,7 @@ class WeightView(ModelView):
     edit_modal = True
 
     def is_accessible(self):
-        if (
-            current_user.is_authenticated
-            and current_user.permission.value in ['Админ', 'Владелец']
-        ):
+        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
             return True
 
         return False
@@ -118,9 +110,7 @@ class ExpensesView(ModelView):
     form_columns = ['type_expenses', 'value', 'user', 'created_at']
     column_exclude_list = ('id',)
     column_default_sort = [('updated_at', True), ('created_at', True)]
-    column_choices = {
-        'type_expenses': [(i.split('.')[-1], i.value) for i in TypeExpenses]
-    }
+    column_choices = {'type_expenses': [(i.split('.')[-1], i.value) for i in TypeExpenses]}
     column_labels = dict(
         type_expenses='Трата',
         value='Значение',
@@ -133,10 +123,7 @@ class ExpensesView(ModelView):
     edit_modal = True
 
     def is_accessible(self):
-        if (
-            current_user.is_authenticated
-            and current_user.permission.value in ['Админ', 'Владелец']
-        ):
+        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
             return True
 
         return False
@@ -166,10 +153,7 @@ class WorkoutView(ModelView):
     form_overrides = {'text_value': CKEditorField}
 
     def is_accessible(self):
-        if (
-            current_user.is_authenticated
-            and current_user.permission.value in ['Админ', 'Владелец']
-        ):
+        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
             return True
 
         return False
@@ -177,16 +161,8 @@ class WorkoutView(ModelView):
 
 admin.add_view(UserView(User, session_factory(), name='Пользователи'))
 
-admin.add_view(
-    WeightView(
-        Weight, session_factory(), name='Журнал веса', category='Журналы'
-    )
-)
-admin.add_view(
-    ExpensesView(
-        Expenses, session_factory(), name='Журнал трат', category='Журналы'
-    )
-)
+admin.add_view(WeightView(Weight, session_factory(), name='Журнал веса', category='Журналы'))
+admin.add_view(ExpensesView(Expenses, session_factory(), name='Журнал трат', category='Журналы'))
 admin.add_view(
     WorkoutView(
         Workout,

@@ -1,7 +1,7 @@
 import os
 import subprocess
-from dotenv import find_dotenv, load_dotenv
 
+from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
 os.environ.setdefault('IS_DOKKU', 'True')
@@ -20,9 +20,7 @@ if pull_res.returncode == 0:
             # первичное развертование, нужно настроить сервис
             subprocess.run(['dokku', 'apps:create', 'bot-secretar'])
             subprocess.run(['dokku', 'postgres:create', 'bot_secretar'])
-            subprocess.run(
-                ['dokku', 'postgres:link', 'bot_secretar', 'bot-secretar']
-            )
+            subprocess.run(['dokku', 'postgres:link', 'bot_secretar', 'bot-secretar'])
 
             config_res = subprocess.run(
                 ['dokku', 'config', 'bot-secretar'],
@@ -62,13 +60,7 @@ if pull_res.returncode == 0:
                         text=True,
                     )
 
-                    ip_address = (
-                        subprocess.check_output(
-                            "hostname -i | awk '{print $2}'", shell=True
-                        )
-                        .decode()
-                        .strip()
-                    )
+                    ip_address = subprocess.check_output("hostname -i | awk '{print $2}'", shell=True).decode().strip()
                     host = os.getenv('HOST') or ip_address
                     subprocess.run(
                         ['dokku', 'domains:add', 'bot-secretar', host],
@@ -90,9 +82,7 @@ if pull_res.returncode == 0:
                     print('Порты и хосты установлены')
 
 if pull_res.returncode == 0:
-    push_res = subprocess.run(
-        ['git', 'push', 'dokku', 'main'], capture_output=True, text=True
-    )
+    push_res = subprocess.run(['git', 'push', 'dokku', 'main'], capture_output=True, text=True)
     print('stdout (git push):', push_res.stdout)
     print('stderr (git push):', push_res.stderr)
 

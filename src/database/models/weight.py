@@ -1,14 +1,16 @@
 import typing
-from ..base import Base, session_factory
+
 from sqlalchemy import (
     DECIMAL,
-    and_,
-    select,
-    func,
     ForeignKey,
+    and_,
     extract,
+    func,
+    select,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from ..base import Base, session_factory
 
 if typing.TYPE_CHECKING:
     from src.database.models.users import User
@@ -22,9 +24,7 @@ class Weight(Base):
         nullable=False,
     )
 
-    user_telegram_id: Mapped[int] = mapped_column(
-        ForeignKey('users.telegram_id'), nullable=True
-    )
+    user_telegram_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'), nullable=True)
     user: Mapped['User'] = relationship('User', back_populates='weight')
 
     def __str__(self):
@@ -48,9 +48,7 @@ class Weight(Base):
             return True
 
     @classmethod
-    def check_note_by_telegram_id(
-        cls, telegram_id: int, year: int, month: int, day: int
-    ):
+    def check_note_by_telegram_id(cls, telegram_id: int, year: int, month: int, day: int):
         with session_factory() as session:
             query = select(cls).where(
                 and_(
@@ -66,7 +64,6 @@ class Weight(Base):
 
     @classmethod
     def update_note_by_telegram_id(cls, note_id: int, weight: float):
-
         note = cls.get_note_by_id(note_id)
         if note:
             with session_factory() as session:
@@ -83,8 +80,7 @@ class Weight(Base):
             query = (
                 select(cls.value, func.date(cls.created_at).label('date'))
                 .filter(
-                    cls.user_telegram_id
-                    == telegram_id  # Фильтрация по telegram_id
+                    cls.user_telegram_id == telegram_id  # Фильтрация по telegram_id
                 )
                 .order_by(func.date(cls.created_at))
             )

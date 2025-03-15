@@ -1,14 +1,16 @@
 import typing
-from ..base import Base, session_factory
+
 from sqlalchemy import (
-    Text,
     Boolean,
-    and_,
-    select,
     ForeignKey,
+    Text,
+    and_,
     extract,
+    select,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from ..base import Base, session_factory
 
 if typing.TYPE_CHECKING:
     from src.database.models.users import User
@@ -19,9 +21,7 @@ class Workout(Base):
 
     text_value: Mapped[str] = mapped_column(Text)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    user_telegram_id: Mapped[int] = mapped_column(
-        ForeignKey('users.telegram_id'), nullable=True
-    )
+    user_telegram_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'), nullable=True)
     user: Mapped['User'] = relationship('User', back_populates='workouts')
 
     def __str__(self):
@@ -66,9 +66,7 @@ class Workout(Base):
             return [str(day) for day in result] if result else []
 
     @classmethod
-    def get_workouts_for_timestamp(
-        cls, telegram_id: int, day: int, month: int, year: int
-    ):
+    def get_workouts_for_timestamp(cls, telegram_id: int, day: int, month: int, year: int):
         with session_factory() as session:
             query = select(cls).where(
                 and_(

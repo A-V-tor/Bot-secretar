@@ -1,12 +1,17 @@
-from flask import session, current_app as current_flask_app
-from dash import dcc, html
 from datetime import datetime
+
 import plotly.graph_objects as go
+from dash import dcc, html
 from dash.dependencies import Input, Output
-from src.webapp.dashbords.base import DashboardManager, StyleDash
+from flask import (
+    current_app as current_flask_app,
+    session,
+)
 from flask_login import current_user
-from src.services.weight import WeightDashbordService
+
 from config import settings
+from src.services.weight import WeightDashbordService
+from src.webapp.dashbords.base import DashboardManager, StyleDash
 
 
 def get_weight_analytics(current_flask_app):
@@ -64,10 +69,7 @@ def get_weight_analytics(current_flask_app):
                         ),
                         dcc.Dropdown(
                             id='start-date-dropdown',
-                            options=[
-                                {'label': f'С {date}', 'value': date}
-                                for date in list_timestamp
-                            ],
+                            options=[{'label': f'С {date}', 'value': date} for date in list_timestamp],
                             multi=False,
                             value=list_timestamp[0],
                             style=StyleDash.dropdown_style,
@@ -79,10 +81,7 @@ def get_weight_analytics(current_flask_app):
                         ),
                         dcc.Dropdown(
                             id='end-date-dropdown',
-                            options=[
-                                {'label': f'ДО {date}', 'value': date}
-                                for date in list_timestamp
-                            ],
+                            options=[{'label': f'ДО {date}', 'value': date} for date in list_timestamp],
                             multi=False,
                             value=list_timestamp[-1],
                             style=StyleDash.dropdown_style,
@@ -94,17 +93,13 @@ def get_weight_analytics(current_flask_app):
                         'padding': '2px 6px',
                     },
                 ),
-                dcc.Graph(
-                    id='weight-graph', figure=fig, style={'height': '600px'}
-                ),
+                dcc.Graph(id='weight-graph', figure=fig, style={'height': '600px'}),
             ]
         )
 
         return content
 
-    app = DashboardManager(
-        __name__, current_flask_app, settings.DASHBOARD_WEIGHT, show_content
-    ).app
+    app = DashboardManager(__name__, current_flask_app, settings.DASHBOARD_WEIGHT, show_content).app
 
     @app.callback(
         [
@@ -126,14 +121,10 @@ def get_weight_analytics(current_flask_app):
             string_end_date = session.get('end_date')
 
             start_date = (
-                datetime.strptime(string_start_date, '%Y-%m-%d').date()
-                if string_start_date
-                else datetime.now().date()
+                datetime.strptime(string_start_date, '%Y-%m-%d').date() if string_start_date else datetime.now().date()
             )
             end_date = (
-                datetime.strptime(string_end_date, '%Y-%m-%d').date()
-                if string_end_date
-                else datetime.now().date()
+                datetime.strptime(string_end_date, '%Y-%m-%d').date() if string_end_date else datetime.now().date()
             )
 
         weight_manager = WeightDashbordService(current_user.telegram_id)
@@ -162,9 +153,7 @@ def get_weight_analytics(current_flask_app):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0, 0, 0, 0)',
-            legend=dict(
-                orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1
-            ),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
         )
 
         return [fig]

@@ -1,14 +1,10 @@
-import os
-import datetime
-from src.database.models.workouts import Workout
 import calendar
+
 from aiogram.types import (
-    ReplyKeyboardMarkup,
-    KeyboardButton,
-    InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from src.utils.tools import get_next_month_and_year, get_prev_month_and_year
 
 
@@ -17,9 +13,7 @@ async def root_menu_workout_kb():
 
     root_menu = InlineKeyboardButton(text='🗂', callback_data='start')
     journal = InlineKeyboardButton(text='журнал', callback_data='show workout')
-    new_note = InlineKeyboardButton(
-        text='добавить', callback_data='add workout'
-    )
+    new_note = InlineKeyboardButton(text='добавить', callback_data='add workout')
 
     keyboard.row(root_menu).row(journal).row(new_note)
 
@@ -32,9 +26,7 @@ async def rotation_workout():
     prev = InlineKeyboardButton(text='<<<', callback_data='& back')
     forward = InlineKeyboardButton(text='>>>', callback_data='& forward')
     back = InlineKeyboardButton(text='назад', callback_data='show workout')
-    delete_note = InlineKeyboardButton(
-        text='удалить', callback_data='del workout'
-    )
+    delete_note = InlineKeyboardButton(text='удалить', callback_data='del workout')
     root_menu = InlineKeyboardButton(text='🗂', callback_data='start')
 
     keyboard.row(prev, forward).row(delete_note).row(back).row(root_menu)
@@ -44,7 +36,6 @@ async def rotation_workout():
 
 async def render_workout_calendar(month: int, year: int, workout_days: list):
     """Отрисовка календаря тренировок в клавиатуре."""
-
     keyboard = InlineKeyboardBuilder()
     cl = calendar.TextCalendar(firstweekday=0)
     days_current_month = [day for day in cl.itermonthdays(year, month)]
@@ -65,24 +56,20 @@ async def render_workout_calendar(month: int, year: int, workout_days: list):
         if day != 0:
             if str(day) in workout_days:
                 # если есть тренировка
-                workout_button = InlineKeyboardButton(
-                    text='💪', callback_data=f'_{day}-{month}-{year}'
-                )
+                workout_button = InlineKeyboardButton(text='💪', callback_data=f'_{day}-{month}-{year}')
                 if count_days % 7 == 0:
                     keyboard.row(workout_button)
                 else:
                     keyboard.add(workout_button)
             else:
-                not_workout_button = InlineKeyboardButton(
-                    text=f' {day} ', callback_data=f'_{day}-{month}-{year}'
-                )
+                not_workout_button = InlineKeyboardButton(text=f' {day} ', callback_data=f'_{day}-{month}-{year}')
                 if count_days % 7 == 0:
                     keyboard.row(not_workout_button)
                 else:
                     keyboard.add(not_workout_button)
         else:
             # заглушки дней других месяцев
-            empty_button = InlineKeyboardButton(text=' ', callback_data=f'_')
+            empty_button = InlineKeyboardButton(text=' ', callback_data='_')
 
             if count_days % 7 == 0:
                 keyboard.row(empty_button)
@@ -93,16 +80,10 @@ async def render_workout_calendar(month: int, year: int, workout_days: list):
     prev_month, prev_year = await get_prev_month_and_year(month, year)
     next_month, next_year = await get_next_month_and_year(month, year)
     keyboard.row(
-        InlineKeyboardButton(
-            text='<<', callback_data=f'-{prev_month} {prev_year}'
-        ),
-        InlineKeyboardButton(
-            text='>>', callback_data=f'+{next_month} {next_year}'
-        ),
+        InlineKeyboardButton(text='<<', callback_data=f'-{prev_month} {prev_year}'),
+        InlineKeyboardButton(text='>>', callback_data=f'+{next_month} {next_year}'),
     )
-    keyboard.row(
-        InlineKeyboardButton(text='назад', callback_data='workout journal')
-    )
+    keyboard.row(InlineKeyboardButton(text='назад', callback_data='workout journal'))
     keyboard.row(InlineKeyboardButton(text='🗂', callback_data='start'))
 
     return keyboard.as_markup()

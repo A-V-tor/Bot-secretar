@@ -1,14 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, func
-
+from sqlalchemy import DateTime, Integer, create_engine, func
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
     mapped_column,
     sessionmaker,
 )
-from sqlalchemy import create_engine
 
 from config import settings
 
@@ -17,12 +15,8 @@ class Base(DeclarativeBase):
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, server_default=func.now()
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, server_default=func.now(), onupdate=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
 
 engine = create_engine(

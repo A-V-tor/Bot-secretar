@@ -1,8 +1,9 @@
 import datetime
 
-from src.database.models.expenses import Expenses
 from aiogram import types
 from prettytable import PrettyTable
+
+from src.database.models.expenses import Expenses
 
 
 class ExpensesTelegramService:
@@ -19,9 +20,7 @@ class ExpensesTelegramService:
     async def get_expenses_for_day(self):
         today = datetime.date.today()
         year, month, day = today.year, today.month, today.day
-        notes: list[Expenses] | list = self.model.get_expenses_for_day(
-            self.telegram_id, day, month, year
-        )
+        notes: list[Expenses] | list = self.model.get_expenses_for_day(self.telegram_id, day, month, year)
 
         flag_last_note = True if notes else False
         my_table = PrettyTable()
@@ -50,9 +49,7 @@ class ExpensesTelegramService:
         return last_note
 
     async def update_last_note(self, note_id: int, money: int, category: str):
-        result = self.model.update_last_note_for_current_day(
-            note_id, money, category
-        )
+        result = self.model.update_last_note_for_current_day(note_id, money, category)
 
         msg = 'Запись обновлена' if result else 'Что-то пошло не так'
 
@@ -68,8 +65,6 @@ class ExpensesDashbordService:
         self.user_telegram_id = telegram_id
 
     def get_all_expenses_by_telegram_id(self):
-        result = self.model.get_all_expenses_by_telegram_id(
-            self.user_telegram_id
-        )
+        result = self.model.get_all_expenses_by_telegram_id(self.user_telegram_id)
 
         return result

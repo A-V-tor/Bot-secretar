@@ -1,13 +1,14 @@
-from aiogram import Router, types, F
-from src.services.weight import WeightTelegramService
+from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
-from src.telegram.states import NewValueWeight, ChangeValueWeight
+
+from src.services.weight import WeightTelegramService
 from src.telegram.keyboards.base_kb import cansel_kb, start_kb
 from src.telegram.keyboards.weight_kb import (
     root_menu_weight_kb,
-    yes_or_no_save_weight_kb,
     yes_or_no_save_change_weight_kb,
+    yes_or_no_save_weight_kb,
 )
+from src.telegram.states import ChangeValueWeight, NewValueWeight
 from src.utils.tools import validate_weight
 
 router = Router(name='weight')
@@ -21,11 +22,7 @@ async def root_weight_menu(callback: types.CallbackQuery, state: FSMContext):
     weight_manager = WeightTelegramService(callback)
     result = await weight_manager.check_note()
     presence_of_record = True if result else False
-    msg = (
-        f'Твой вес сегодня: <b>{result.text_value}</b>'
-        if result
-        else 'Журнал веса'
-    )
+    msg = f'Твой вес сегодня: <b>{result.text_value}</b>' if result else 'Журнал веса'
 
     if presence_of_record:
         await state.set_data({'weight_note_id': result.id})

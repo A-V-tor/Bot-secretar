@@ -1,21 +1,22 @@
 import os
+
 from flask import (
     Flask,
     flash,
-    request,
-    render_template,
-    redirect,
-    url_for,
-    session,
-    send_from_directory,
     g,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
 )
-from flask_ckeditor import CKEditor
-from src.database.models.users import User
-from config import get_config
-from werkzeug.security import check_password_hash
 from flask_babel import Babel
-from flask_login import LoginManager, login_user, logout_user, current_user
+from flask_ckeditor import CKEditor
+from flask_login import LoginManager, current_user, login_user, logout_user
+from werkzeug.security import check_password_hash
+
+from config import get_config
+from src.database.models.users import User
 
 
 def create_app():
@@ -27,10 +28,6 @@ def create_app():
     ckeditor.init_app(app)
 
     with app.app_context():
-
-        from src.webapp.admin import admin
-        from src.webapp.dashbords import expenses, weight
-
         return app
 
 

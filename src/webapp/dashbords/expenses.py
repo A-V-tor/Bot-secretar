@@ -1,15 +1,20 @@
-from flask import session, current_app as current_flask_app
-from dash import dcc, html
 import time
 from datetime import datetime
-import plotly.graph_objects as go
-from plotly.io import write_image
+
 import plotly.express as px
+import plotly.graph_objects as go
+from dash import dcc, html
 from dash.dependencies import Input, Output
-from src.webapp.dashbords.base import DashboardManager, StyleDash
+from flask import (
+    current_app as current_flask_app,
+    session,
+)
 from flask_login import current_user
-from src.services.expenses import ExpensesDashbordService
+from plotly.io import write_image
+
 from config import settings
+from src.services.expenses import ExpensesDashbordService
+from src.webapp.dashbords.base import DashboardManager, StyleDash
 
 
 def get_expense_analytics(current_flask_app):
@@ -28,7 +33,6 @@ def get_expense_analytics(current_flask_app):
 
     def show_content():
         """Получение и отрисовка данных."""
-
         expanses_manager = ExpensesDashbordService(current_user.telegram_id)
         mapa_expanses = {}
         total_money = []
@@ -67,7 +71,6 @@ def get_expense_analytics(current_flask_app):
         )
 
         for expense_item, value_tuple in mapa_expanses.items():
-
             date_time = sorted([i[0] for i in value_tuple])
             date_time = [i.strftime('%m/%d/%Y') for i in date_time]
 
@@ -113,10 +116,7 @@ def get_expense_analytics(current_flask_app):
                         ),
                         dcc.Dropdown(
                             id='start-date-dropdown',
-                            options=[
-                                {'label': f'С {date}', 'value': date}
-                                for date in list_timestamp
-                            ],
+                            options=[{'label': f'С {date}', 'value': date} for date in list_timestamp],
                             multi=False,
                             value=list_timestamp[0],
                             style=StyleDash.dropdown_style,
@@ -128,10 +128,7 @@ def get_expense_analytics(current_flask_app):
                         ),
                         dcc.Dropdown(
                             id='end-date-dropdown',
-                            options=[
-                                {'label': f'ДО {date}', 'value': date}
-                                for date in list_timestamp
-                            ],
+                            options=[{'label': f'ДО {date}', 'value': date} for date in list_timestamp],
                             multi=False,
                             value=list_timestamp[-1],
                             style=StyleDash.dropdown_style,
@@ -149,9 +146,7 @@ def get_expense_analytics(current_flask_app):
                     style={'textAlign': 'center'},
                     id='total',
                 ),
-                dcc.Graph(
-                    id='expenses-graph', figure=fig, style={'height': '600px'}
-                ),
+                dcc.Graph(id='expenses-graph', figure=fig, style={'height': '600px'}),
                 html.Br(),
                 dcc.Graph(
                     id='expenses-pie',
@@ -197,14 +192,10 @@ def get_expense_analytics(current_flask_app):
             string_end_date = session.get('end_date')
 
             start_date = (
-                datetime.strptime(string_start_date, '%Y-%m-%d').date()
-                if string_start_date
-                else datetime.now().date()
+                datetime.strptime(string_start_date, '%Y-%m-%d').date() if string_start_date else datetime.now().date()
             )
             end_date = (
-                datetime.strptime(string_end_date, '%Y-%m-%d').date()
-                if string_end_date
-                else datetime.now().date()
+                datetime.strptime(string_end_date, '%Y-%m-%d').date() if string_end_date else datetime.now().date()
             )
 
         expanses_manager = ExpensesDashbordService(current_user.telegram_id)
@@ -260,9 +251,7 @@ def get_expense_analytics(current_flask_app):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0, 0, 0, 0)',
-            legend=dict(
-                orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1
-            ),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
         )
         check_for_picture = pathname.split('/')[-1]
         if check_for_picture == 'picture':

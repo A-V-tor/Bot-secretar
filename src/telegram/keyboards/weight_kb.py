@@ -1,15 +1,7 @@
-import os
-import datetime
-from src.database.models.workouts import Workout
-import calendar
 from aiogram.types import (
-    ReplyKeyboardMarkup,
-    KeyboardButton,
-    InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from src.utils.tools import get_next_month_and_year, get_prev_month_and_year
 
 
 async def root_menu_weight_kb(presence_of_record=False):
@@ -17,12 +9,8 @@ async def root_menu_weight_kb(presence_of_record=False):
 
     root_menu = InlineKeyboardButton(text='🗂', callback_data='start')
     journal = InlineKeyboardButton(text='журнал', callback_data='show weight')
-    new_note = InlineKeyboardButton(
-        text='добавить', callback_data='add weight'
-    )
-    change_note = InlineKeyboardButton(
-        text='✍️ изменить', callback_data='change weight'
-    )
+    new_note = InlineKeyboardButton(text='добавить', callback_data='add weight')
+    change_note = InlineKeyboardButton(text='✍️ изменить', callback_data='change weight')
 
     keyboard.row(root_menu).row(journal)
 

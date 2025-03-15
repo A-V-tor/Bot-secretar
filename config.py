@@ -1,6 +1,6 @@
 import os
-from dotenv import find_dotenv, load_dotenv
 
+from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -8,7 +8,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def get_config():
     """Получение настроек проекта."""
-
     env = os.getenv('FLASK_ENV', 'production')
     if env == 'development':
         return DevelopConfig

@@ -1,8 +1,10 @@
-from aiogram import Router, types, F
+from aiogram import F, Router, types
 from aiogram.filters.command import CommandStart
-from ..keyboards.base_kb import start_kb
-from src.services.users import UserTelegramService
 from aiogram.fsm.context import FSMContext
+
+from src.services.users import UserTelegramService
+
+from ..keyboards.base_kb import start_kb
 
 router = Router(name='base')
 
@@ -10,7 +12,6 @@ router = Router(name='base')
 @router.message(CommandStart())
 async def start_command(message: types.Message):
     """Стартовое меню."""
-
     user_service = UserTelegramService(message)
     user, msg = await user_service.check_user_by_telegram()
 
@@ -23,7 +24,6 @@ async def start_command(message: types.Message):
 @router.callback_query(F.data == 'start')
 async def root_menu(callback: types.CallbackQuery):
     """Стартовое меню для инлайна."""
-
     user_service = UserTelegramService(callback)
     user, msg = await user_service.check_user_by_telegram()
 
@@ -31,17 +31,12 @@ async def root_menu(callback: types.CallbackQuery):
         msg = await user_service.create_new_user()
 
     await callback.message.delete()
-    await callback.message.answer(
-        msg, reply_markup=await start_kb(), parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=await start_kb(), parse_mode='HTML')
 
 
 @router.callback_query(F.data == 'cancel')
-async def cancel_handler_inline(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def cancel_handler_inline(callback: types.CallbackQuery, state: FSMContext):
     """Сброс машины состояний."""
-
     await state.clear()
     await callback.message.delete()
     await callback.message.answer('Отменено', reply_markup=await start_kb())

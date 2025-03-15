@@ -1,17 +1,20 @@
 import datetime
-from aiogram import Router, types, F
+
+from aiogram import F, Router, types
+from aiogram.fsm.context import FSMContext
+
+from src.services.reminders import RemindersTelegramService
+from src.telegram.states import AddReminder
+from src.utils.tools import ReminderLevel
+
+from ..keyboards.base_kb import cansel_kb, start_kb
 from ..keyboards.reminders import (
     reminders_kb,
     render_reminders_calendar,
+    render_reminders_calendar_for_input,
     select_hour_timestamp,
     select_minutes_timestamp,
-    render_reminders_calendar_for_input,
 )
-from ..keyboards.base_kb import start_kb, cansel_kb
-from src.services.reminders import RemindersTelegramService
-from aiogram.fsm.context import FSMContext
-from src.telegram.states import AddReminder
-from src.utils.tools import ReminderLevel
 
 router = Router(name='reminders')
 
@@ -28,7 +31,6 @@ async def menu_reminders(callback: types.CallbackQuery):
 @router.callback_query(F.data == 'show-reminders')
 async def get_reminders_journal(callback: types.CallbackQuery):
     """Календарь текущего месяца."""
-
     today = datetime.date.today()
     year, month = today.year, today.month
     await callback.message.delete()
@@ -37,22 +39,17 @@ async def get_reminders_journal(callback: types.CallbackQuery):
     (
         reminder_days,
         msg,
-    ) = await reminder_service.get_reminders_days_for_current_month(
-        month, year
-    )
+    ) = await reminder_service.get_reminders_days_for_current_month(month, year)
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(
-            month, year, reminder_days
-        ),
+        reply_markup=await render_reminders_calendar(month, year, reminder_days),
     )
 
 
 @router.callback_query(F.data.startswith('rmndrs-'))
 async def previous_month_of_reminders(callback: types.CallbackQuery):
     """Назад по календарю."""
-
     month, year = callback.data[7:].split(' ')
     month, year = int(month), int(year)
     await callback.message.delete()
@@ -61,22 +58,17 @@ async def previous_month_of_reminders(callback: types.CallbackQuery):
     (
         reminder_days,
         msg,
-    ) = await reminder_service.get_reminders_days_for_current_month(
-        month, year
-    )
+    ) = await reminder_service.get_reminders_days_for_current_month(month, year)
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(
-            month, year, reminder_days
-        ),
+        reply_markup=await render_reminders_calendar(month, year, reminder_days),
     )
 
 
 @router.callback_query(F.data.startswith('rmndrs+'))
 async def next_month_of_reminders(callback: types.CallbackQuery):
     """Вперед по календарю."""
-
     month, year = callback.data[7:].split(' ')
     month, year = int(month), int(year)
     await callback.message.delete()
@@ -85,15 +77,11 @@ async def next_month_of_reminders(callback: types.CallbackQuery):
     (
         reminder_days,
         msg,
-    ) = await reminder_service.get_reminders_days_for_current_month(
-        month, year
-    )
+    ) = await reminder_service.get_reminders_days_for_current_month(month, year)
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(
-            month, year, reminder_days
-        ),
+        reply_markup=await render_reminders_calendar(month, year, reminder_days),
     )
 
 
@@ -102,9 +90,7 @@ async def add_reminder(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(AddReminder.start_save_reminder)
 
     await callback.message.delete()
-    await callback.message.answer(
-        'Введи тест напоминания: ', reply_markup=await cansel_kb()
-    )
+    await callback.message.answer('Введи тест напоминания: ', reply_markup=await cansel_kb())
 
 
 @router.message(AddReminder.start_save_reminder)
@@ -125,23 +111,17 @@ async def get_hour_for_reminder(message: types.Message, state: FSMContext):
 
 
 @router.callback_query(F.data.startswith('rmndr-hour'))
-async def get_minutes_for_reminder(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def get_minutes_for_reminder(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     hour = callback.data.split('-')[-1]
     await state.update_data({'hour': hour})
 
     keyboard = await select_minutes_timestamp()
-    await callback.message.answer(
-        'Выбери минуты напоминания', reply_markup=keyboard, parse_mode='HTML'
-    )
+    await callback.message.answer('Выбери минуты напоминания', reply_markup=keyboard, parse_mode='HTML')
 
 
 @router.callback_query(F.data.startswith('rmndr-minutes'))
-async def get_date_for_reminder(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def get_date_for_reminder(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     minutes = callback.data.split('-')[-1]
     await state.update_data({'minutes': minutes})
@@ -151,15 +131,11 @@ async def get_date_for_reminder(
 
     msg = 'Выбери дату'
     keyboard = await render_reminders_calendar_for_input(month, year)
-    await callback.message.answer(
-        msg, reply_markup=keyboard, parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=keyboard, parse_mode='HTML')
 
 
 @router.callback_query(F.data.startswith('rmndrsnew'))
-async def set_data_for_reminder(
-    callback: types.CallbackQuery, state: FSMContext
-):
+async def set_data_for_reminder(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
     month, day, year = callback.data.split('-')[1:]
 
@@ -170,13 +146,9 @@ async def set_data_for_reminder(
     timestamp = f'{month}.{day}.{year} {hour}:{minutes}'
 
     reminder_service = RemindersTelegramService(callback)
-    msg = await reminder_service.new_reminder(
-        value, ReminderLevel.important, timestamp
-    )
+    msg = await reminder_service.new_reminder(value, ReminderLevel.important, timestamp)
 
-    await callback.message.answer(
-        msg, reply_markup=await start_kb(), parse_mode='HTML'
-    )
+    await callback.message.answer(msg, reply_markup=await start_kb(), parse_mode='HTML')
 
 
 @router.callback_query(F.data.startswith('rmndrsbacknew-'))

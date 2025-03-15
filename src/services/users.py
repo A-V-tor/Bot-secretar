@@ -1,5 +1,6 @@
-from src.database.models.users import User
 from aiogram import types
+
+from src.database.models.users import User
 from src.utils.text_templates import text_for_new_user
 from src.utils.tools import generate_password
 
@@ -23,34 +24,25 @@ class UserTelegramService:
 
     async def check_user_by_telegram(self):
         """Проверка наличия юзера в базе по tg_id."""
-
         user = self.model.get_user_by_telegram_id(self.telegram_id)
 
         return user, 'Главное меню' if user else False
 
     async def create_new_user(self):
         """Создание нового пользователя в бд."""
+        user_psw = self.model.create_user(self.username, self.telegram_id, self.first_name, self.last_name)
 
-        user_psw = self.model.create_user(
-            self.username, self.telegram_id, self.first_name, self.last_name
-        )
-
-        msg = text_for_new_user.format(
-            username=self.username, user_psw=user_psw
-        )
+        msg = text_for_new_user.format(username=self.username, user_psw=user_psw)
         result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
 
         return result
 
     async def change_password(self):
         """Создание нового пароля профиля."""
-
         password = generate_password()
         user_psw = self.model.set_new_password(password, self.telegram_id)
 
-        msg = text_for_new_user.format(
-            username=self.username, user_psw=user_psw
-        )
+        msg = text_for_new_user.format(username=self.username, user_psw=user_psw)
         result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
 
         return result

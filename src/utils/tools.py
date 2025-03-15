@@ -1,16 +1,17 @@
 import enum
-import re
 import html
-import string
+import re
 import secrets
+import string
 
 
 async def get_prev_month_and_year(month: int, year: int) -> tuple[int, int]:
-    """
-    Получение предыдущего месяца для инлайн календаря.
+    """Получение предыдущего месяца для инлайн календаря.
+
     Args:
         month: месяц целочисленным представлением
         year: год целочисленным представлением
+
     """
     if month != 1:
         month -= 1
@@ -22,11 +23,12 @@ async def get_prev_month_and_year(month: int, year: int) -> tuple[int, int]:
 
 
 async def get_next_month_and_year(month: int, year: int) -> tuple[int, int]:
-    """
-    Получение следующего месяца для инлайн календаря.
+    """Получение следующего месяца для инлайн календаря.
+
     Args:
         month: месяц целочисленным представлением
         year: год целочисленным представлением
+
     """
     if month != 12:
         month += 1
@@ -38,11 +40,11 @@ async def get_next_month_and_year(month: int, year: int) -> tuple[int, int]:
 
 
 async def validate_weight(string_value: str) -> str | bool:
-    """
-    Валидатор текстового отображения веса.
+    """Валидатор текстового отображения веса.
 
     Args:
         string_value: строковое представление веса
+
     """
     kg, gr = '', ''
     result = False
@@ -66,8 +68,7 @@ async def validate_weight(string_value: str) -> str | bool:
 
 
 def clean_unsupported_tags(html_text) -> str:
-    """
-    Очистка сообщения от неразрешеных в телеграм тегов.
+    """Очистка сообщения от неразрешеных в телеграм тегов.
 
     Args:
         html_text: входной текст для очистки от запрещенных тегов

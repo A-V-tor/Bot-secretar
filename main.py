@@ -3,9 +3,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 
 def start_web():
-    subprocess.call(
-        ['gunicorn', '--bind', '0.0.0.0:5000', '-w 4', 'web_app:app']
-    )
+    subprocess.call(['gunicorn', '--bind', '0.0.0.0:5000', '-w 4', 'web_app:app'])
 
 
 def start_bot():

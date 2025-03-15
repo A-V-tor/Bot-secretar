@@ -1,8 +1,9 @@
+import os
+
 from dash import Dash, html
 from dash.dependencies import Input, Output
-from flask_login import current_user
 from dotenv import load_dotenv
-import os
+from flask_login import current_user
 
 load_dotenv()
 

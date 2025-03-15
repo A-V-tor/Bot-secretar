@@ -4,10 +4,11 @@ Revision ID: 190bc521e750
 Revises:
 Create Date: 2024-11-08 20:00:13.858688
 """
+
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
@@ -25,9 +26,7 @@ def upgrade() -> None:
         sa.Column('psw', sa.String(length=255), nullable=False),
         sa.Column(
             'permission',
-            postgresql.ENUM(
-                'user', 'moderator', 'admin', 'owner', name='userpermissions'
-            ),
+            postgresql.ENUM('user', 'moderator', 'admin', 'owner', name='userpermissions'),
             nullable=True,
         ),
         sa.Column('first_surname', sa.String(length=255), nullable=True),
@@ -50,12 +49,8 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint('id'),
     )
-    op.create_index(
-        op.f('ix_users_telegram_id'), 'users', ['telegram_id'], unique=True
-    )
-    op.create_index(
-        op.f('ix_users_username'), 'users', ['username'], unique=True
-    )
+    op.create_index(op.f('ix_users_telegram_id'), 'users', ['telegram_id'], unique=True)
+    op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
     op.create_table(
         'expenses',
         sa.Column(

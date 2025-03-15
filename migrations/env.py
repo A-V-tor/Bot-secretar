@@ -1,16 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-from migrations import alembic_autogenerate_enums
-
 from alembic import context
-from src.database.base import Base
-from src.database.models.users import User
-from src.database.models.workouts import Workout
-from src.database.models.expenses import Expenses
-from src.database.models.weight import Weight
+from sqlalchemy import engine_from_config, pool
+
 from config import settings
+from src.database.base import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -73,9 +67,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

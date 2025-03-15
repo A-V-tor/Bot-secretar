@@ -1,12 +1,9 @@
-import os
 from aiogram.types import (
-    ReplyKeyboardMarkup,
-    KeyboardButton,
-    InlineKeyboardMarkup,
     InlineKeyboardButton,
     WebAppInfo,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from config import settings
 
 
@@ -16,23 +13,13 @@ async def start_kb():
         text='📟 Админка 📟',
         web_app=WebAppInfo(url=f'{settings.URL_ADMIN}'),
     )
-    weight = InlineKeyboardButton(
-        text='журнал веса ⚖️', callback_data='weight journal'
-    )
-    workout = InlineKeyboardButton(
-        text='журнал тренировок 🏋️', callback_data='workout journal'
-    )
-    expense = InlineKeyboardButton(
-        text='журнал расходов 💵', callback_data='expense journal'
-    )
-    reminders = InlineKeyboardButton(
-        text='напоминания ⏰', callback_data='reminders'
-    )
+    weight = InlineKeyboardButton(text='журнал веса ⚖️', callback_data='weight journal')
+    workout = InlineKeyboardButton(text='журнал тренировок 🏋️', callback_data='workout journal')
+    expense = InlineKeyboardButton(text='журнал расходов 💵', callback_data='expense journal')
+    reminders = InlineKeyboardButton(text='напоминания ⏰', callback_data='reminders')
     profile = InlineKeyboardButton(text='профиль 👤', callback_data='profile')
 
-    keyboard.row(kb_web).row(weight).row(workout, reminders).row(expense).row(
-        profile
-    )
+    keyboard.row(kb_web).row(weight).row(workout, reminders).row(expense).row(profile)
 
     return keyboard.as_markup()
 

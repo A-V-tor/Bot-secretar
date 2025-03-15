@@ -1,18 +1,20 @@
 import typing
-from ..base import Base, session_factory
+
 from sqlalchemy import (
-    Integer,
-    desc,
-    and_,
-    select,
-    func,
     ForeignKey,
+    Integer,
+    and_,
+    desc,
     extract,
+    func,
+    select,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.utils.tools import TypeExpenses
 
+from ..base import Base, session_factory
 
 if typing.TYPE_CHECKING:
     from src.database.models.users import User
@@ -30,33 +32,24 @@ class Expenses(Base):
         nullable=False,
     )
 
-    user_telegram_id: Mapped[int] = mapped_column(
-        ForeignKey('users.telegram_id'), nullable=True
-    )
+    user_telegram_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'), nullable=True)
     user: Mapped['User'] = relationship('User', back_populates='expenses')
 
     def __str__(self):
-        return (
-            f'Трата: {self.type_expenses} | {self.value} | {self.updated_at}'
-        )
+        return f'Трата: {self.type_expenses} | {self.value} | {self.updated_at}'
 
     @classmethod
     def get_note_by_id(cls, note_id: int):
         with session_factory() as session:
-
             result = session.get(cls, note_id)
 
             return result
 
     @classmethod
-    def get_expenses_for_day(
-        cls, telegram_id: int, day: int, month: int, year: int
-    ):
+    def get_expenses_for_day(cls, telegram_id: int, day: int, month: int, year: int):
         with session_factory() as session:
             query = (
-                select(
-                    cls.type_expenses, func.sum(cls.value).label('total_value')
-                )
+                select(cls.type_expenses, func.sum(cls.value).label('total_value'))
                 .where(
                     and_(
                         cls.user_telegram_id == telegram_id,
@@ -107,9 +100,7 @@ class Expenses(Base):
             return result
 
     @classmethod
-    def update_last_note_for_current_day(
-        cls, note_id: int, money: int, category: str
-    ):
+    def update_last_note_for_current_day(cls, note_id: int, money: int, category: str):
         note: cls = cls.get_note_by_id(note_id)
         if note:
             with session_factory() as session:
@@ -128,25 +119,18 @@ class Expenses(Base):
             query = (
                 select(
                     cls.type_expenses,
-                    func.date(cls.created_at).label(
-                        'date'
-                    ),  # Преобразуем created_at в дату (убираем время)
-                    func.sum(cls.value).label(
-                        'total_value_daily'
-                    ),  # Сумма расходов за день
+                    func.date(cls.created_at).label('date'),  # Преобразуем created_at в дату (убираем время)
+                    func.sum(cls.value).label('total_value_daily'),  # Сумма расходов за день
                 )
                 .filter(
-                    cls.user_telegram_id
-                    == telegram_id  # Фильтрация по telegram_id
+                    cls.user_telegram_id == telegram_id  # Фильтрация по telegram_id
                 )
                 .group_by(
                     cls.type_expenses,  # Группируем по типу расходов
                     func.date(cls.created_at),  # И по дате (убираем время)
                 )
                 .order_by(
-                    func.date(
-                        cls.created_at
-                    )  # .desc()  # Можно отсортировать по дате, если нужно
+                    func.date(cls.created_at)  # .desc()  # Можно отсортировать по дате, если нужно
                 )
             )
 

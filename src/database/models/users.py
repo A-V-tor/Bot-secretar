@@ -1,23 +1,24 @@
 import typing
 
-from src.database.models.reminders import Reminder
-from ..base import Base, session_factory
 from flask_login import UserMixin
-from sqlalchemy import BigInteger, String, Text, Boolean, select, event
-from werkzeug.security import generate_password_hash
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from src.utils.tools import UserPermissions, generate_password
+from sqlalchemy import BigInteger, Boolean, String, Text, event, select
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from werkzeug.security import generate_password_hash
+
+from src.database.models.reminders import Reminder
+from src.utils.tools import UserPermissions, generate_password
+
+from ..base import Base, session_factory
 
 if typing.TYPE_CHECKING:
     from src.database.models.expenses import Expenses
-    from src.database.models.workouts import Workout
     from src.database.models.weight import Weight
+    from src.database.models.workouts import Workout
 
 
 class User(Base, UserMixin):
-    """
-    Модель пользователя.
+    """Модель пользователя.
 
     username: никнейм пользователя
     psw: пароль пользователя
@@ -30,9 +31,7 @@ class User(Base, UserMixin):
 
     __tablename__ = 'users'
 
-    username: Mapped[str] = mapped_column(
-        String(255), nullable=False, unique=True, index=True
-    )
+    username: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     psw: Mapped[str] = mapped_column(String(255))
     permission: Mapped[UserPermissions] = mapped_column(
         ENUM(UserPermissions), default=UserPermissions.user, nullable=True
@@ -40,23 +39,13 @@ class User(Base, UserMixin):
     first_surname: Mapped[str] = mapped_column(String(255), nullable=True)
     last_surname: Mapped[str] = mapped_column(String(255), nullable=True)
     description: Mapped[str] = mapped_column(Text(), nullable=True)
-    telegram_id: Mapped[int] = mapped_column(
-        BigInteger(), nullable=False, index=True, unique=True
-    )
+    telegram_id: Mapped[int] = mapped_column(BigInteger(), nullable=False, index=True, unique=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    workouts: Mapped[list['Workout']] = relationship(
-        'Workout', back_populates='user', uselist=True
-    )
-    expenses: Mapped[list['Expenses']] = relationship(
-        'Expenses', back_populates='user', uselist=True
-    )
-    weight: Mapped[list['Weight']] = relationship(
-        'Weight', back_populates='user', uselist=True
-    )
-    reminders: Mapped[list['Reminder']] = relationship(
-        'Reminder', back_populates='user', uselist=True
-    )
+    workouts: Mapped[list['Workout']] = relationship('Workout', back_populates='user', uselist=True)
+    expenses: Mapped[list['Expenses']] = relationship('Expenses', back_populates='user', uselist=True)
+    weight: Mapped[list['Weight']] = relationship('Weight', back_populates='user', uselist=True)
+    reminders: Mapped[list['Reminder']] = relationship('Reminder', back_populates='user', uselist=True)
 
     def __str__(self):
         return f'Пользователь: {self.username} - {self.telegram_id}'
@@ -87,7 +76,6 @@ class User(Base, UserMixin):
 
     @classmethod
     def get_user_by_telegram_id(cls, telegram_id: int):
-
         with session_factory() as session:
             query = select(cls).where(cls.telegram_id == telegram_id)
             result = session.execute(query).scalar_one_or_none()
@@ -125,5 +113,4 @@ class User(Base, UserMixin):
 @event.listens_for(User, 'before_insert')
 def hash_password(mapper, connection, target):
     """Хеширование пароля перед записью в бд."""
-
     target.psw = generate_password_hash(target.psw)
