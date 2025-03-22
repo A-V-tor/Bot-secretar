@@ -74,7 +74,7 @@ def clean_unsupported_tags(html_text) -> str:
         html_text: входной текст для очистки от запрещенных тегов
 
     """
-    # Декодируем HTML сущности
+    # декодировать HTML сущности
     html_text = html.unescape(html_text)
 
     # Список поддерживаемых Telegram API тегов
@@ -94,24 +94,26 @@ def clean_unsupported_tags(html_text) -> str:
         'br',
     }
 
-    # Заменяем <p> на двойную новую строку и <br> на одну новую строку
-    html_text = re.sub(r'</?p[^>]*>', '\n', html_text)
+    #  замена <p> на двойную новую строку и <br> на одну новую строку
+    html_text = re.sub(r'</?p[^>]*>', '\n\n', html_text)
     html_text = re.sub(r'<br\s*/?>', '\n', html_text)
 
-    # Шаблон для поиска HTML тегов
+    # шаблон поиска HTML тегов
     tag_pattern = re.compile(r'<(/?)(\w+)([^>]*?)>')
 
     def replace_tag(match):
         slash, tag, rest = match.groups()
         if tag.lower() in supported_tags:
-            return match.group(0)  # Оставляем тег как есть
+            # текста прошел проверку
+            return match.group(0)
         else:
-            return ''  # Удаляем тег и его содержимое
+            # удаление тега и содержимого
+            return ''
 
-    # Замена неподдерживаемых тегов с сохранением содержимого
+    # замена неподдерживаемых тегов с сохранением содержимого
     cleaned_text = re.sub(tag_pattern, replace_tag, html_text)
 
-    # Убираем лишние пробелы и приводим к более читаемому виду
+    # убрать лишние пробелы
     cleaned_text = re.sub(r'\n\s*\n', '\n\n', cleaned_text.strip())
 
     return cleaned_text

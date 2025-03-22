@@ -24,9 +24,9 @@ class UserTelegramService:
 
     async def check_user_by_telegram(self):
         """Проверка наличия юзера в базе по tg_id."""
-        user = self.model.get_user_by_telegram_id(self.telegram_id)
+        user: User | None = self.model.get_user_by_telegram_id(self.telegram_id)
 
-        return user, 'Главное меню' if user else False
+        return (user, 'Главное меню') if user else (None, '')
 
     async def create_new_user(self):
         """Создание нового пользователя в бд."""

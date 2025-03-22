@@ -16,6 +16,7 @@ from src.telegram.handlers.profile import router as profile_router
 from src.telegram.handlers.reminders import router as reminder_router
 from src.telegram.handlers.weight import router as weight_router
 from src.telegram.handlers.workout import router as workout_router
+from src.telegram.middleware import UnsupportedTagCleanerMiddleware
 
 # установка родной локали, чтобы название месяца Python стал выводить кириллицей
 locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
@@ -36,6 +37,9 @@ async def bot_run():
 
     bot = Bot(settings.BOT_TOKEN)
     dp = Dispatcher()
+
+    dp.update.outer_middleware(UnsupportedTagCleanerMiddleware(bot))
+
     dp.include_router(base_router)
     dp.include_router(workout_router)
     dp.include_router(expenses_router)

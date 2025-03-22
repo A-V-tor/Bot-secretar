@@ -1,8 +1,10 @@
 import typing
+from typing import Sequence
 
 from sqlalchemy import (
     ForeignKey,
     Integer,
+    Row,
     and_,
     desc,
     extract,
@@ -11,6 +13,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing_extensions import Optional
 
 from src.utils.tools import TypeExpenses
 
@@ -39,14 +42,16 @@ class Expenses(Base):
         return f'Трата: {self.type_expenses} | {self.value} | {self.updated_at}'
 
     @classmethod
-    def get_note_by_id(cls, note_id: int):
+    def get_note_by_id(cls, note_id: int) -> Optional['Expenses']:
         with session_factory() as session:
             result = session.get(cls, note_id)
 
             return result
 
     @classmethod
-    def get_expenses_for_day(cls, telegram_id: int, day: int, month: int, year: int):
+    def get_expenses_for_day(
+        cls, telegram_id: int, day: int, month: int, year: int
+    ) -> Sequence[Row[tuple[TypeExpenses, int]]]:
         with session_factory() as session:
             query = (
                 select(cls.type_expenses, func.sum(cls.value).label('total_value'))
@@ -101,12 +106,12 @@ class Expenses(Base):
 
     @classmethod
     def update_last_note_for_current_day(cls, note_id: int, money: int, category: str):
-        note: cls = cls.get_note_by_id(note_id)
+        note: Optional[Expenses] = cls.get_note_by_id(note_id)
         if note:
             with session_factory() as session:
                 note.value = money
                 if category != 'current':
-                    note.type_expenses = category.split('.')[-1]
+                    note.type_expenses = getattr(TypeExpenses, category.split('.')[-1])
 
                 session.add(note)
                 session.commit()

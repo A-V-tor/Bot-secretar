@@ -3,6 +3,7 @@ from aiogram.filters.command import CommandStart
 from aiogram.fsm.context import FSMContext
 
 from src.services.users import UserTelegramService
+from src.utils.decorators import retry_on_connection_error
 
 from ..keyboards.base_kb import start_kb
 
@@ -17,7 +18,7 @@ async def start_command(message: types.Message):
 
     if not user:
         msg = await user_service.create_new_user()
-
+    print(message)
     await message.reply(msg, reply_markup=await start_kb(), parse_mode='HTML')
 
 
@@ -35,6 +36,7 @@ async def root_menu(callback: types.CallbackQuery):
 
 
 @router.callback_query(F.data == 'cancel')
+# @retry_on_connection_error()1232131
 async def cancel_handler_inline(callback: types.CallbackQuery, state: FSMContext):
     """Сброс машины состояний."""
     await state.clear()

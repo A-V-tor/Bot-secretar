@@ -1,9 +1,11 @@
 import datetime
+from typing import Sequence
 
 from aiogram import types
 from prettytable import PrettyTable
+from sqlalchemy import Row
 
-from src.database.models.expenses import Expenses
+from src.database.models.expenses import Expenses, TypeExpenses
 
 
 class ExpensesTelegramService:
@@ -14,13 +16,18 @@ class ExpensesTelegramService:
     def __init__(self, message: types.Message | types.CallbackQuery):
         if isinstance(message, types.Message):
             self.telegram_id = message.chat.id
+        elif message.message is None:
+            # TODO: нужна ошибка и запись лога
+            message_id = message.inline_message_id
         else:
             self.telegram_id = message.message.chat.id
 
     async def get_expenses_for_day(self):
         today = datetime.date.today()
         year, month, day = today.year, today.month, today.day
-        notes: list[Expenses] | list = self.model.get_expenses_for_day(self.telegram_id, day, month, year)
+        notes: Sequence[Row[tuple[TypeExpenses, int]]] = self.model.get_expenses_for_day(
+            self.telegram_id, day, month, year
+        )
 
         flag_last_note = True if notes else False
         my_table = PrettyTable()
