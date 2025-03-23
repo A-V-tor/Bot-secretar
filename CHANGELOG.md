@@ -30,6 +30,7 @@
 
 - Поправил команду запуска в компоузе ([2685fe8](https://github.com/A-V-tor/Bot-secretar/commit/2685fe86ae72d547291530af005656dd67432a21))
 - Изменение сборки компоуза, добавлена точка входа main.py ([dafd03a](https://github.com/A-V-tor/Bot-secretar/commit/dafd03a06af5c3c6ff9846789416ba3d57523125))
+- Добавление декоратора повтора попыток отправки сообщений ([e86377e](https://github.com/A-V-tor/Bot-secretar/commit/e86377e433fc2889762ecd72252434ad5a420004))
 
 ## 3.0.0 - 2025-02-15
 
