@@ -1,10 +1,10 @@
 from typing import Any, Awaitable, Callable
 
 from aiogram import BaseMiddleware, Bot
-from aiogram.types import Message
 from aiogram.types.update import Update
 
 from src.utils.custom_aiogram import MessageCustom, UpdateCustom
+from src.utils.decorators import retry_on_connection_error
 from src.utils.tools import clean_unsupported_tags
 
 
@@ -28,4 +28,5 @@ class UnsupportedTagCleanerMiddleware(BaseMiddleware):
 
             event.message.text = clean_unsupported_tags(event.message.text)
 
-        return await handler(event, data)
+        decorated_handler = retry_on_connection_error()(handler)
+        return await decorated_handler(event, data)
