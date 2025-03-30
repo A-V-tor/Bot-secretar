@@ -16,6 +16,8 @@ from config import settings
 from src.services.expenses import ExpensesDashbordService
 from src.webapp.dashbords.base import DashboardManager, StyleDash
 
+logger = settings.bot_logger
+
 
 def get_expense_analytics(current_flask_app):
     def save_graph_as_image(fig, pie_fig, user_name='_Unknown_'):
@@ -27,9 +29,9 @@ def get_expense_analytics(current_flask_app):
 
         write_image(fig, fig_path)
         write_image(pie_fig, pie_fig_path)
-        # TODO: заменить на логи
-        print(f'Graph saved as {fig_path}')
-        print(f'Graph saved as {pie_fig_path}')
+
+        logger.info(f'Graph saved as {fig_path}')
+        logger.info(f'Graph saved as {pie_fig_path}')
 
     def show_content():
         """Получение и отрисовка данных."""
@@ -47,8 +49,7 @@ def get_expense_analytics(current_flask_app):
             session['start_date'] = list_timestamp[0].strftime('%Y-%m-%d')
             session['end_date'] = list_timestamp[-1].strftime('%Y-%m-%d')
         except IndexError:
-            # TODO: залогировать
-            print('Нет записи')
+            logger.info('Нет записи')
             session['start_date'] = datetime.now().date()
             session['end_date'] = datetime.now().date()
 

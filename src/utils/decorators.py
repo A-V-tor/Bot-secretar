@@ -5,6 +5,10 @@ from typing import Callable
 from aiogram.exceptions import TelegramBadRequest, TelegramNetworkError
 from aiohttp import ServerDisconnectedError
 
+from config import settings
+
+logger = settings.bot_logger
+
 
 def retry_on_connection_error(
     retry_count: int = 5,
@@ -20,7 +24,6 @@ def retry_on_connection_error(
     """
 
     def wrapper(func: Callable):
-        # TODO: заменить принты на логи
         func_args = inspect.signature(func).parameters
 
         async def inner(*args, **kwargs):
@@ -29,15 +32,15 @@ def retry_on_connection_error(
 
             for attempt in range(retry_count):
                 try:
-                    print(f'Попытка {attempt + 1} для функции {func.__name__}')
+                    logger.info(f'Попытка {attempt + 1} для функции {func.__name__}')
                     return await func(*args, **filtered_kwargs)
                 except (TelegramNetworkError, TelegramBadRequest, ServerDisconnectedError) as e:
-                    print(f'Ошибка сети Telegram при попытке {attempt + 1}: {e.__class__.__name__} - {e}')
+                    logger.info(f'Ошибка сети Telegram при попытке {attempt + 1}: {e.__class__.__name__} - {e}')
                     if attempt < retry_count - 1:
                         await asyncio.sleep(delay)
                         delay = min(delay * 1.5, retry_max_delay)
                     else:
-                        print(f'Превышено количество попыток для функции {func.__name__}')
+                        logger.info(f'Превышено количество попыток для функции {func.__name__}')
                         raise
 
         return inner

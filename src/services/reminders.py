@@ -2,8 +2,11 @@ import datetime
 
 from aiogram import Bot, types
 
+from config import settings
 from src.database.models.reminders import Reminder
 from src.utils.tools import ReminderLevel
+
+logger = settings.bot_logger
 
 
 class RemindersTelegramService:
@@ -43,16 +46,20 @@ class RemindersScheduleService:
         self.bot = bot
 
     async def send_messages_reminders(self, current_reminder: Reminder):
-        current_reminder.user_telegram_id
         reminder = str(current_reminder.value)
         msg = f'Напоминание\n✖️ ✖️ ✖️ ✖️ ✖️ ✖️\n{reminder}'
 
         response = await self.bot.send_message(current_reminder.user_telegram_id, msg)
         if response.message_id:
             # TODO: нужно проверить будет ли message_id в случае проблем с отправкой сообщения
-            res = self.model.disable_reminder(current_reminder.id)
-            res.first()
-            # TODO: добавить в лог id записи
+            res = self.model.disable_reminder(current_reminder.id).first()
+            telegram_id = current_reminder.user_telegram_id
+            res_msg = (
+                f'Запись № {res[0]} помечена отправленной: <{telegram_id}>'
+                if res
+                else f'Запись № {current_reminder.id} не помечена отправленной: <{telegram_id}>'
+            )
+            logger.info(f'{res_msg}')
 
     async def check_reminders(self):
         """Проверка напоминаний и рассылка по ним."""
