@@ -2,8 +2,14 @@ import asyncio
 import inspect
 from typing import Callable
 
+from aiogram import types
 from aiogram.exceptions import TelegramBadRequest, TelegramNetworkError
 from aiohttp import ServerDisconnectedError
+
+from config import settings
+from src.utils.text_templates import retry_logs
+
+logger = settings.bot_logger
 
 
 def retry_on_connection_error(
@@ -20,24 +26,39 @@ def retry_on_connection_error(
     """
 
     def wrapper(func: Callable):
-        # TODO: заменить принты на логи
         func_args = inspect.signature(func).parameters
 
         async def inner(*args, **kwargs):
             delay = retry_min_delay
             filtered_kwargs = {name: value for name, value in kwargs.items() if name in func_args}
-
             for attempt in range(retry_count):
+                event = args[0]
                 try:
-                    print(f'Попытка {attempt + 1} для функции {func.__name__}')
+                    if isinstance(event.message, types.Message):
+                        log_msg = retry_logs.format(
+                            attempt=attempt + 1,
+                            event=event.update_id,
+                            chat_id=event.message.chat.id,
+                            username=event.message.chat.username,
+                            text=event.message.text,
+                        )
+                    else:
+                        log_msg = retry_logs.format(
+                            attempt=attempt + 1,
+                            event=event.update_id,
+                            chat_id=event.callback_query.from_user.id,
+                            username=event.callback_query.from_user.username,
+                            text=event.callback_query.message.text,
+                        )
+                    logger.info(log_msg)
                     return await func(*args, **filtered_kwargs)
                 except (TelegramNetworkError, TelegramBadRequest, ServerDisconnectedError) as e:
-                    print(f'Ошибка сети Telegram при попытке {attempt + 1}: {e.__class__.__name__} - {e}')
+                    logger.info(f'Ошибка сети Telegram при попытке {attempt + 1}: {e.__class__.__name__} - {e}')
                     if attempt < retry_count - 1:
                         await asyncio.sleep(delay)
                         delay = min(delay * 1.5, retry_max_delay)
                     else:
-                        print(f'Превышено количество попыток для функции {func.__name__}')
+                        logger.info(f'Превышено количество попыток для события {event.update_id}')
                         raise
 
         return inner

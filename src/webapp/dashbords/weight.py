@@ -13,6 +13,8 @@ from config import settings
 from src.services.weight import WeightDashbordService
 from src.webapp.dashbords.base import DashboardManager, StyleDash
 
+logger = settings.bot_logger
+
 
 def get_weight_analytics(current_flask_app):
     def show_content():
@@ -27,8 +29,7 @@ def get_weight_analytics(current_flask_app):
             session['start_date'] = list_timestamp[0].strftime('%Y-%m-%d')
             session['end_date'] = list_timestamp[-1].strftime('%Y-%m-%d')
         except IndexError:
-            # TODO: залогировать
-            print('Нет записи')
+            logger.info('Нет записи')
             session['start_date'] = datetime.now().date()
             session['end_date'] = datetime.now().date()
 

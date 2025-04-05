@@ -1,6 +1,7 @@
 import os
 
 from dotenv import find_dotenv, load_dotenv
+from loguru import logger
 
 load_dotenv(find_dotenv())
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -13,6 +14,18 @@ def get_config():
         return DevelopConfig
     else:
         return ProductionConfig
+
+
+class LoggerConfig:
+    logger = logger
+
+    def __init__(self, file_name) -> None:
+        self.logger.add(
+            f'logs/{file_name}.log',
+            backtrace=True,
+            diagnose=True,
+            rotation='20 MB',
+        )
 
 
 class DatabaseConfig:
@@ -43,6 +56,8 @@ class DevelopConfig:
 
     BOT_TOKEN = os.getenv('token')
     URL_ADMIN = os.getenv('URL_ADMIN')
+    web_logger = LoggerConfig('test-web').logger
+    bot_logger = LoggerConfig('test-bot').logger
 
 
 class ProductionConfig:
@@ -57,6 +72,9 @@ class ProductionConfig:
 
     BOT_TOKEN = os.getenv('token')
     URL_ADMIN = os.getenv('URL_ADMIN')
+
+    web_logger = LoggerConfig('web').logger
+    bot_logger = LoggerConfig('bot').logger
 
 
 settings = get_config()

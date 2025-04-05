@@ -1,6 +1,7 @@
 from typing import Any, Awaitable, Callable
 
 from aiogram import BaseMiddleware, Bot
+from aiogram.types import TelegramObject
 from aiogram.types.update import Update
 
 from src.utils.custom_aiogram import MessageCustom, UpdateCustom
@@ -17,7 +18,7 @@ class UnsupportedTagCleanerMiddleware(BaseMiddleware):
         self.bot = bot
 
     async def __call__(
-        self, handler: Callable[[Update, dict[str, Any]], Awaitable[Any]], event: Update, data: dict[str, Any]
+        self, handler: Callable[[Update, dict[str, Any]], Awaitable[Any]], event: TelegramObject, data: dict[str, Any]
     ) -> Any:
         if event.message:
             event = UpdateCustom(**event.dict())
