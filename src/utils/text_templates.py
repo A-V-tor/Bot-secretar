@@ -14,3 +14,6 @@ note_workout = """
 
 {text}
 """
+
+
+retry_logs = """Попытка {attempt} для события {event} tg_id: {chat_id} - user: {username} - текст: {text}"""

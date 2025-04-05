@@ -50,8 +50,7 @@ class RemindersScheduleService:
         msg = f'Напоминание\n✖️ ✖️ ✖️ ✖️ ✖️ ✖️\n{reminder}'
 
         response = await self.bot.send_message(current_reminder.user_telegram_id, msg)
-        if response.message_id:
-            # TODO: нужно проверить будет ли message_id в случае проблем с отправкой сообщения
+        if getattr(response, 'message_id', None):
             res = self.model.disable_reminder(current_reminder.id).first()
             telegram_id = current_reminder.user_telegram_id
             res_msg = (
@@ -60,6 +59,8 @@ class RemindersScheduleService:
                 else f'Запись № {current_reminder.id} не помечена отправленной: <{telegram_id}>'
             )
             logger.info(f'{res_msg}')
+        else:
+            logger.info(f'Нет message_id для: {response}')
 
     async def check_reminders(self):
         """Проверка напоминаний и рассылка по ним."""

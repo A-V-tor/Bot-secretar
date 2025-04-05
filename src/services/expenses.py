@@ -5,7 +5,11 @@ from aiogram import types
 from prettytable import PrettyTable
 from sqlalchemy import Row
 
+from config import settings
 from src.database.models.expenses import Expenses, TypeExpenses
+from src.utils.exceptions import EmptyMsgTelegram
+
+logger = settings.bot_logger
 
 
 class ExpensesTelegramService:
@@ -17,8 +21,9 @@ class ExpensesTelegramService:
         if isinstance(message, types.Message):
             self.telegram_id = message.chat.id
         elif message.message is None:
-            # TODO: нужна ошибка и запись лога
             message_id = message.inline_message_id
+            logger.error(f'Пустое сообщение: {message_id}')
+            raise EmptyMsgTelegram(message_id=message_id)
         else:
             self.telegram_id = message.message.chat.id
 
