@@ -25,12 +25,15 @@
 - Добавлена смена пароля ([881e72b](https://github.com/A-V-tor/Bot-secretar/commit/881e72bc4b7ee70fc59de5b47b5327bb2c457874))
 - Добавлен функционал напоминаний в бот ([8c24212](https://github.com/A-V-tor/Bot-secretar/commit/8c24212da7e2ac20ae5b566a8452cc5caf3799a3))
 - Добавлен мидлварь обработки тегов сообщения ([0426906](https://github.com/A-V-tor/Bot-secretar/commit/04269063268befb29031eeba7474d99ba808db97))
+- Добавлено логирование ([14e341c](https://github.com/A-V-tor/Bot-secretar/commit/14e341c2baf7a45eeaf86f4a54a7ee6b418fdbbb))
 
 ### 🪄 Изменения функционала
 
 - Поправил команду запуска в компоузе ([2685fe8](https://github.com/A-V-tor/Bot-secretar/commit/2685fe86ae72d547291530af005656dd67432a21))
 - Изменение сборки компоуза, добавлена точка входа main.py ([dafd03a](https://github.com/A-V-tor/Bot-secretar/commit/dafd03a06af5c3c6ff9846789416ba3d57523125))
 - Добавление декоратора повтора попыток отправки сообщений ([e86377e](https://github.com/A-V-tor/Bot-secretar/commit/e86377e433fc2889762ecd72252434ad5a420004))
+- Поправлены логи ([d083348](https://github.com/A-V-tor/Bot-secretar/commit/d083348f79fcd83d7e8fcfa58eba3abf2c27f2ad))
+- Поправлены логи ([368840a](https://github.com/A-V-tor/Bot-secretar/commit/368840ab598440302ba50c78a4f730ca2df2dcc0))
 
 ## 3.0.0 - 2025-02-15
 
