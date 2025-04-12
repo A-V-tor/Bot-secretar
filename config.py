@@ -59,6 +59,9 @@ class DevelopConfig:
     web_logger = LoggerConfig('test-web').logger
     bot_logger = LoggerConfig('test-bot').logger
 
+    def __name__(self):
+        return 'DevelopConfig'
+
 
 class ProductionConfig:
     DASHBOARD_EXPENSE = os.getenv('DASHBOARD_EXPENSE')
@@ -75,6 +78,9 @@ class ProductionConfig:
 
     web_logger = LoggerConfig('web').logger
     bot_logger = LoggerConfig('bot').logger
+
+    def __name__(self):
+        return 'ProductionConfig'
 
 
 settings = get_config()

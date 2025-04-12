@@ -1,4 +1,7 @@
 <h1 align="center">Личный бот - секретарь</h1>
+<a href="https://codecov.io/github/A-V-tor/Bot-secretar" >
+ <img src="https://codecov.io/github/A-V-tor/Bot-secretar/graph/badge.svg?token=65PRUK4GYD"/>
+ </a>
 <br>
 <div id="header" align="center">
 <img src='https://media.giphy.com/media/wlR4kWTnwEyY8RwHKM/giphy.gif' width="100"/>
