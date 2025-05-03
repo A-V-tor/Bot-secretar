@@ -85,7 +85,7 @@ class Expenses(Base):
             return True
 
     @classmethod
-    def get_last_note_for_current_day(cls, year: int, month: int, day: int):
+    def get_last_note_for_current_day(cls, telegram_id: int, year: int, month: int, day: int):
         with session_factory() as session:
             query = (
                 select(cls)
@@ -94,6 +94,7 @@ class Expenses(Base):
                         extract('year', cls.created_at) == year,
                         extract('month', cls.created_at) == month,
                         extract('day', cls.created_at) == day,
+                        cls.user_telegram_id == telegram_id,
                     )
                 )
                 .order_by(desc(cls.updated_at))

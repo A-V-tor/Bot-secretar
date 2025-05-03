@@ -56,7 +56,7 @@ class ExpensesTelegramService:
     async def get_last_note(self):
         today = datetime.date.today()
         year, month, day = today.year, today.month, today.day
-        last_note = self.model.get_last_note_for_current_day(year, month, day)
+        last_note = self.model.get_last_note_for_current_day(self.telegram_id, year, month, day)
 
         return last_note
 

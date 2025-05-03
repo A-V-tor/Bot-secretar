@@ -1,8 +1,11 @@
 from aiogram import types
 
+from config import settings
 from src.database.models.users import User
 from src.utils.text_templates import text_for_new_user
 from src.utils.tools import generate_password
+
+logger = settings.bot_logger
 
 
 class UserTelegramService:
@@ -33,9 +36,13 @@ class UserTelegramService:
         user_psw = self.model.create_user(self.username, self.telegram_id, self.first_name, self.last_name)
 
         msg = text_for_new_user.format(username=self.username, user_psw=user_psw)
-        result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
+        if user_psw:
+            logger.info(f'Пользователь <{self.username}:{self.telegram_id}> добавлен в бд')
+        else:
+            logger.error(f'Ошибка добавления пользователя <{self.username}:{self.telegram_id}> в бд')
+            msg = 'Что-то пошло не так, попробуйте позже'
 
-        return result
+        return msg
 
     async def change_password(self):
         """Создание нового пароля профиля."""

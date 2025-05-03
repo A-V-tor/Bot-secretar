@@ -14,7 +14,7 @@ class TestBase:
     """
 
     @pytest.mark.asyncio
-    async def test_start_command_with_create_user(self, message, get_db, user):
+    async def test_start_command_with_create_user(self, message, get_db, user, caplog):
         """
         Создание нового пользовател в бд при первом вызове `/start` юзером.
         """
@@ -31,6 +31,7 @@ class TestBase:
         actual_reply_markup = message.reply.call_args[1]['reply_markup']
         assert actual_reply_markup == await start_kb()
         assert message.reply.call_args[1]['parse_mode'] == 'HTML'
+        assert 'Пользователь <test_username:123456789> добавлен в бд' in [i.message for i in caplog.records]
 
     @pytest.mark.asyncio
     async def test_start_command_with_existing_user(self, message, get_db, user):
