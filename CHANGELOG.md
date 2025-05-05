@@ -31,6 +31,7 @@
 
 - Настройка отображения покрытия кода ([b77b67e](https://github.com/A-V-tor/Bot-secretar/commit/b77b67e0aa23c749ec08b6a0403ae462b12915f2))
 - Тесты для  бота ([78c1b46](https://github.com/A-V-tor/Bot-secretar/commit/78c1b4601c238245cfc093907903318eb966bf84))
+- Тесты для веб приложени ([1df689d](https://github.com/A-V-tor/Bot-secretar/commit/1df689d7c8bd37e502678803ca16a7185d9cc198))
 
 ### 🪄 Изменения функционала
 
