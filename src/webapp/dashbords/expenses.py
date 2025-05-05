@@ -119,7 +119,7 @@ def get_expense_analytics(current_flask_app):
                             id='start-date-dropdown',
                             options=[{'label': f'С {date}', 'value': date} for date in list_timestamp],
                             multi=False,
-                            value=list_timestamp[0],
+                            value=list_timestamp[0] if list_timestamp else 0,
                             style=StyleDash.dropdown_style,
                         ),
                         # Добавление выпадающего списка для выбора интервала конечной даты
@@ -131,7 +131,7 @@ def get_expense_analytics(current_flask_app):
                             id='end-date-dropdown',
                             options=[{'label': f'ДО {date}', 'value': date} for date in list_timestamp],
                             multi=False,
-                            value=list_timestamp[-1],
+                            value=list_timestamp[-1] if list_timestamp else 0,
                             style=StyleDash.dropdown_style,
                         ),
                     ],

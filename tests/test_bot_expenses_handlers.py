@@ -1,24 +1,15 @@
 import datetime
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock
 
 import pytest
-from _pytest.logging import LogCaptureFixture
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from src.database import Expenses
 from src.services.expenses import ExpensesTelegramService
-from src.telegram.handlers.base import root_menu, start_command
 from src.telegram.handlers.expenses import root_expenses_menu, save_expenses, show_expanses_for_day
 from src.telegram.keyboards.base_kb import start_kb
-from src.telegram.keyboards.expenses_kb import (
-    category_expenses_kb,
-    category_expenses_last_name_kb,
-    expanses_journal_kb,
-    root_menu_expanses_kb,
-    yes_or_no_save_expenses_kb,
-    yes_or_no_save_last_note_expenses_kb,
-)
+from src.telegram.keyboards.expenses_kb import expanses_journal_kb, root_menu_expanses_kb
 
 
 class TestExpenses:

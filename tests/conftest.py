@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 from config import settings
 from src.database.base import Base, engine
+from src.webapp.wsgi import app
 
 
 @pytest.fixture(
@@ -62,3 +63,18 @@ def callback_query(user):
     callback_query.message.chat.first_name = user['chat.first_name']
     callback_query.message.chat.last_name = user['chat.last_name']
     return callback_query
+
+
+@pytest.fixture()
+def webapp():
+    yield app
+
+
+@pytest.fixture()
+def client(webapp):
+    return webapp.test_client()
+
+
+@pytest.fixture()
+def runner(webapp):
+    return webapp.test_cli_runner()

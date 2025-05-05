@@ -28,6 +28,9 @@ def create_app():
     ckeditor.init_app(app)
 
     with app.app_context():
+        from src.webapp.admin import admin
+        from src.webapp.dashbords import expenses, weight
+
         return app
 
 
