@@ -82,7 +82,7 @@ if pull_res.returncode == 0:
                     print('Порты и хосты установлены')
 
 if pull_res.returncode == 0:
-    push_res = subprocess.run(['git', 'push', 'dokku', 'main'], capture_output=True, text=True)
+    push_res = subprocess.run(['git', 'push', '-f', 'dokku', 'main'], capture_output=True, text=True)
     print('stdout (git push):', push_res.stdout)
     print('stderr (git push):', push_res.stderr)
 
