@@ -18,4 +18,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd Bot-secretar
+            git pull origin main
             make deploy
