@@ -1,7 +1,10 @@
 import os
 
 from dotenv import find_dotenv, load_dotenv
-from flask import current_app as app
+from flask import (
+    current_app as app,
+    request,
+)
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.theme import Bootstrap4Theme
@@ -23,7 +26,10 @@ class MyAdminIndexView(AdminIndexView):
     def default_view(self):
         expense_url = os.getenv('DASHBOARD_EXPENSE')
         weight_url = os.getenv('DASHBOARD_WEIGHT')
-        return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url)
+        if 'check_mobile=True' in request.query_string.decode('utf-8'):
+            return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url, check_mobile=True)
+        else:
+            return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url, check_mobile=False)
 
     def is_accessible(self):
         if current_user.is_authenticated:

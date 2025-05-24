@@ -83,6 +83,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    check_mobile = 'mobile' in request.query_string.decode('utf-8')
     if request.method == 'POST':
         user = User.get_user_by_username(request.form['name'])
         if user:
@@ -91,11 +92,11 @@ def login():
                 login_user(user)
                 flash('Добро пожаловать!')
                 next_link = request.args.get('next')
-                return redirect(next_link or url_for('admin.index'))
+                return redirect(next_link or url_for('admin.index', check_mobile=check_mobile))
 
         flash('Пароль не верен!')
     if current_user.is_authenticated:
-        return redirect(url_for('admin.index'))
+        return redirect(url_for('admin.index', check_mobile=check_mobile))
     else:
         flash('Введи пароль!')
     return render_template('login.html', title='Авторизация')

@@ -11,7 +11,7 @@ async def start_kb():
     keyboard = InlineKeyboardBuilder()
     kb_web = InlineKeyboardButton(
         text='📟 Админка 📟',
-        web_app=WebAppInfo(url=f'{settings.URL_ADMIN}'),
+        web_app=WebAppInfo(url=f'{settings.URL_ADMIN}?mobile=yes'),
     )
     weight = InlineKeyboardButton(text='журнал веса ⚖️', callback_data='weight journal')
     workout = InlineKeyboardButton(text='журнал тренировок 🏋️', callback_data='workout journal')
