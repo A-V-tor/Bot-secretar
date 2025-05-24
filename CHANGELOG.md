@@ -12,6 +12,7 @@
 - Добавлен ci обновление кода на сервере ([92db347](https://github.com/A-V-tor/Bot-secretar/commit/92db3470c0f45b4d4239ff4a1c9c4d35f165b7ac))
 - Правка воркфлоу деплоя ([5d07769](https://github.com/A-V-tor/Bot-secretar/commit/5d07769fcfea096ae1acc66bc401af784470364d))
 - Добавлен poetry.lock ([8b1442c](https://github.com/A-V-tor/Bot-secretar/commit/8b1442ccfc85580a849a82776b98496851248751))
+- Обновление кода для доку через force ([5382b73](https://github.com/A-V-tor/Bot-secretar/commit/5382b733545b1c0adb80725f549280e5c8fe95a4))
 
 ### 💫 Стиль
 
