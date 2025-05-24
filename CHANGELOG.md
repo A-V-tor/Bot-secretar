@@ -9,6 +9,7 @@
 - Мелкие правки ([db697b2](https://github.com/A-V-tor/Bot-secretar/commit/db697b2ca3111a1e850e912fc97ae252963f4452))
 - Правка cliff.toml, убрал опечатки, перевел текст ([8f26868](https://github.com/A-V-tor/Bot-secretar/commit/8f268680d7bd1f6a1dedd403c04af187705d88bc))
 - Правка cliff.toml - правильный адрес для коммитов релиза ([62b937d](https://github.com/A-V-tor/Bot-secretar/commit/62b937d995787e07cfed7c84d6cc006b5f5cf209))
+- Добавлен ci обновление кода на сервере ([92db347](https://github.com/A-V-tor/Bot-secretar/commit/92db3470c0f45b4d4239ff4a1c9c4d35f165b7ac))
 
 ### 💫 Стиль
 
