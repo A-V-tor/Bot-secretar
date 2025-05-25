@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --upgrade pip \
-    && pip install "poetry==1.2.2" --no-cache-dir
+    && pip install "poetry==1.8.3" --no-cache-dir
 
 RUN poetry install
 
