@@ -14,6 +14,7 @@
 - Добавлен poetry.lock ([8b1442c](https://github.com/A-V-tor/Bot-secretar/commit/8b1442ccfc85580a849a82776b98496851248751))
 - Обновление кода для доку через force ([5382b73](https://github.com/A-V-tor/Bot-secretar/commit/5382b733545b1c0adb80725f549280e5c8fe95a4))
 - Изменение версии poetry в dockerfile ([92a7db1](https://github.com/A-V-tor/Bot-secretar/commit/92a7db11b54abc8ae9e6093a4680b4e75ea8e0e5))
+- Правка версии в dockerfile ([a20574b](https://github.com/A-V-tor/Bot-secretar/commit/a20574b47a9501f1c108b6722d4ca46e6c4c90b8))
 
 ### 💫 Стиль
 
