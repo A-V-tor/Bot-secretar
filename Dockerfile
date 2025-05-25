@@ -2,12 +2,14 @@ FROM python:3.11.8
 
 WORKDIR /app
 
-COPY . .
+COPY pyproject.toml poetry.lock ./
 
 RUN pip install --upgrade pip \
     && pip install "poetry==1.8.3" --no-cache-dir
 
 RUN poetry install
+
+COPY . .
 
 RUN apt-get update \
     && apt-get install -y vim locales \
@@ -15,5 +17,6 @@ RUN apt-get update \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
 ENV LANG ru_RU.UTF-8
+ENV LC_ALL ru_RU.UTF-8
 
 CMD ["bash", "-c", "poetry run alembic upgrade head && poetry run bot"]

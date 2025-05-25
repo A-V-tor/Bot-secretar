@@ -39,7 +39,7 @@ if pull_res.returncode == 0:
                 database_url = env_vars.get('DATABASE_URL')
                 if database_url:
                     # добавление префикса драйвера бд
-                    driver = os.getenv('DB_DRIVER')
+                    driver = env_vars.get('DB_DRIVER') or 'postgresql+psycopg2'
                     database_url = database_url.split(':', 1)[1]
                     set_db_res = subprocess.run(
                         [
