@@ -13,6 +13,7 @@
 - Правка воркфлоу деплоя ([5d07769](https://github.com/A-V-tor/Bot-secretar/commit/5d07769fcfea096ae1acc66bc401af784470364d))
 - Добавлен poetry.lock ([8b1442c](https://github.com/A-V-tor/Bot-secretar/commit/8b1442ccfc85580a849a82776b98496851248751))
 - Обновление кода для доку через force ([5382b73](https://github.com/A-V-tor/Bot-secretar/commit/5382b733545b1c0adb80725f549280e5c8fe95a4))
+- Изменение версии poetry в dockerfile ([92a7db1](https://github.com/A-V-tor/Bot-secretar/commit/92a7db11b54abc8ae9e6093a4680b4e75ea8e0e5))
 
 ### 💫 Стиль
 
