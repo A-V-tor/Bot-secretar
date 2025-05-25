@@ -16,6 +16,7 @@
 - Изменение версии poetry в dockerfile ([92a7db1](https://github.com/A-V-tor/Bot-secretar/commit/92a7db11b54abc8ae9e6093a4680b4e75ea8e0e5))
 - Правка версии в dockerfile ([a20574b](https://github.com/A-V-tor/Bot-secretar/commit/a20574b47a9501f1c108b6722d4ca46e6c4c90b8))
 - Правка скрипта по деплою, DB_DRIVER ([6d01998](https://github.com/A-V-tor/Bot-secretar/commit/6d01998596a2c7a74a8026856a0b1ca8d16ca4f0))
+- Правка Dockerfile ([7067516](https://github.com/A-V-tor/Bot-secretar/commit/706751671d64fc147fdb24fa84607f73e1cb0abc))
 
 ### 💫 Стиль
 
