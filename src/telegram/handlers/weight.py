@@ -22,7 +22,7 @@ async def root_weight_menu(callback: types.CallbackQuery, state: FSMContext):
     weight_manager = WeightTelegramService(callback)
     result = await weight_manager.check_note()
     presence_of_record = True if result else False
-    msg = f'Твой вес сегодня: <b>{result.text_value}</b>' if result else 'Журнал веса'
+    msg = f'Твой вес сегодня: <b>{result.value}</b>' if result else 'Журнал веса'
 
     if presence_of_record:
         await state.set_data({'weight_note_id': result.id})

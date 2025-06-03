@@ -1,4 +1,7 @@
 <h1 align="center">Личный бот - секретарь</h1>
+
+[![deploy](https://github.com/A-V-tor/Bot-secretar/actions/workflows/deploy.yaml/badge.svg?branch=main)](https://github.com/A-V-tor/Bot-secretar/actions/workflows/deploy.yaml)
+[![Run tests](https://github.com/A-V-tor/Bot-secretar/actions/workflows/test_runner.yaml/badge.svg?branch=main)](https://github.com/A-V-tor/Bot-secretar/actions/workflows/test_runner.yaml)
 <a href="https://codecov.io/github/A-V-tor/Bot-secretar" >
  <img src="https://codecov.io/github/A-V-tor/Bot-secretar/graph/badge.svg?token=65PRUK4GYD"/>
  </a>
@@ -13,9 +16,7 @@
 
 
 ## Настройка и запуск
-- <добавить инфу>
 
-  ```
 - Создание виртуального окружения и установка зависимостей
   ```
   poetry shell
@@ -35,6 +36,13 @@
 
 <a href="https://github.com/A-V-tor/Bot-secretar/blob/main/CHANGELOG.md">Журнал изменений<a/>
 
+## Разработка
+
+### Проверка и форматирование кода
+
+```
+ruff check --fix
+```
 
 ## Backlogs
 

@@ -1,5 +1,3 @@
-import os
-
 from dotenv import find_dotenv, load_dotenv
 from flask import (
     current_app as app,
@@ -11,6 +9,7 @@ from flask_admin.theme import Bootstrap4Theme
 from flask_ckeditor import CKEditorField
 from flask_login import current_user
 
+from config import settings
 from src.database.base import session_factory
 from src.database.models.expenses import Expenses
 from src.database.models.users import User
@@ -21,11 +20,24 @@ from src.utils.tools import TypeExpenses, UserPermissions
 load_dotenv(find_dotenv())
 
 
+class CustomModelView(ModelView):
+    def is_accessible(self):
+        """
+        Определение доступа к администрированию моделей бд.
+        """
+
+        def is_accessible(self):
+            if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
+                return True
+
+            return False
+
+
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def default_view(self):
-        expense_url = os.getenv('DASHBOARD_EXPENSE')
-        weight_url = os.getenv('DASHBOARD_WEIGHT')
+        expense_url = settings.DASHBOARD_EXPENSE
+        weight_url = settings.DASHBOARD_WEIGHT
         if 'check_mobile=True' in request.query_string.decode('utf-8'):
             return self.render('admin/index.html', expense_url=expense_url, weight_url=weight_url, check_mobile=True)
         else:
@@ -51,7 +63,7 @@ admin = Admin(
 )
 
 
-class UserView(ModelView):
+class UserView(CustomModelView):
     can_view_details = True
     # form_choices = {'permission': [
     #     (i.split(".")[-1], i.value) for i in UserPermissions
@@ -82,14 +94,8 @@ class UserView(ModelView):
     create_modal = True
     edit_modal = True
 
-    def is_accessible(self):
-        if current_user.is_authenticated:
-            return True
 
-        return False
-
-
-class WeightView(ModelView):
+class WeightView(CustomModelView):
     column_display_pk = True
     can_view_details = True
     column_exclude_list = ('id',)
@@ -104,14 +110,8 @@ class WeightView(ModelView):
     create_modal = True
     edit_modal = True
 
-    def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
-            return True
 
-        return False
-
-
-class ExpensesView(ModelView):
+class ExpensesView(CustomModelView):
     can_view_details = True
     form_columns = ['type_expenses', 'value', 'user', 'created_at']
     column_exclude_list = ('id',)
@@ -128,21 +128,15 @@ class ExpensesView(ModelView):
     create_modal = True
     edit_modal = True
 
-    def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
-            return True
-
-        return False
-
     def on_model_change(self, form, model, is_created):
         if is_created:
-            # Логика при создании новой записи
+            # TODO: Логика при создании новой записи
             print('Новая запись создана', model)
             print(dir(form))
         return super().on_model_change(form, model, is_created)
 
 
-class WorkoutView(ModelView):
+class WorkoutView(CustomModelView):
     can_view_details = True
     column_default_sort = [('updated_at', True), ('created_at', True)]
     form_columns = ['text_value', 'user', 'is_active']
@@ -158,15 +152,8 @@ class WorkoutView(ModelView):
     edit_template = 'admin/edit.html'
     form_overrides = {'text_value': CKEditorField}
 
-    def is_accessible(self):
-        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
-            return True
-
-        return False
-
 
 admin.add_view(UserView(User, session_factory(), name='Пользователи'))
-
 admin.add_view(WeightView(Weight, session_factory(), name='Журнал веса', category='Журналы'))
 admin.add_view(ExpensesView(Expenses, session_factory(), name='Журнал трат', category='Журналы'))
 admin.add_view(
@@ -177,5 +164,3 @@ admin.add_view(
         category='Журналы',
     )
 )
-
-# admin.add_link(MenuLink(name='Home Page', url='/', category='Links'))
