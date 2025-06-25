@@ -40,7 +40,7 @@ class Workout(Base):
     @classmethod
     def delete_note(cls, note_id: int):
         with session_factory() as session:
-            query = select(cls).where(cls.id.is_(note_id))
+            query = select(cls).where(cls.id == note_id)
             note = session.scalar(query)
             if note:
                 session.delete(note)

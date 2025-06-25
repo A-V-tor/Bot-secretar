@@ -25,12 +25,10 @@ class CustomModelView(ModelView):
         """
         Определение доступа к администрированию моделей бд.
         """
+        if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
+            return True
 
-        def is_accessible(self):
-            if current_user.is_authenticated and current_user.permission.value in ['Админ', 'Владелец']:
-                return True
-
-            return False
+        return False
 
 
 class MyAdminIndexView(AdminIndexView):

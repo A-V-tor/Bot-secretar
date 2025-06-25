@@ -36,6 +36,10 @@ class RemindersTelegramService:
 
         return reminder_days, msg
 
+    async def get_note_by_date(self, telegram_id: int, day: int, month: int, year: int):
+        notes = self.model.get_note_by_date(telegram_id, day, month, year)
+        return notes if notes else None
+
 
 class RemindersScheduleService:
     """Сервис для работы с сущностью напоминаний в шедулере."""

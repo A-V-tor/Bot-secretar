@@ -103,3 +103,20 @@ class Reminder(Base):
             session.commit()
 
             return result
+
+    @classmethod
+    def get_note_by_date(cls, telegram_id: int, day: int, month: int, year: int):
+        """Получение записи по дате."""
+        with session_factory() as session:
+            query = select(cls).where(
+                and_(
+                    extract('day', cls.datetime_reminder) == day,
+                    extract('month', cls.datetime_reminder) == month,
+                    extract('year', cls.datetime_reminder) == year,
+                    cls.is_active.is_(True),
+                    cls.user_telegram_id == telegram_id,
+                )
+            )
+            result = session.execute(query).scalars().all()
+
+            return result

@@ -45,7 +45,7 @@ async def render_reminders_calendar(month: int, year: int, reminder_days: list):
                 reminder_date = datetime.datetime(year, month, day)
                 emoji = '⏰' if reminder_date > now else '⭕'
 
-                reminder_button = InlineKeyboardButton(text=emoji, callback_data=f'rmndrs{day}-{month}-{year}')
+                reminder_button = InlineKeyboardButton(text=emoji, callback_data=f'rmndrs_show-{day}-{month}-{year}')
                 if count_days % 7 == 0:
                     keyboard.row(reminder_button)
                 else:
@@ -154,5 +154,19 @@ async def render_reminders_calendar_for_input(month: int, year: int):
     )
     keyboard.row(InlineKeyboardButton(text='назад', callback_data='reminders'))
     keyboard.row(InlineKeyboardButton(text='🗂', callback_data='start'))
+
+    return keyboard.as_markup()
+
+
+async def rotation_reminders():
+    """Проход по напоминанимя за день."""
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(
+        InlineKeyboardButton(text='<<', callback_data='<reminder'),
+        InlineKeyboardButton(text='>>', callback_data='>reminder'),
+    )
+    keyboard.row(
+        InlineKeyboardButton(text='🗂', callback_data='start'),
+    )
 
     return keyboard.as_markup()

@@ -1,4 +1,5 @@
 import datetime
+from collections import deque
 
 from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
@@ -12,6 +13,7 @@ from ..keyboards.reminders import (
     reminders_kb,
     render_reminders_calendar,
     render_reminders_calendar_for_input,
+    rotation_reminders,
     select_hour_timestamp,
     select_minutes_timestamp,
 )
@@ -136,6 +138,7 @@ async def get_date_for_reminder(callback: types.CallbackQuery, state: FSMContext
 
 @router.callback_query(F.data.startswith('rmndrsnew'))
 async def set_data_for_reminder(callback: types.CallbackQuery, state: FSMContext):
+    """Создание/сохранение напоминания."""
     await callback.message.delete()
     month, day, year = callback.data.split('-')[1:]
 
@@ -182,4 +185,61 @@ async def next_month_of_new_reminder(callback: types.CallbackQuery):
     await callback.message.answer(
         msg,
         reply_markup=await render_reminders_calendar_for_input(month, year),
+    )
+
+
+@router.callback_query(F.data.startswith('rmndrs_show-'))
+async def show_reminders_for_current_day(callback: types.CallbackQuery, state: FSMContext):
+    """Показать напоминания на текущий день."""
+    await callback.message.delete()
+    _, day, month, year = callback.data.split('-')
+
+    reminder_service = RemindersTelegramService(callback)
+    notes = await reminder_service.get_note_by_date(callback.from_user.id, int(day), int(month), int(year))
+    msg = f'{day.zfill(2)}-{month.zfill(2)}-{year}\n' + str(notes[0].value) if notes else 'Нет напоминаний'
+    notes = notes if notes else []
+    await state.set_data({'remiinders_to_day': notes, 'timestamp_reminder': f'{day}-{month}-{year}'})
+    await callback.message.answer(
+        str(msg),
+        reply_markup=await rotation_reminders(),
+    )
+
+
+@router.callback_query(F.data.startswith('>reminder'))
+async def show_next_reminders_for_current_day(callback: types.CallbackQuery, state: FSMContext):
+    """Вперед по списку напоминаний за текущий день."""
+    await callback.message.delete()
+    data = await state.get_data()
+    day, month, year = data['timestamp_reminder'].split('-')
+
+    notes = data['remiinders_to_day']
+    notes = deque(notes)
+    notes.rotate(-1)
+
+    msg = f'{day.zfill(2)}-{month.zfill(2)}-{year}\n' + str(notes[0].value) if notes else 'Нет напоминаний'
+    notes = notes if notes else []
+    await state.set_data({'remiinders_to_day': notes, 'timestamp_reminder': f'{day}-{month}-{year}'})
+    await callback.message.answer(
+        str(msg),
+        reply_markup=await rotation_reminders(),
+    )
+
+
+@router.callback_query(F.data.startswith('<reminder'))
+async def show_back_reminders_for_current_day(callback: types.CallbackQuery, state: FSMContext):
+    """Назад по списку напоминаний за текущий день."""
+    await callback.message.delete()
+    data = await state.get_data()
+    day, month, year = data['timestamp_reminder'].split('-')
+
+    notes = data['remiinders_to_day']
+    notes = deque(notes)
+    notes.rotate(1)
+
+    msg = f'{day.zfill(2)}-{month.zfill(2)}-{year}\n' + str(notes[0].value) if notes else 'Нет напоминаний'
+    notes = notes if notes else []
+    await state.set_data({'remiinders_to_day': notes, 'timestamp_reminder': f'{day}-{month}-{year}'})
+    await callback.message.answer(
+        str(msg),
+        reply_markup=await rotation_reminders(),
     )
