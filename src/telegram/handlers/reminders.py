@@ -92,7 +92,7 @@ async def add_reminder(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(AddReminder.start_save_reminder)
 
     await callback.message.delete()
-    await callback.message.answer('Введи тест напоминания: ', reply_markup=await cansel_kb())
+    await callback.message.answer('Введи текст напоминания: ', reply_markup=await cansel_kb())
 
 
 @router.message(AddReminder.start_save_reminder)
@@ -144,7 +144,7 @@ async def set_data_for_reminder(callback: types.CallbackQuery, state: FSMContext
 
     data = await state.get_data()
     value = data['text_reminder']
-    hour = data['hour']
+    hour = '00' if data['hour'] == '24' else data['hour']
     minutes = data['minutes']
     timestamp = f'{month}.{day}.{year} {hour}:{minutes}'
 

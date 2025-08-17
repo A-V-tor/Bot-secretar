@@ -147,3 +147,24 @@ class ReminderLevel(str, enum.Enum):
     very_important = 'очень важно'
     important = 'важно'
     doesnot_matter = 'не важно'
+
+
+class TimeZoneEnum(str, enum.Enum):
+    offset_00 = 'Atlantic/Reykjavik'
+    offset_01 = 'Europe/Berlin'
+    offset_02 = 'Europe/Kaliningrad'
+    offset_03 = 'Europe/Moscow'
+    offset_04 = 'Europe/Samara'
+    offset_05 = 'Asia/Yekaterinburg'
+    offset_06 = 'Asia/Omsk'
+    offset_07 = 'Asia/Novosibirsk'
+    offset_08 = 'Asia/Irkutsk'
+    offset_09 = 'AAsia/Chita'
+    offset_10 = 'Asia/Vladivostok'
+
+    @classmethod
+    def get_offset(cls, timezone_string: str):
+        for tz in cls:
+            if tz.value == timezone_string:
+                return tz.value
+        raise ValueError(f'Невалидный часовой пояс: {timezone_string}')

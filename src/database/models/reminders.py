@@ -30,7 +30,7 @@ class Reminder(Base):
         ENUM(ReminderLevel, name='reminderlevel'),
         nullable=False,
     )
-    datetime_reminder: Mapped[datetime] = mapped_column(DateTime)
+    datetime_reminder: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     user_telegram_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'), nullable=False)

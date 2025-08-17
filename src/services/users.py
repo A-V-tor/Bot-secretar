@@ -1,6 +1,7 @@
 from aiogram import types
 
 from config import settings
+from src.database.base import TimeZone
 from src.database.models.users import User
 from src.utils.text_templates import text_for_new_user
 from src.utils.tools import generate_password
@@ -51,5 +52,15 @@ class UserTelegramService:
 
         msg = text_for_new_user.format(username=self.username, user_psw=user_psw)
         result = msg if user_psw else 'Что-то пошло не так, попробуйте позже'
+
+        return result
+
+    async def set_timezone(self, time_zone):
+        """Установка таймзоны профиля."""
+        time_zone = await TimeZone.get_time_zone_id(time_zone)
+        check_time_zone = self.model.set_timezone(time_zone, self.telegram_id)
+
+        msg = f'Таймзона <b>{time_zone}</b> успешно установлена'
+        result = msg if check_time_zone else 'Что-то пошло не так, попробуйте позже'
 
         return result

@@ -144,7 +144,7 @@ async def delete_current_record(callback: types.CallbackQuery, state: FSMContext
 
     if len(current_workouts) == 0:
         # нет записей для отображения/удаления
-        msg += 'Не записй на текущий день!'
+        msg += 'Не записей на текущий день!'
         await callback.message.answer(msg, reply_markup=await root_menu_workout_kb(), parse_mode='HTML')
         return
 

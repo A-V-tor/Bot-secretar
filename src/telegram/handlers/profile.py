@@ -3,7 +3,7 @@ from aiogram import F, Router, types
 from src.services.users import UserTelegramService
 
 from ..keyboards.base_kb import start_kb
-from ..keyboards.profile import profile_kb
+from ..keyboards.profile import profile_kb, timezone_kb
 
 router = Router(name='profile')
 
@@ -26,5 +26,25 @@ async def new_password(callback: types.CallbackQuery):
 
     user_service = UserTelegramService(callback)
     msg = await user_service.change_password()
+
+    await callback.message.answer(msg, reply_markup=await start_kb(), parse_mode='HTML')
+
+
+@router.callback_query(F.data == 'user-timezone')
+async def show_timezones(callback: types.CallbackQuery):
+    """Показать доступные таймзоны."""
+    await callback.message.delete()
+    msg = 'Выбери таймзону'
+    await callback.message.answer(msg, reply_markup=await timezone_kb(), parse_mode='HTML')
+
+
+@router.callback_query(F.data.startswith('timezone_user-'))
+async def set_timezone(callback: types.CallbackQuery):
+    """Установка таймзоны."""
+    await callback.message.delete()
+
+    time_zone = callback.data.split('-')[1]
+    user_service = UserTelegramService(callback)
+    msg = await user_service.set_timezone(time_zone)
 
     await callback.message.answer(msg, reply_markup=await start_kb(), parse_mode='HTML')

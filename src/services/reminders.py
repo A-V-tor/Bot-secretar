@@ -1,9 +1,11 @@
 import datetime
 
+import pytz
 from aiogram import Bot, types
 
 from config import settings
 from src.database.models.reminders import Reminder
+from src.database.models.users import User
 from src.utils.tools import ReminderLevel
 
 logger = settings.bot_logger
@@ -22,7 +24,10 @@ class RemindersTelegramService:
 
     async def new_reminder(self, value: str, type_expenses: ReminderLevel, datetime_str: str) -> str:
         timestamp = datetime.datetime.strptime(datetime_str, '%d.%m.%Y %H:%M')
-        res = self.model.add_new_note(self.telegram_id, value, type_expenses, timestamp)
+        user = User.get_user_by_telegram_id(self.telegram_id)
+        user_tz = pytz.timezone(user.time_zones[0].time_zones.value)
+        localized_time = user_tz.localize(timestamp)
+        res = self.model.add_new_note(self.telegram_id, value, type_expenses, localized_time)
         msg = 'Напоминание добавлено' if res else 'Что-то пошло не так'
 
         return msg

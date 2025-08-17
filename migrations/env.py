@@ -4,6 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from config import settings
+from migrations import alembic_autogenerate_enums
 from src.database.base import Base
 
 # this is the Alembic Config object, which provides

@@ -1,9 +1,9 @@
 import typing
 
 from flask_login import UserMixin
-from sqlalchemy import BigInteger, Boolean, String, Text, event, select
+from sqlalchemy import BigInteger, Boolean, ForeignKey, String, Text, event, select
 from sqlalchemy.dialects.postgresql import ENUM
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
 from werkzeug.security import generate_password_hash
 
 from src.database.models.reminders import Reminder
@@ -27,6 +27,7 @@ class User(Base, UserMixin):
     description: описание
     telegram_id: идентификатор телеграм
     is_active: флаг актуальности записи
+    time_zones_id: идентификатор часового пояса
     """
 
     __tablename__ = 'users'
@@ -42,10 +43,13 @@ class User(Base, UserMixin):
     telegram_id: Mapped[int] = mapped_column(BigInteger(), nullable=False, index=True, unique=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
+    time_zones_id: Mapped[int] = mapped_column(ForeignKey('time_zones.id'), nullable=True)
+
     workouts: Mapped[list['Workout']] = relationship('Workout', back_populates='user', uselist=True)
     expenses: Mapped[list['Expenses']] = relationship('Expenses', back_populates='user', uselist=True)
     weight: Mapped[list['Weight']] = relationship('Weight', back_populates='user', uselist=True)
     reminders: Mapped[list['Reminder']] = relationship('Reminder', back_populates='user', uselist=True)
+    time_zones: Mapped[list['Reminder']] = relationship('TimeZone', back_populates='users', uselist=True)
 
     def __str__(self):
         return f'Пользователь: {self.username} - {self.telegram_id}'
@@ -77,7 +81,7 @@ class User(Base, UserMixin):
     @classmethod
     def get_user_by_telegram_id(cls, telegram_id: int):
         with session_factory() as session:
-            query = select(cls).where(cls.telegram_id == telegram_id)
+            query = select(cls).where(cls.telegram_id == telegram_id).options(selectinload(cls.time_zones))
             result = session.execute(query).scalar_one_or_none()
 
             return result
@@ -107,6 +111,18 @@ class User(Base, UserMixin):
                 session.commit()
 
                 return password
+
+    @classmethod
+    def set_timezone(cls, time_zone_id: int, telegram_id: int):
+        """Установка таймзоны профиля."""
+        with session_factory() as session:
+            user = cls.get_user_by_telegram_id(telegram_id)
+            if user:
+                user.time_zones_id = time_zone_id
+                session.add(user)
+                session.commit()
+
+                return user.id
 
 
 # хеширование пароля перед записью в бд
