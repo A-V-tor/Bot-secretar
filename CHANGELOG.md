@@ -52,6 +52,7 @@
 - Добавление декоратора повтора попыток отправки сообщений ([e86377e](https://github.com/A-V-tor/Bot-secretar/commit/e86377e433fc2889762ecd72252434ad5a420004))
 - Поправлены логи ([d083348](https://github.com/A-V-tor/Bot-secretar/commit/d083348f79fcd83d7e8fcfa58eba3abf2c27f2ad))
 - Поправлены логи ([368840a](https://github.com/A-V-tor/Bot-secretar/commit/368840ab598440302ba50c78a4f730ca2df2dcc0))
+- Настройка логирования по записи в файл ([a64d884](https://github.com/A-V-tor/Bot-secretar/commit/a64d884ed6b036dcfd3c4b504ff1a85c5d3adae7))
 
 ## 3.0.0 - 2025-02-15
 
