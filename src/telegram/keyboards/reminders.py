@@ -1,11 +1,13 @@
 import calendar
 import datetime
 
+import pytz
 from aiogram.types import (
     InlineKeyboardButton,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from src.database.models.users import User
 from src.utils.tools import get_next_month_and_year, get_prev_month_and_year
 
 
@@ -19,9 +21,11 @@ async def reminders_kb():
     return keyboard.as_markup()
 
 
-async def render_reminders_calendar(month: int, year: int, reminder_days: list):
+async def render_reminders_calendar(tg_id: int, month: int, year: int, reminder_days: list):
     """Отрисовка календаря напоминаний в клавиатуре для просмотра записей."""
-    now = datetime.datetime.now()
+    user = User.get_user_by_telegram_id(tg_id)
+    user_tz = pytz.timezone(user.time_zones[0].time_zones.value)
+    now = user_tz.localize(datetime.datetime.now())
 
     keyboard = InlineKeyboardBuilder()
     cl = calendar.TextCalendar(firstweekday=0)
@@ -42,7 +46,7 @@ async def render_reminders_calendar(month: int, year: int, reminder_days: list):
     for day in days_current_month:
         if day != 0:
             if str(day) in reminder_days:
-                reminder_date = datetime.datetime(year, month, day)
+                reminder_date = user_tz.localize(datetime.datetime(year, month, day))
                 emoji = '⏰' if reminder_date > now else '⭕'
 
                 reminder_button = InlineKeyboardButton(text=emoji, callback_data=f'rmndrs_show-{day}-{month}-{year}')

@@ -33,7 +33,7 @@ class RemindersTelegramService:
         return msg
 
     async def get_reminders_days_for_current_month(self, month: int, year: int):
-        """Получение дней тренировок юзера в этом месяце."""
+        """Получение дней напоминаний юзера в этом месяце."""
         month_string = datetime.datetime(year, month, 1).strftime('%B')
         msg = f'С 1 {month_string} {year} года'
 

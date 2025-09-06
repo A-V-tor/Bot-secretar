@@ -13,7 +13,8 @@ async def root_profile(callback: types.CallbackQuery):
     """Меню профиля юзера."""
     user_service = UserTelegramService(callback)
     user, _ = await user_service.check_user_by_telegram()
-    msg = f'Ваши Логин: {user.username}'
+    time_zone = user.time_zones[0].time_zones.value if user.time_zones else '❗️НЕ ЗАДАНО❗️'
+    msg = f'Ваши Логин: {user.username}\nТаймзона: {time_zone}'
 
     await callback.message.delete()
     await callback.message.answer(msg, reply_markup=await profile_kb(), parse_mode='HTML')
@@ -44,6 +45,7 @@ async def set_timezone(callback: types.CallbackQuery):
     await callback.message.delete()
 
     time_zone = callback.data.split('-')[1]
+
     user_service = UserTelegramService(callback)
     msg = await user_service.set_timezone(time_zone)
 

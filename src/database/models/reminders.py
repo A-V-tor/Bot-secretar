@@ -69,7 +69,6 @@ class Reminder(Base):
                     cls.user_telegram_id == telegram_id,
                     extract('year', cls.datetime_reminder) == year,
                     extract('month', cls.datetime_reminder) == month,
-                    cls.is_active.is_(True),
                 )
             )
             result = session.execute(query).scalars().all()

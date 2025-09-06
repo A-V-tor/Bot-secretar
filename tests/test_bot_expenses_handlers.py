@@ -67,4 +67,4 @@ class TestExpenses:
         year, month, day = today.year, today.month, today.day
         check_note = Expenses.get_last_note_for_current_day(user['chat.id'], year, month, day)
 
-        assert check_note is not None
+        assert check_note.value == 1000

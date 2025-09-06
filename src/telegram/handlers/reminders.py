@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from src.services.reminders import RemindersTelegramService
 from src.telegram.states import AddReminder
-from src.utils.tools import ReminderLevel
+from src.utils.tools import ReminderLevel, month_map
 
 from ..keyboards.base_kb import cansel_kb, start_kb
 from ..keyboards.reminders import (
@@ -45,7 +45,7 @@ async def get_reminders_journal(callback: types.CallbackQuery):
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(month, year, reminder_days),
+        reply_markup=await render_reminders_calendar(callback.message.chat.id, month, year, reminder_days),
     )
 
 
@@ -64,7 +64,7 @@ async def previous_month_of_reminders(callback: types.CallbackQuery):
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(month, year, reminder_days),
+        reply_markup=await render_reminders_calendar(callback.message.chat.id, month, year, reminder_days),
     )
 
 
@@ -83,7 +83,7 @@ async def next_month_of_reminders(callback: types.CallbackQuery):
 
     await callback.message.answer(
         msg,
-        reply_markup=await render_reminders_calendar(month, year, reminder_days),
+        reply_markup=await render_reminders_calendar(callback.message.chat.id, month, year, reminder_days),
     )
 
 
@@ -131,7 +131,7 @@ async def get_date_for_reminder(callback: types.CallbackQuery, state: FSMContext
     today = datetime.date.today()
     year, month = today.year, today.month
 
-    msg = 'Выбери дату'
+    msg = f'📆<b>{month_map.get(month)}</b>📆\nВыбери дату'
     keyboard = await render_reminders_calendar_for_input(month, year)
     await callback.message.answer(msg, reply_markup=keyboard, parse_mode='HTML')
 

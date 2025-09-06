@@ -36,7 +36,7 @@ class UserTelegramService:
         """Создание нового пользователя в бд."""
         user_psw = self.model.create_user(self.username, self.telegram_id, self.first_name, self.last_name)
 
-        msg = text_for_new_user.format(username=self.username, user_psw=user_psw)
+        msg = text_for_new_user.format(username=self.username, user_psw=user_psw) + '❗️Установи тайм зону в профиле❗️'
         if user_psw:
             logger.info(f'Пользователь <{self.username}:{self.telegram_id}> добавлен в бд')
         else:
@@ -55,12 +55,12 @@ class UserTelegramService:
 
         return result
 
-    async def set_timezone(self, time_zone):
+    async def set_timezone(self, time_zone_str):
         """Установка таймзоны профиля."""
-        time_zone = await TimeZone.get_time_zone_id(time_zone)
+        time_zone = await TimeZone.get_time_zone_id(time_zone_str)
         check_time_zone = self.model.set_timezone(time_zone, self.telegram_id)
 
-        msg = f'Таймзона <b>{time_zone}</b> успешно установлена'
+        msg = f'Таймзона <b>{time_zone_str}</b> успешно установлена'
         result = msg if check_time_zone else 'Что-то пошло не так, попробуйте позже'
 
         return result

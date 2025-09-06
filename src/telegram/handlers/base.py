@@ -17,6 +17,8 @@ async def start_command(message: types.Message):
 
     if not user:
         msg = await user_service.create_new_user()
+        await message.answer(msg, parse_mode='HTML')
+        msg = 'Приветствую вас!'
 
     await message.reply(msg, reply_markup=await start_kb(), parse_mode='HTML')
 

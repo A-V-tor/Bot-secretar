@@ -159,7 +159,7 @@ class TimeZoneEnum(str, enum.Enum):
     offset_06 = 'Asia/Omsk'
     offset_07 = 'Asia/Novosibirsk'
     offset_08 = 'Asia/Irkutsk'
-    offset_09 = 'AAsia/Chita'
+    offset_09 = 'Asia/Chita'
     offset_10 = 'Asia/Vladivostok'
 
     @classmethod
@@ -168,3 +168,19 @@ class TimeZoneEnum(str, enum.Enum):
             if tz.value == timezone_string:
                 return tz.value
         raise ValueError(f'Невалидный часовой пояс: {timezone_string}')
+
+
+month_map = {
+    1: 'Январь',
+    2: 'Февраль',
+    3: 'Март',
+    4: 'Апрель',
+    5: 'Май',
+    6: 'Июнь',
+    7: 'Июль',
+    8: 'Август',
+    9: 'Сентябрь',
+    10: 'Октябрь',
+    11: 'Ноябрь',
+    12: 'Декабрь',
+}
