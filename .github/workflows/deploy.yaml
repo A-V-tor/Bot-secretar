@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install SSH Key
+      - name: Обновить код
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -21,3 +21,4 @@ jobs:
             git pull origin main
             make fill_db
             make deploy
+            dokku ports:set bot-secretar https:443:5000

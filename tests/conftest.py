@@ -4,7 +4,7 @@ import pytest
 from aiogram import types
 from sqlalchemy.orm import sessionmaker
 
-from config import settings
+from config import DevelopConfig, settings
 from src.database.base import Base, engine
 from src.webapp.wsgi import app
 
@@ -14,7 +14,7 @@ from src.webapp.wsgi import app
     scope='session',
 )
 def get_test_db():
-    assert settings.__name__ == 'DevelopConfig'
+    assert isinstance(settings, DevelopConfig)
 
     Base.metadata.create_all(bind=engine)
     session_factory = sessionmaker(

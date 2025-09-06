@@ -17,6 +17,7 @@
 - Правка версии в dockerfile ([a20574b](https://github.com/A-V-tor/Bot-secretar/commit/a20574b47a9501f1c108b6722d4ca46e6c4c90b8))
 - Правка скрипта по деплою, DB_DRIVER ([6d01998](https://github.com/A-V-tor/Bot-secretar/commit/6d01998596a2c7a74a8026856a0b1ca8d16ca4f0))
 - Правка Dockerfile ([7067516](https://github.com/A-V-tor/Bot-secretar/commit/706751671d64fc147fdb24fa84607f73e1cb0abc))
+- Проброс портов после деплоя ([78102cf](https://github.com/A-V-tor/Bot-secretar/commit/78102cf7de1a24b26a579d154ec48ef600763017))
 
 ### 💫 Стиль
 
