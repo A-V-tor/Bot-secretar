@@ -13,14 +13,13 @@ from config import settings
 from src.services.weight import WeightDashbordService
 from src.webapp.dashbords.base import DashboardManager, StyleDash
 
-logger = settings.bot_logger
+logger = settings.web_logger
 
 
 def get_weight_analytics(current_flask_app):
     def show_content():
         """Получение и отрисовка данных."""
         weight_manager = WeightDashbordService(current_user.telegram_id)
-
         data_weight = weight_manager.get_all_weight_by_telegram_id()
         list_timestamp = sorted(set([i[1] for i in data_weight]))
 

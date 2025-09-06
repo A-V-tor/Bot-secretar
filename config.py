@@ -1,4 +1,8 @@
+import inspect
+import logging
 import os
+import sys
+from typing import Optional, Union
 
 from dotenv import find_dotenv, load_dotenv
 from loguru import logger
@@ -7,24 +11,65 @@ load_dotenv(find_dotenv())
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
+class InterceptHandler(logging.Handler):
+    """
+    Обработчик (из документации `loguru`) ловит все сообщения от стандартного `logging` и передаёт их в `loguru`.
+    """
+
+    def emit(self, record: logging.LogRecord) -> None:
+        # Get corresponding Loguru level if it exists.
+        level: Union[str, int]
+        try:
+            level = logger.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+
+        # Find caller from where originated the logged message.
+        frame, depth = inspect.currentframe(), 0
+        while frame and (depth == 0 or frame.f_code.co_filename == logging.__file__):
+            frame = frame.f_back
+            depth += 1
+
+        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+
+
 def get_config():
     """Получение настроек проекта."""
     env = os.getenv('FLASK_ENV', 'production')
+    logging.basicConfig(handlers=[InterceptHandler()], level=0, force=True)
     if env == 'development':
-        return DevelopConfig
+        return DevelopConfig()
     else:
-        return ProductionConfig
+        return ProductionConfig()
 
 
 class LoggerConfig:
     logger = logger
 
-    def __init__(self, file_name) -> None:
+    def custom_filter(self, record: dict):
+        """
+        Фильтрация записи в файл.
+        """
+        return True if self.file_name == record.get('extra').get('logger') else False
+
+    def __init__(
+        self,
+        file_name,
+        extra_format='{extra[logger]} {message}',
+    ) -> None:
+        self.file_name = file_name
+
+        custom_filter = self.custom_filter
+
         self.logger.add(
             f'logs/{file_name}.log',
             backtrace=True,
             diagnose=True,
             rotation='20 MB',
+            retention=5,
+            format=extra_format,
+            filter=custom_filter,
+            enqueue=True,
         )
 
 
@@ -56,11 +101,13 @@ class DevelopConfig:
 
     BOT_TOKEN = os.getenv('token')
     URL_ADMIN = os.getenv('URL_ADMIN')
-    web_logger = LoggerConfig('test-web').logger
-    bot_logger = LoggerConfig('test-bot').logger
 
     def __name__(self):
         return 'DevelopConfig'
+
+    def __init__(self) -> None:
+        self.web_logger = LoggerConfig('web', '{extra[logger]} {message}').logger.bind(logger='web')
+        self.bot_logger = LoggerConfig('bot', '{extra[logger]} {message}').logger.bind(logger='bot')
 
 
 class ProductionConfig:
@@ -76,11 +123,12 @@ class ProductionConfig:
     BOT_TOKEN = os.getenv('token')
     URL_ADMIN = os.getenv('URL_ADMIN')
 
-    web_logger = LoggerConfig('web').logger
-    bot_logger = LoggerConfig('bot').logger
-
     def __name__(self):
         return 'ProductionConfig'
+
+    def __init__(self) -> None:
+        self.web_logger = LoggerConfig('web', '{extra[logger]} {message}').logger.bind(logger='web')
+        self.bot_logger = LoggerConfig('bot', '{extra[logger]} {message}').logger.bind(logger='bot')
 
 
 settings = get_config()
