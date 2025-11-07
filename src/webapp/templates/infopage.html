@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Python разработчик | Создание сайтов, сервисов и ботов | Django, FastAPI</title>
+        <meta
+            name="description"
+            content="Профессиональный Python разработчик. Создаю веб-сайты на Django, REST API на FastAPI, Telegram ботов. Полный цикл разработки."
+        />
+        <meta
+            name="keywords"
+            content="python разработчик, django, fastapi, telegram боты, создание сайтов, веб-разработка, python программист"
+        />
+        <meta name="author" content="Ваше Имя" />
+
+        <!-- Open Graph для соцсетей -->
+        <meta property="og:title" content="Python разработчик - Создание сайтов и ботов" />
+        <meta
+            property="og:description"
+            content="Профессиональная разработка на Python: сайты, сервисы, боты"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://вашсайт.com/images/preview.jpg" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://вашсайт.com" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                line-height: 1.6;
+                color: #1a1a1a;
+                background: #ffffff;
+                min-height: 100vh;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .hero {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23434c5e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                max-width: 800px;
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 3.5rem;
+                margin-bottom: 1.5rem;
+                font-weight: 700;
+                color: #1a1a1a;
+                letter-spacing: -0.02em;
+            }
+
+            .tagline {
+                font-size: 1.4rem;
+                margin-bottom: 3rem;
+                color: #4a5568;
+                font-weight: 400;
+                line-height: 1.5;
+            }
+
+            .highlight {
+                color: #2d3748;
+                font-weight: 600;
+                background: linear-gradient(120deg, #e2e8f0 0%, #e2e8f0 100%);
+                background-repeat: no-repeat;
+                background-size: 100% 0.2em;
+                background-position: 0 88%;
+            }
+
+            .skills {
+                display: flex;
+                justify-content: center;
+                gap: 0.8rem;
+                margin-bottom: 3rem;
+                flex-wrap: wrap;
+            }
+
+            .skill-tag {
+                background: #ffffff;
+                padding: 0.6rem 1.2rem;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: #4a5568;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                transition: all 0.2s ease;
+            }
+
+            .skill-tag:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                border-color: #cbd5e0;
+            }
+
+            .cta-button {
+                display: inline-block;
+                background: #2d3748;
+                color: #ffffff;
+                padding: 1rem 2.5rem;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+                border: 2px solid #2d3748;
+                letter-spacing: -0.01em;
+            }
+
+            .cta-button:hover {
+                background: transparent;
+                color: #2d3748;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(45, 55, 72, 0.15);
+            }
+
+            .features {
+                padding: 6rem 0;
+                background: #f8fafc;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 2rem;
+                margin-top: 4rem;
+            }
+
+            .feature-card {
+                background: #ffffff;
+                padding: 2.5rem 2rem;
+                border-radius: 12px;
+                text-align: center;
+                transition: all 0.3s ease;
+                border: 1px solid #e2e8f0;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .feature-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #e2e8f0, #cbd5e0);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+                border-color: #cbd5e0;
+            }
+
+            .feature-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+                color: #2d3748;
+            }
+
+            .feature-card h3 {
+                margin-bottom: 1rem;
+                color: #1a1a1a;
+                font-size: 1.3rem;
+                font-weight: 600;
+            }
+
+            .feature-card p {
+                color: #4a5568;
+                line-height: 1.6;
+                font-size: 1rem;
+            }
+
+            footer {
+                background: #1a202c;
+                color: #e2e8f0;
+                text-align: center;
+                padding: 3rem 0;
+            }
+
+            @media (max-width: 768px) {
+                h1 {
+                    font-size: 2.5rem;
+                }
+
+                .tagline {
+                    font-size: 1.2rem;
+                }
+
+                .skills {
+                    gap: 0.6rem;
+                }
+
+                .skill-tag {
+                    padding: 0.5rem 1rem;
+                    font-size: 0.85rem;
+                }
+
+                .features-grid {
+                    grid-template-columns: 1fr;
+                    gap: 1.5rem;
+                }
+
+                .feature-card {
+                    padding: 2rem 1.5rem;
+                }
+            }
+
+            /* Анимации */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fadeInUp 0.8s ease-out;
+            }
+
+            .python-logo {
+                font-size: 4rem;
+                margin-bottom: 2rem;
+                animation: float 3s ease-in-out infinite;
+                color: #2d3748;
+            }
+
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-8px);
+                }
+            }
+
+            /* Скандинавские акценты */
+            .section-title {
+                text-align: center;
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: #1a1a1a;
+                margin-bottom: 1rem;
+                letter-spacing: -0.02em;
+            }
+
+            .section-subtitle {
+                text-align: center;
+                color: #4a5568;
+                font-size: 1.2rem;
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Герой секция -->
+        <section class="hero">
+            <div class="hero-content animate-fade-in">
+                <div class="python-logo">🪪</div>
+                <h1>Python Разработчик</h1>
+                <p class="tagline">
+                    Создаю <span class="highlight">сайты</span>,
+                    <span class="highlight">сервисы</span> и <span class="highlight">ботов</span> с
+                    любовью к коду
+                </p>
+
+                <div class="skills">
+                    <span class="skill-tag">Django</span>
+                    <span class="skill-tag">FastAPI</span>
+                    <span class="skill-tag">Telegram Bot</span>
+                    <span class="skill-tag">Хранение данных</span>
+                    <span class="skill-tag">Flask</span>
+                    <span class="skill-tag">REST API</span>
+                </div>
+
+                <a href="https://t.me/Artem4_8" target="_blank" class="cta-button"> Обсудить </a>
+            </div>
+        </section>
+
+        <!-- Секция услуг -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Услуги</h2>
+                <p class="section-subtitle">
+                    Функциональные и эстетичные решения, сочетающие простоту и эффективность
+                </p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Веб-сайты</h3>
+                        <p>
+                            Современные и адаптивные веб-приложения на Django и Flask с продуманным
+                            UX/UI
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>API Сервисы</h3>
+                        <p>Мощные backend-сервисы и REST API для мобильных и веб-приложений</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>Telegram Боты</h3>
+                        <p>
+                            Умные боты для автоматизации бизнес-процессов, уведомлений и
+                            взаимодействия с пользователями
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Парсинг Данных</h3>
+                        <p>Сбор и анализ данных из различных источников для бизнес-аналитики</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Автоматизация</h3>
+                        <p>Скрипты и системы для автоматизации рутинных задач и процессов</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Техническая Поддержка</h3>
+                        <p>Оптимизация, доработка и поддержка существующих Python-проектов</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section id="contact" style="padding: 5rem 0; background: #f8f9fa; text-align: center">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #333">Готовы к сотрудничеству?</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #666">
+                    Давайте обсудим ваш проект и найдем лучшее решение
+                </p>
+                <a href="mailto:avtorca4@gmail.com" class="cta-button">Написать мне</a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Python Разработчик. Создано с ❤️ и Python</p>
+            </div>
+        </footer>
+
+        <script>
+            // Простая анимация появления элементов при скролле
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px",
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+                });
+            }, observerOptions);
+
+            // Наблюдаем за карточками
+            document.querySelectorAll(".feature-card").forEach((card) => {
+                card.style.opacity = "0";
+                card.style.transform = "translateY(30px)";
+                card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+                observer.observe(card);
+            });
+        </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                "name": "Ваше Имя",
+                "jobTitle": "Python Developer",
+                "skills": "Python, Django, FastAPI, Telegram Bot API, PostgreSQL, Docker",
+                "description": "Python разработчик специализирующийся на создании веб-сайтов, сервисов и чат-ботов",
+                "url": "https://bot01.ru/infopage",
+                "sameAs": ["https://t.me/Artem4_8", "https://github.com/A-V-tor"]
+            }
+        </script>
+    </body>
+</html>

@@ -31,6 +31,8 @@ def create_app():
         from src.webapp.admin import admin
         from src.webapp.dashbords import expenses, weight
 
+        from . import infopage
+
         return app
 
 
