@@ -109,6 +109,15 @@ class DevelopConfig:
         self.web_logger = LoggerConfig('web', '{extra[logger]} {message}').logger.bind(logger='web')
         self.bot_logger = LoggerConfig('bot', '{extra[logger]} {message}').logger.bind(logger='bot')
 
+    @property
+    def variables(self):
+        """Ленивая загрузка переменных только при обращении"""
+        from src.database.models.variables import Variables
+
+        if not hasattr(self, '_variables'):
+            self._variables = Variables().get_variables().__dict__
+        return self._variables
+
 
 class ProductionConfig:
     DASHBOARD_EXPENSE = os.getenv('DASHBOARD_EXPENSE')
@@ -129,6 +138,15 @@ class ProductionConfig:
     def __init__(self) -> None:
         self.web_logger = LoggerConfig('web', '{extra[logger]} {message}').logger.bind(logger='web')
         self.bot_logger = LoggerConfig('bot', '{extra[logger]} {message}').logger.bind(logger='bot')
+
+    @property
+    def variables(self):
+        """Ленивая загрузка переменных только при обращении"""
+        from src.database.models.variables import Variables
+
+        if not hasattr(self, '_variables'):
+            self._variables = Variables().get_variables().__dict__
+        return self._variables
 
 
 settings = get_config()

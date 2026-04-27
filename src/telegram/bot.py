@@ -4,6 +4,8 @@ import logging
 import sys
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiohttp_socks import ProxyConnector
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from dotenv import find_dotenv, load_dotenv
@@ -35,7 +37,11 @@ async def bot_run():
     if not settings.BOT_TOKEN:
         raise ValueError('Отсутствует токен для бота')
 
+    proxy_session = AiohttpSession(proxy=settings.variables['telegram_proxy'], timeout=45)
     bot = Bot(settings.BOT_TOKEN)
+
+    if proxy_session:
+        bot.session = proxy_session
     dp = Dispatcher()
 
     dp.update.outer_middleware(UnsupportedTagCleanerMiddleware(bot))

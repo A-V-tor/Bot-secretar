@@ -1,4 +1,4 @@
-from unittest.mock import create_autospec
+from unittest.mock import AsyncMock, create_autospec
 
 import pytest
 from aiogram import types
@@ -48,7 +48,8 @@ def message(user):
     message_mock.chat.username = user['chat.username']
     message_mock.chat.first_name = user['chat.first_name']
     message_mock.chat.last_name = user['chat.last_name']
-
+    message_mock.answer = AsyncMock()
+    message_mock.reply = AsyncMock()
     return message_mock
 
 

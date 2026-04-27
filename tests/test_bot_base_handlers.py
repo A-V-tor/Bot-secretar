@@ -20,13 +20,11 @@ class TestBase:
         """
         message.text = '/start'
         message.reply = AsyncMock()
-
+        message.answer = AsyncMock()  # ДОБАВЛЕНО
         await start_command(message=message)
-
-        message.reply.assert_called()
-        actual_msg = message.reply.call_args[0][0]
+        message.answer.assert_called()  # ИЗМЕНЕНО
+        actual_msg = message.answer.call_args[0][0]  # ИЗМЕНЕНО
         assert re.search(r'Вы добавлены в пользователи бота', actual_msg)
-
         # проверка других аргументов (reply_markup и parse_mode)
         actual_reply_markup = message.reply.call_args[1]['reply_markup']
         assert actual_reply_markup == await start_kb()

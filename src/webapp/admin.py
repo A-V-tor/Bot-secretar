@@ -13,6 +13,7 @@ from config import settings
 from src.database.base import session_factory
 from src.database.models.expenses import Expenses
 from src.database.models.users import User
+from src.database.models.variables import Variables
 from src.database.models.weight import Weight
 from src.database.models.workouts import Workout
 from src.utils.tools import TypeExpenses, UserPermissions
@@ -151,6 +152,11 @@ class WorkoutView(CustomModelView):
     form_overrides = {'text_value': CKEditorField}
 
 
+class VariablesView(CustomModelView):
+    can_view_details = True
+
+
+admin.add_view(VariablesView(Variables, session_factory(), name='Переменные'))
 admin.add_view(UserView(User, session_factory(), name='Пользователи'))
 admin.add_view(WeightView(Weight, session_factory(), name='Журнал веса', category='Журналы'))
 admin.add_view(ExpensesView(Expenses, session_factory(), name='Журнал трат', category='Журналы'))

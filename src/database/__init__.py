@@ -1,6 +1,7 @@
 from .models.expenses import Expenses
 from .models.reminders import Reminder
 from .models.users import User
+from .models.variables import Variables
 from .models.weight import Weight
 from .models.workouts import Workout
 
