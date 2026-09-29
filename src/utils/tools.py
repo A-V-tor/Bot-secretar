@@ -134,6 +134,11 @@ class TypeExpenses(str, enum.Enum):
     CLOTH = 'одежда'
     TAXES = 'налоги'
     OTHER = 'прочее'
+    CAFEANDFASTFOOD = 'кафе/фастфуд'
+    TRAVEL = 'путешествия'
+    SPORT = 'спорт'
+    INVESTMENTS = 'инвестиции'
+    MAJORPURCHASES = 'крупные покупки'
 
 
 class UserPermissions(str, enum.Enum):
