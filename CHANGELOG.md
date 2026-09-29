@@ -42,6 +42,7 @@
 - Возможность просмотра напоминаний ([551422a](https://github.com/A-V-tor/Bot-secretar/commit/551422aa3273206359e8e09e0d3965c802e97568))
 - Добавлена личная страничка infopage ([3bd9ab3](https://github.com/A-V-tor/Bot-secretar/commit/3bd9ab3aa0cfc5e70629dbcb55309c8050c4cad9))
 - Добавлена модель хранения переменных в бд ([b6771b4](https://github.com/A-V-tor/Bot-secretar/commit/b6771b44a400a1cc52adf2a0bb2e59d8dbff03ca))
+- Добавлены типы трат ([ae71d07](https://github.com/A-V-tor/Bot-secretar/commit/ae71d07a72a0a1bcc0b792f1f0ce301180dd0fc9))
 
 ### 🧪 Тесты
 
