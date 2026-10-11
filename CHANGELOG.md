@@ -30,6 +30,7 @@
 - Добавлено хранение таймзоны юзера ([e87b908](https://github.com/A-V-tor/Bot-secretar/commit/e87b908ccf7043da4c66f5a3d0e4068f71f1e4b9))
 - Правка миграции 2e25b3c590d8 ([92df0d9](https://github.com/A-V-tor/Bot-secretar/commit/92df0d92ba8480b6b1ac09439a06c7acd974a50d))
 - Фикс мелких неотображения истекших напоминаний ([4083131](https://github.com/A-V-tor/Bot-secretar/commit/4083131d1f7bbcfb9615168c38a3d6158e23e159))
+- Добавлены тпы расходов ([c559eaa](https://github.com/A-V-tor/Bot-secretar/commit/c559eaaa9dec882441980aa4767d61872cba2380))
 
 ### 🚀 Новый функционал
 
